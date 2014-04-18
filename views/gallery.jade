@@ -1,0 +1,20 @@
+!!! 5
+html(lang='en')
+head
+    meta(charset='utf-8')
+    title Background Images
+    script(src="/socket.io/socket.io.js")
+    script(src='js/jquery-1.10.2.min.js')
+    script(src='http://code.jquery.com/ui/1.10.4/jquery-ui.js')
+    script(src='js/gallery.js')
+    link(rel='stylesheet', href='stylesheets/gallery.css')
+    style
+    script
+  body
+    input(type='hidden',id='visionData',value=visionData)
+    input(type='hidden',id='imageData',value=imageData)
+    <h3>Shows Up in Gallery</h3>
+    ul#sortable1.connectedSortable
+    <h3>All Visions</h3>
+    ul#sortable2.connectedSortable
+    #save Save

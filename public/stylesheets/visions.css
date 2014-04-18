@@ -1,0 +1,166 @@
+
+
+#popup{
+	
+	width: 1200px;
+	height: 750px;
+	 position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+	z-index: 30;
+	background-color: #fff;
+}
+
+
+#closeButton{
+	background-image:url('/images/close-02.png');
+	width: 50px;
+	height: 50px;
+	position:absolute;
+	right: 15px;
+	top:5px;
+}
+
+#backdrop{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 20;
+	background-color: #000;
+	opacity: 0.9;
+}
+.vision {
+  width: 500px;
+  height: 270px;
+  float: left;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+  color: #fff;
+  margin: 0px;
+
+}
+
+.vision .name {
+  
+ width: 90%;
+ height: 15%;
+   
+  right: 0em;
+  bottom: 0em;
+  font-size: 2.0em;
+  
+  margin-right: 5%;
+   margin-left: 5%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-bottom: 0px;
+  /*background-color: rgba(0,0,0,0.75);*/
+  background-color: rgba(30,30,30,0.75);
+ box-shadow: 1em 0 0 rgba(30,30,30,0.75), -1em 0 0 rgba(30,30,30,0.75);
+
+  }
+
+#content {
+  width: 250px;
+  height: 125px;
+}
+
+.year {
+  right: 0.2em;
+  top: 0.2em;
+  padding: 5px;
+  font-size: 4em;
+  font-weight: bold;
+  line-height: 1.0em;
+  color: #fff;
+  z-index: 35;
+}
+
+.height1 {
+	width: 250px;
+	height: 300px;
+	
+}
+
+.height1 img{
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+.height2 {
+  width: 500px;
+  height: 300px;
+ 
+}
+
+.height2 img{
+  width: 100%;
+  height:auto;
+  vertical-align: middle;
+}
+
+.height5 {
+  width: 250px;
+  height: 300px;
+  
+  
+}
+
+.height5 img{
+  height: 120%;
+  width:auto;
+  left: -25%;
+  vertical-align: middle;
+}
+
+.height4 {
+  width: 300px;
+  height: 150px;
+  float: left;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+  color: #fff;
+  margin: 4px;
+}
+
+.height4 img{
+ width: 100%;
+
+  width: auto;
+  vertical-align: middle;
+}
+
+.height3 {
+  width: 400px;
+  height: 200px;
+  float: left;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+  color: #fff;
+  margin: 4px;
+}
+
+.height3 img{
+ width: 100%;
+
+  width: auto;
+  vertical-align: middle;
+}
+h3{
+	display:inline;
+	font-weight: normal;
+	
+}
+iframe{
+	width: 100%;
+	height: 100%;
+}

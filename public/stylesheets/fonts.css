@@ -1,0 +1,47 @@
+@font-face {
+	font-family: 'Conv_BentonSans-MediumItalic';
+	src: url('fonts/BentonSans-MediumItalic.eot');
+	src: local('☺'), url('../fonts/BentonSans-MediumItalic.woff') format('woff'), url('../fonts/BentonSans-MediumItalic.ttf') format('truetype'), url('../fonts/BentonSans-MediumItalic.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Conv_BentonSans-Bold';
+	src: url('../fonts/BentonSans-Bold.eot');
+	src: local('☺'), url('../fonts/BentonSans-Bold.woff') format('woff'), url('../fonts/BentonSans-Bold.ttf') format('truetype'), url('../fonts/BentonSans-Bold.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'BentonSans-Book';
+	src: url('../fonts/BentonSans-Book.eot');
+	src: local('☺'), url('../fonts/BentonSans-Book.woff') format('woff'), url('../fonts/BentonSans-Book.ttf') format('truetype'), url('../fonts/BentonSans-Book.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'BentonSansCond-Regular';
+	src: url('../fonts/BentonSansCond-Regular.eot');
+	src: local('☺'), url('../fonts/BentonSansCond-Regular.woff') format('woff'), url('../fonts/BentonSansCond-Regular.ttf') format('truetype'), url('../fonts/BentonSansCond-Regular.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'BentonSans-Regular';
+	src: url('../fonts/BentonSans-Regular.eot');
+	src: local('☺'), url('../fonts/BentonSans-Regular.woff') format('woff'), url('../fonts/BentonSans-Regular.ttf') format('truetype'), url('../fonts/BentonSans-Regular.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'BentonSans-Medium';
+	src: url('../fonts/BentonSans-Medium.eot');
+	src: local('☺'), url('../fonts/BentonSans-Medium.woff') format('woff'), url('../fonts/BentonSans-Medium.ttf') format('truetype'), url('../fonts/BentonSans-Medium.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}

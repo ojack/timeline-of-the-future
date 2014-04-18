@@ -1,0 +1,36 @@
+!!! 5
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width')
+    title Form
+    script(src="/socket.io/socket.io.js")
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js')
+    script(src='js/simple-slider.js')
+    script(src='js/jquery.textfill.js')
+    script(type='text/javascript', src='js/rating.js')
+    link(rel='stylesheet', href='/stylesheets/fonts.css')
+    link(rel='stylesheet', href='/stylesheets/simple-slider.css')
+    link(rel='stylesheet', href='/stylesheets/rating.css')
+  body
+    
+    div#container
+      input(type='hidden',id='visionData',value=visionData)
+      div#image
+      div#skip
+        | SKIP
+      div#text-shade
+      div#text-container
+          h3#vision-text This is the text
+      div#controls
+        div#slider-val
+        div#slider-wrapper
+          div#slider
+        div#never NEVER
+        div#submit SUBMIT
+
+
+        
+          
+
+       

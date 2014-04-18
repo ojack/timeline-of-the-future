@@ -1,0 +1,32 @@
+!!! 5
+html(lang='en')
+head
+    title Add a Vision
+    meta(charset='utf-8')
+    meta(name='description', content='Procedural Drawing Tool')
+    meta(name='viewport', content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;')
+    meta(name='apple-mobile-web-app-capable', content='yes')
+   
+   
+    link(rel='stylesheet', type='text/css', href='stylesheets/onScreenKeyboard.css')
+    link(rel='stylesheet', type='text/css', href='stylesheets/spectrum.css')
+    link(rel='stylesheet', type='text/css', href='stylesheets/harmony-new.css')
+
+  body
+    input(type='hidden',id='imageData',value=imageData)
+    input(type='hidden',id='visionData',value=visionData)
+    input(type='hidden',id='drawingData',value=drawingData)
+    img#my-image(src='uploads/smog.jpg', style='display: none;')
+    script(src="/socket.io/socket.io.js")
+    script(type='text/javascript', src='js/jquery-1.10.2.min.js')
+    script(type='text/javascript', src='http://code.jquery.com/ui/1.10.3/jquery-ui.js')
+    script(type='text/javascript', src='js/tag-it/tag-it.js')
+    script(type='text/javascript', src='js/shared/eraser.js')
+    script(type='text/javascript', src='js/shared/marker.js')
+    script(type='text/javascript', src='js/shared/pen.js')
+    script(type='text/javascript', src='js/shared/sketchy.js')
+    script(type='text/javascript', src='js/shared/web.js')
+    script(type='text/javascript', src='js/harmony/spectrum.js')
+    script(type='text/javascript', src='js/jquery.onScreenKeyboard.js')
+    script(type='text/javascript', src='js/harmony/brushSettings_server.js')
+    script(type='text/javascript', src='js/harmony/gallery_server.js')

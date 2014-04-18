@@ -1,0 +1,28 @@
+!!! 5
+html(lang='en')
+head
+    meta(charset='utf-8')
+    title Adding items · Isotope Demo
+    link(rel='stylesheet', href='/stylesheets/isostyle.css', type='text/css')
+    link(rel='stylesheet', href='/stylesheets/visions.css', type='text/css')
+  body.demos
+    input(type='hidden',id='visionData',value=visionData)
+    section#content
+      section#options
+        ul#filters.option-set.clearfix(data-option-key='filter') 
+          li
+            a(id="addNew", href='#filter', data-filter='.Question') Add new vision
+          li
+            a(id="shuffle", data-filter='.Question') Shuffle
+          li
+            a(id='showAll', data-filter='*') Timeline
+      #container.horizontal
+    #backdrop
+    #popup
+      iframe#form(src='form')
+      #closeButton
+    script(src='js/jquery-1.10.2.min.js')
+    script(src='js/jquery.isotope.min.js')
+    script(src='js/jquery.isotope.perfectmasonry.js')
+    script(src='js/jquery.textfill.js')
+    script(src='js/visions.js')

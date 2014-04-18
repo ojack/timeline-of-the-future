@@ -1,0 +1,24 @@
+!!! 5
+html(lang='en')
+head
+    meta(charset='utf-8')
+    title Timeline of the Future
+    link(rel='stylesheet', href='/stylesheets/fonts.css', type='text/css')
+    link(href="/stylesheets/bootstrap.min.css", rel='stylesheet')
+    link(href="/stylesheets/slabtext.css", rel='stylesheet')
+    link(href="/stylesheets/timeline.css", rel='stylesheet')
+  body.demos
+    input(type='hidden',id='visionData',value=visionData)
+    input(type='hidden',id='imageData',value=imageData)
+    #background
+      #background-texture
+    #scroll-wrapper
+      #container.horizontal
+
+    #projection-date 2014
+    #bottom-bar
+    script(src="/socket.io/socket.io.js")
+    script(src='js/jquery-1.10.2.min.js')
+    script(src='js/jquery.slabtext.js')
+    script(src='js/iscroll.js')
+    script(src='js/input/projection.js')
