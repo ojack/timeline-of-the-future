@@ -92,7 +92,7 @@ DetailView.prototype =
      $(".label").hide();
                 if(visionObj.parent){
                   showParentThumb(visionObj.parent, 0);
-                  $("#inspiration").show();
+                  $("#inspiration-label").show();
                   //TODO resize detail container
                 }
                 if(visionObj.children){

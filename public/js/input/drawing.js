@@ -98,11 +98,12 @@ DrawingView.prototype =
         	thisObj.submitForm();
         	dc.removeClass('show');
 			hideKeyboard();
-			clearForm();
+			
 			//$("#inspiration").val("");
 		
 			form.removeClass('show');
 			$('#new-side-bar').removeClass('show');
+			clearForm();
 
         	
         });
@@ -128,7 +129,7 @@ DrawingView.prototype =
 
         var iFrameDrawing =  this.drawingBackground.canvas;
         var imageCanvas =  this.drawingBackground.baseCanvas;
-       
+       console.log("INSPIRATION IS "+ $("#inspiration").val());
 	var params = {};
      for(var i = 0; i < this.drawing_fields.length; i++){
        //$( "#"+admin_fields[i] ).val(visionData[admin_fields[i]]);
