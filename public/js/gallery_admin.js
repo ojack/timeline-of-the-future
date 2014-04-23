@@ -26,7 +26,7 @@ connectWith: ".connectedSortable"
 
  
  function addOtherThumbs(data){
- 	for(var i = 0; i < 75; i++){
+ 	for(var i = 0; i < data.length; i++){
  			addOtherThumb(data[i].smallPath, data[i].date, data[i].vision, data[i]._id);
       console.log("adding "+ i);
  	}
