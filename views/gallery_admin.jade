@@ -1,0 +1,16 @@
+!!! 5
+html(lang='en')
+head
+    meta(charset='utf-8')
+    title Gallery Admin
+    script(src="/socket.io/socket.io.js")
+    script(src='js/jquery-1.10.2.min.js')
+    script(src='http://code.jquery.com/ui/1.10.4/jquery-ui.js')
+    script(src='js/gallery_admin.js')
+    link(rel='stylesheet', href='stylesheets/gallery_admin.css')
+    style
+    script
+  body
+    input(type='hidden',id='visionData',value=visionData)
+    input(type='hidden',id='imageData',value=imageData)
+    ul#sortable2.connectedSortable
