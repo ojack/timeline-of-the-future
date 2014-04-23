@@ -30,7 +30,7 @@ fakeElement.newNode = function(nodeInfo){
 
    // if((nodeInfo.inputType == 'Prediction')){
     if(nodeInfo.mediumPath){
-      imgPath = nodeInfo.mediumPath;
+      imgPath = nodeInfo.smallPath;
        //widthClass = 'medium';
      } 
    // }

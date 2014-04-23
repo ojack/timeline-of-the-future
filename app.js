@@ -263,6 +263,38 @@ app.get('/gallery', function(req, res) {
   });
 });
 
+app.get('/gallery_admin', function(req, res) {
+ /* imageProvider.findAllThumbs(function(err, result){
+  if(err) throw(err);
+  var visionJson = 'new';
+  var dataJson = JSON.stringify(result);
+  console.log("result is "+ dataJson);*/
+  visionProvider.findGallery(function(err, result){
+        //console.log("result is "+ nodes.length);
+        if(err){console.log(err);
+      } else {
+        var dataJson = JSON.stringify(result);
+  //console.log(" the data from the provider is " +dataJson);
+  
+        //console.log("found "+ dataJson);
+       visionProvider.findAllGalleryAdmin(function(err, visions){
+        //console.log("result is "+ nodes.length);
+       
+        var dataJson = JSON.stringify(result);
+          if(err){console.log(err);
+          } else {
+             var visionJson = JSON.stringify(visions);
+             console.log("all image "+ visionJson);
+        res.render('gallery_admin.jade', {
+          visionData: visionJson,
+          imageData: dataJson,
+         });
+      }
+    });
+      }
+  });
+});
+
 app.get('/drawing', function(req, res) {
  // imageProvider.findAllThumbs(function(err, result){
   //if(err) throw(err);

@@ -11,8 +11,9 @@ var query_params = { _id: { $ne: "gallery" } };
 var detailed_fields = { imgPath: 1, vision: 1, year:1, smallPath:1, inspiration:1, tags: 1, date:1, name: 1, parent:1, children: 1};
 var thumb_fields = { smallPath: 1, vision:1};
 var gallery_fields = { smallPath: 1, imgPath: 1};
+var gallery_admin_fields = { smallPath: 1, date:1, vision: 1};
 var admin_fields = { imgPath: 1, vision: 1, year:1, inspiration:1, tags: 1, date:1, name: 1, adminTags: 1, children: 1, parent: 1, show_rating:1, show_timeline:1, museum:1, show_projection:1};
-var timeline_fields = { imgPath: 1, mediumPath: 1, vision: 1, year:1, museum: 1};
+var timeline_fields = { imgPath: 1, mediumPath: 1, smallPath: 1, vision: 1, year:1, museum: 1};
 
 
 VisionProvider = function (host, port) {
@@ -52,6 +53,18 @@ VisionProvider.prototype.findAllGallery = function (callback) {
         if (error) callback(error)
             else {
                 vision_collection.find(query_params, gallery_fields).toArray(function (error, results) {
+                    if (error) callback(error)
+                        else callback(null, results)
+                    });
+            }
+        });
+};
+
+VisionProvider.prototype.findAllGalleryAdmin = function (callback) {
+    this.getCollection(function (error, vision_collection) {
+        if (error) callback(error)
+            else {
+                vision_collection.find(query_params, gallery_admin_fields).sort({date: -1}).toArray(function (error, results) {
                     if (error) callback(error)
                         else callback(null, results)
                     });
