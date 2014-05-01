@@ -40,7 +40,7 @@ sketchy.prototype =
 		this.points.push( [ mouseX, mouseY ] );
 
 		//this.context.lineWidth = 1+EXTENT/10;
-		this.context.lineWidth = 1;
+		this.context.lineWidth = 2;
 		//this.context.strokeStyle = "rgba(" + COLOR[0] + ", " + COLOR[1] + ", " + COLOR[2] + ", " + 0.8  + ")";
 		
 		this.context.beginPath();
@@ -55,8 +55,8 @@ sketchy.prototype =
 			d = dx * dx + dy * dy;
 			//d = (dx * dx + dy * dy)/(EXTENT/2);
 
-			if (d < 2000 && Math.random() > (d / 2000))
-			//if (d < 4000 && Math.random() > (d / 2000))
+		if (d < 2000 && Math.random() > (d / 4000))
+		//	if (d < 4000 && Math.random() > (d / 4000))
 	//	if (d < 2500 && Math.random() > 0.9)
 			{
 				this.context.beginPath();

@@ -38,7 +38,7 @@ eraser.prototype =
 	{
 		this.context.save();
       // this.context.globalCompositeOperation = 'destination-out' ;
-      	var EXTENT = 10; //CHANGED
+      	var EXTENT = 5; //CHANGED
 		var circRad = EXTENT*6;
 		var start = {x: this.prevMouseX, y: this.prevMouseY}
 		var end = {x: mouseX, y: mouseY}

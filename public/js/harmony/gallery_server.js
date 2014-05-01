@@ -180,8 +180,8 @@ function setForegroundColor(col){
 	COLOR[1] = col.g;
 	COLOR[2] = col.b;
 //onsole.log("setting COlor "+ COLOR); // #ff0000
-	context.fillStyle =  "rgba("+COLOR[0]+","+COLOR[1]+","+ COLOR[2]+", 0.08)";
-	context.strokeStyle =  "rgba("+COLOR[0]+","+COLOR[1]+","+ COLOR[2]+", 0.08)";
+	context.fillStyle =  "rgba("+COLOR[0]+","+COLOR[1]+","+ COLOR[2]+", 0.1)";
+	context.strokeStyle =  "rgba("+COLOR[0]+","+COLOR[1]+","+ COLOR[2]+", 0.1)";
 }
 
 function setBackgroundColor(col){

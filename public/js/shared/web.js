@@ -38,8 +38,8 @@ web.prototype =
 		var i, dx, dy, d;
 		var EXTENT = 6;
 		this.points.push( [ mouseX, mouseY ] );
-
-		this.context.lineWidth = 1+EXTENT/10;
+		this.context.lineWidth = 2;
+		//this.context.lineWidth = 1+EXTENT/10;
 		//this.context.strokeStyle = "rgba(" + COLOR[0] + ", " + COLOR[1] + ", " + COLOR[2] + ", " + 0.5 * BRUSH_PRESSURE + ")";
 		this.context.beginPath();
 		this.context.moveTo(this.prevMouseX, this.prevMouseY);
@@ -54,7 +54,8 @@ web.prototype =
 			dy = this.points[i][1] - this.points[this.count][1];
 		//	d = (dx * dx + dy * dy)/(EXTENT);
 			d = (dx * dx + dy * dy);
-			if (d < 2500 && Math.random() > 0.9+0.003*EXTENT)
+			//if (d < 2500 && Math.random() > 0.9+0.003*EXTENT)
+			if (d < 2000 && Math.random() > (d / 4000))
 			{
 				this.context.beginPath();
 				this.context.moveTo( this.points[this.count][0], this.points[this.count][1]);

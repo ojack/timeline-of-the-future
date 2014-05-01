@@ -40,7 +40,7 @@ pen.prototype =
 		/*this.context.globalCompositeOperation = 'lighten';*/
 
 		//var circRad = 2;
-		var BRUSH_SIZE = 5;//CHANGED
+		var BRUSH_SIZE = 10;//CHANGED
 		var start = {x: this.prevMouseX, y: this.prevMouseY}
 		var end = {x: mouseX, y: mouseY}
 		
@@ -71,11 +71,11 @@ pen.prototype =
 		this.context.stroke();*/
 	/*		z+=circRad;
 		}*/
-	  this.thickness = 1+Math.pow(distance/50, 2);// good for pen
+	  this.thickness = 4+Math.pow(distance/50, 2);// good for pen
 	  //this.thickness = 1+Math.pow(distance/80, 4);
 	//this.thickness = EXTENT/2*(10+distance/10);
 	//this.thickness = 1/2*(10+distance);
-	var bRad = 6;
+	var bRad = 10;
 for (var i = 0; i < distance; i+=bRad/5) {
     		x = start.x + (Math.sin(angle) * i);
     		y = start.y + (Math.cos(angle) * i);
