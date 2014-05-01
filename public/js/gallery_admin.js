@@ -1,11 +1,12 @@
  var galleryList; 
  var otherImages;
  var socket;
+ var table; 
 
  $(function() {
  	//connectToSocket();
- 	galleryList = document.getElementById("sortable1");
- 	otherImages = document.getElementById("sortable2");
+
+ 
    /* $( "#sortable1, #sortable2" ).sortable({
 connectWith: ".connectedSortable"
 }).disableSelection();*/
@@ -26,29 +27,31 @@ connectWith: ".connectedSortable"
 
  
  function addOtherThumbs(data){
- 	for(var i = 0; i < data.length; i++){
- 			addOtherThumb(data[i].smallPath, data[i].date, data[i].vision, data[i]._id);
+  for(var i = 0; i < 40; i++){
+ 	//for(var i = 0; i < data.length; i++){
+ 			addOtherThumb(data[i].smallPath, data[i].date, data[i].vision, data[i]._id, data[i].show_timeline);
       console.log("adding "+ i);
  	}
  }
 
- function addThumb(path, id){
- 	
- 	 var li=document.createElement('li');
- 	li.setAttribute("id", id);
-    galleryList.appendChild(li);
-    li.style.backgroundImage="url("+path+")";
- }
 
-  function addOtherThumb(path, date, vision, id){
- 	
+  function addOtherThumb(path, date, vision, id, show_timeline){
+     var thisDate =  new Date(date);
+ 	  var row = $('<tr></tr>').addClass('row');
+    var date = $('<td></td>').text(thisDate.toLocaleString()).addClass('date');
+    var thumb = $('<td></td>').css('background-image', "url("+path+")").addClass('thumb');
+    var vision = $('<td></td>').text(vision).addClass('vision');
+    var checkbox = $('<td></td>');
+    $('<input />', { type: 'checkbox' }).prop('checked', show_timeline).appendTo(checkbox);
+    row.append(date).append(thumb).append(vision).append(checkbox);
+    $('#table').append(row);
  //	 var li=document.createElement('li');
-  var li=document.createElement('div');
+ /* var li=document.createElement('div');
  	li.setAttribute("id", id);
     otherImages.appendChild(li);
     var thisDate =  new Date(date);
     li.innerHTML =  thisDate.toDateString() + " " +vision;
-    li.style.backgroundImage="url("+path+")";
+    li.style.backgroundImage="url("+path+")";*/
  }
 
  function connectToSocket(){

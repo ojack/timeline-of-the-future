@@ -11,7 +11,7 @@ var query_params = { _id: { $ne: "gallery" } };
 var detailed_fields = { imgPath: 1, vision: 1, year:1, smallPath:1, inspiration:1, tags: 1, date:1, name: 1, parent:1, children: 1};
 var thumb_fields = { smallPath: 1, vision:1};
 var gallery_fields = { smallPath: 1, imgPath: 1};
-var gallery_admin_fields = { smallPath: 1, date:1, vision: 1};
+var gallery_admin_fields = { smallPath: 1, date:1, vision: 1, show_timeline: true};
 var admin_fields = { imgPath: 1, vision: 1, year:1, inspiration:1, tags: 1, date:1, name: 1, adminTags: 1, children: 1, parent: 1, show_rating:1, show_timeline:1, museum:1, show_projection:1};
 var timeline_fields = { imgPath: 1, mediumPath: 1, smallPath: 1, vision: 1, year:1, museum: 1};
 

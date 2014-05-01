@@ -5,7 +5,7 @@ head
     title Gallery Admin
     script(src="/socket.io/socket.io.js")
     script(src='js/jquery-1.10.2.min.js')
-    script(src='http://code.jquery.com/ui/1.10.4/jquery-ui.js')
+    link(rel='stylesheet', href='/stylesheets/fonts.css', type='text/css')
     script(src='js/gallery_admin.js')
     link(rel='stylesheet', href='stylesheets/gallery_admin.css')
     style
@@ -13,4 +13,11 @@ head
   body
     input(type='hidden',id='visionData',value=visionData)
     input(type='hidden',id='imageData',value=imageData)
+    table(id='table')
+      tr.topRow
+        td.date.header Date
+        td.thumb.header Image
+        td.vision.header Vision
+        td.header Show in Gallery?
+    div#table_container
     ul#sortable2.connectedSortable
