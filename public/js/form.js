@@ -4,6 +4,7 @@ var newImage = false;
 var visionData;
 var params = "parm default";
 var socketLoc;
+var myDropzone;
 var admin_fields = ["vision", "year", "inspiration", "tags", "adminTags", "name", "_id", "notes"];
 var admin_checkboxes = ["show_rating", "show_timeline", "museum", "show_projection"];
 /*Dropzone.options.dropzone = {
@@ -16,7 +17,7 @@ var admin_checkboxes = ["show_rating", "show_timeline", "museum", "show_projecti
 };*/
 
 $(document).ready(function(){
-  var myDropzone = new Dropzone("form#bg", { 
+  myDropzone = new Dropzone("form#bg", { 
   thumbnailWidth: 800,
   thumbnailHeight: 600,
    init: function() {
@@ -39,7 +40,7 @@ $(document).ready(function(){
 
 });
 
-  myDropzone.on("sending", function(file, xhr, formData) {
+/*myDropzone.on("sending", function(file, xhr, formData) {
     var paramString = JSON.stringify(params);
   formData.append("filesize", paramString); // Will send the filesize along with the file as POST data.
 });

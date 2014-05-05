@@ -6,6 +6,7 @@ head
     script(src="/socket.io/socket.io.js")
     script(src='js/jquery-1.10.2.min.js')
     link(rel='stylesheet', href='/stylesheets/fonts.css', type='text/css')
+    link(href="/stylesheets/bootstrap.min.css", rel='stylesheet')
     script(src='js/gallery_admin.js')
     link(rel='stylesheet', href='stylesheets/gallery_admin.css')
     style
@@ -13,11 +14,19 @@ head
   body
     input(type='hidden',id='visionData',value=visionData)
     input(type='hidden',id='imageData',value=imageData)
-    table(id='table')
-      tr.topRow
-        td.date.header Date
-        td.thumb.header Image
-        td.vision.header Vision
-        td.header Show in Gallery?
-    div#table_container
-    ul#sortable2.connectedSortable
+    div#previous.bottom < Previous
+    div#showing.bottom
+        | Showing 1 - 50 
+    div#next.bottom Next >
+    button.btn.btn-default(type="button", id='restart-drawing') Refresh Gallery Input Stations
+    button.btn.btn-default(type="button", id='restart-projection') Refresh Gallery Projection
+    table(id='header')
+          tr.topRow
+            td.date.header Date
+            td.thumb.header Image
+            td.vision.header Vision
+            td.header Show in Gallery?
+            td.apply.header 
+              button.btn.btn-default(type="button", id='submit') Apply Changes
+    div#table-holder
+        table(id='table')

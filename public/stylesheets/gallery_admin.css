@@ -3,16 +3,7 @@ html{
 	font-family: 'BentonSans-Regular', Sans-Serif;
 }
 
-#sortable1, #sortable2 { 
-	list-style-type: none; margin: 0; padding: 0 0 2.5em; float: left; margin-right: 10px; width: 500px; height: 900px; overflow-y:auto;
-}
 
-#sortable2 { width: 1000px;
-	}
-
-div{ 
-  	margin: 0 5px 5px 5px; padding-left: 300px; font-size: 1.2em; float: left; width: 500px; height: 100px; text-align: center; background-repeat: no-repeat; text-align: left;
- }
 
  .table{
  	width: 100%;
@@ -50,4 +41,62 @@ div{
 
  td{
  	padding: 10px;
+ }
+
+#header{
+	position: absolute;
+	top: 60px;
+}
+#table-holder{
+	position: absolute;
+ 	top: 120px;
+	width: 100%;
+	height: 90%;
+	overflow-y: scroll;
+}
+ .bottom{
+ 	position: absolute;
+ 	top: 20px;
+ 	width: 100px;
+ 	/*height: 80px;*/
+ 	z-index: 100;
+ 	font-size: 14px;
+ }
+
+ .apply{
+ 	width: 250px;
+ }
+
+ #previous{
+ 	left: 20px;
+ }
+
+ #showing{
+ 	left: 120px;
+ 	width: 120px;
+ }
+
+ #next{
+ 	left: 230px;
+ }
+
+ #submit{
+ 	top: 0px;
+ 	right: 20px;
+ 	/*top: 0px;
+ 	left: 350px;*/
+ }
+
+ button{
+ 	position: absolute;
+ 	margin: 10px;
+ 	font-size: 12pt;
+ }
+
+ #restart-drawing{
+ 	left: 350px;
+ }
+
+ #restart-projection{
+ 	left: 600px;
  }

@@ -284,7 +284,7 @@ app.get('/gallery_admin', function(req, res) {
           if(err){console.log(err);
           } else {
              var visionJson = JSON.stringify(visions);
-             console.log("all image "+ visionJson);
+            // console.log("all image "+ visionJson);
         res.render('gallery_admin.jade', {
           visionData: visionJson,
           imageData: dataJson,
@@ -561,6 +561,15 @@ io.sockets.on('connection', function (socket) {
    socket.join(roomId);
  });
 
+ socket.on('update from gallery admin', function(data){
+        for(var i = 0; i < data.length; i++){
+          console.log(JSON.stringify(data[i]));
+          visionProvider.updateTimelineVisibility(data[i]._id, data[i].show_timeline, function(error, vision){
+            if(error) console.log(error);
+            io.sockets.in(socket.id).emit('refresh gallery admin', "");
+          });
+        }
+ });
 
   socket.on('addNewDrawing', function (data){
     fileSystem.addNewDrawing(data, visionProvider, function(error, id){
@@ -670,6 +679,15 @@ socket.on('findById', function (data) {
    }
    }
   });
+  });
+
+socket.on("get next page", function(data){
+    console.log("data is "+ JSON.stringify(data));
+    var startIndex = data.page*data.numberPerPage;
+    visionProvider.findRangeGalleryAdmin(startIndex, data.numberPerPage, function(err, visions){
+      //console.log(visions);
+       io.sockets.in(socket.id).emit('next page', visions);
+    });
   });
 
 socket.on('restart projection', function(data){

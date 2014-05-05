@@ -72,6 +72,19 @@ VisionProvider.prototype.findAllGalleryAdmin = function (callback) {
         });
 };
 
+VisionProvider.prototype.findRangeGalleryAdmin = function (startIndex, numElements, callback) {
+  console.log("index is "+ startIndex + " num elements "+ numElements);
+    this.getCollection(function (error, vision_collection) {
+        if (error) callback(error)
+            else {
+                vision_collection.find(query_params, gallery_admin_fields).skip(startIndex).limit(numElements).sort({date: -1}).toArray(function (error, results) {
+                    if (error) callback(error)
+                        else callback(null, results)
+                    });
+            }
+        });
+};
+
 VisionProvider.prototype.findAll = function (callback) {
     this.getCollection(function (error, vision_collection) {
         if (error) callback(error)
@@ -498,6 +511,28 @@ VisionProvider.prototype.updateImagePath = function (visionId, imagePath, callba
                function(error, vision){
                 if( error ) callback(error, null);
                 console.log("updated :" + JSON.stringify(vision));
+                callback(null, vision)
+            });
+        }
+    });
+};
+
+/* Handles show or hide requests from gallery admin interface. Sets show_timeline and show_rating to the new value*/
+VisionProvider.prototype.updateTimelineVisibility = function (visionId, visibility, callback) {
+    //var id = visionId;
+    
+    this.getCollection(function (error, vision_collection) {
+        var id = new ObjectId(visionId.toString());
+        if (error) callback(error);
+        //if(typeof id == "string") id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(visionId.toString());
+        else {
+            vision_collection.update(
+               // {_id: vision_collection.db.bson_serializer.ObjectID.createFromHexString(visionId)},
+               {_id: id},
+               {"$set": {'show_timeline': visibility, "show_rating": visibility}},
+               function(error, vision){
+                if( error ) callback(error, null);
+               // console.log("updated :" + JSON.stringify(vision));
                 callback(null, vision)
             });
         }
