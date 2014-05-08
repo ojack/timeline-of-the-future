@@ -293,9 +293,10 @@ VisionProvider.prototype.addRandom = function(callback){
    this.getCollection(function (error, vision_collection) {
         if (error) callback(error, null)
             else {
+              findRandom(random, vision_collection, callback);
                // vision_collection.findOne({rand : { $near : [Math.random(), 0] },
              //  vision_collection.findOne({_id: { $ne: "gallery" }, show_rating:1, rand : { $gte : random }}, 
-            vision_collection.findOne({_id: { $ne: "gallery" },   show_rating:true, rand : { $gte : random }}, 
+           /* vision_collection.findOne({_id: { $ne: "gallery" },   show_rating:true, rand : { $gte : random }}, 
                     function (error, result) {
 
                     if (error) callback(error, null);
@@ -324,12 +325,46 @@ VisionProvider.prototype.addRandom = function(callback){
                                     callback(null, result);
                                
                     }
-                });
+                });*/
             }
         });
 }
 
+function findRandom(random, vision_collection, callback){
+     vision_collection.findOne({_id: { $ne: "gallery" },   show_rating:true, rand : { $gte : random }}, 
+                    function (error, result) {
 
+                    if (error) callback(error, null);
+                    if(result==null){
+                         vision_collection.findOne({_id: { $ne: "gallery" }, show_rating:1, rand : { $lte : random }}, function (error, result){
+                            if (error){
+                              callback(error, null);
+                            } else {
+                              if(result==null){
+                                var newRand = Math.random();
+                                console.log("COULD NOT FIND RAND");
+                                findRandom(newRand, vision_collection, callback);
+                               // callback(null, null);
+                              } else {
+                                      result.rand = Math.random();
+                                     // console.log("db result is" + result);
+                                    vision_collection.save(result);
+                                              callback(null, result);
+                                  }
+                              
+                            }
+                         });
+
+                    } else {
+                        result.rand = Math.random();
+                           console.log("db result is" + JSON.stringify(result));
+                            vision_collection.save(result);
+                                    callback(null, result);
+                               
+                    }
+                });
+
+}
      /*  vision_collection.update(
          {},
             {$set: {
@@ -352,7 +387,7 @@ VisionProvider.prototype.addRandom = function(callback){
 } */
 VisionProvider.prototype.findForTimeline = function (visionId, callback) {
    var id = visionId;
-   if(id.length != 24) callback(" not valid ID "+ id, null);
+   if(id.length != 24) callback(" not valid ID "+ id + "length" + id.length + " type " + typeof id, null);
    this.getCollection(function (error, vision_collection) {
     if (error) callback(error)
         console.log("ID type is " + typeof id)
@@ -630,13 +665,13 @@ VisionProvider.prototype.removeVision = function (id) {
                     if (error) {
                       console.log("error on delete: "+error);
                     } else {
-                       /* if(result.parent && result.parent.length == 24) {
+                        if(result.parent && result.parent.length == 24) {
                           console.log("removing from parent");
                           removeFromParent(result.parent, objectId, result.children, vision_collection);
                         } else if(result.children.length >= 0){
                            console.log("removing from children");
                           removeFromChildren(objectId, vision_collection);
-                        } else {*/
+                        } else {
                           console.log("straight remove");
                            vision_collection.remove(
                                  {_id: objectId}
@@ -644,7 +679,7 @@ VisionProvider.prototype.removeVision = function (id) {
        
                         }
                         
-                   // }
+                    }
           });
          }
         //}
@@ -721,7 +756,8 @@ function addThisChild(parentId, childId, vision_collection, callback){
 
 function removeFromParent(parent, id, children, vision_collection){
       var parent_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(parent.toString());
-      var this_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
+      //var this_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
+      var this_id = id.toString();
       var query = {children: this_id};
       var update = {$pull: { children: this_id }};
       console.log("children is "+ JSON.stringify(children));
@@ -734,6 +770,9 @@ function removeFromParent(parent, id, children, vision_collection){
         if(err) {
           console.log("error removing from parent "+ err);
         } else {
+         /* vision_collection.remove(
+                                 {_id: this_id}
+                                 );*/
         }
     });
       var child_query = {parent: this_id};
@@ -742,11 +781,12 @@ function removeFromParent(parent, id, children, vision_collection){
         if(err) {
           console.log("error updating children "+ err);
         } else {
+          /*vision_collection.remove(
+                                 {_id: this_id}
+                                 );*/
         }
     });
-       vision_collection.remove(
-                                 {_id: this_id}
-                                 );
+       
 };
 
 function removeFromChildren(objectId, vision_collection){

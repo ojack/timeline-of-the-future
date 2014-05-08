@@ -92,6 +92,7 @@ function connectToSocket(){
 
 function showVision(data){
 	 console.log(data.vision);
+   $('#vision-text').html("");
 	$('#image').css('background-image', 'url(' + data.imgPath + ')');
 	$('#vision-text').html(data.vision);
 	$('#text-container').textfill({ maxFontPixels: 60, innerTag: 'h3'

@@ -49,7 +49,7 @@ body {
   background: url("/images/bottom-bar-01.png");
 }
 #timeline-date {
-  z-index: 300;
+  z-index: 200;
   font-size: 48px;
   position: absolute;
   font-family: 'BentonSansCond-Regular', Sans-Serif;

@@ -22,7 +22,9 @@ DrawingView.prototype =
 		this.infoForm = $('#moreInfo');
 		
 		//this.addGalleryThumbs(this.gallery, ul);
-		
+		 var ul = document.createElement('ul');
+		ul.id = "background-images";
+		 this.addGalleryThumbs(this.gallery, ul);
 		this.initForm();
 		var form = this.infoForm;
 		var dC = this.drawingContainer;
@@ -39,16 +41,16 @@ DrawingView.prototype =
 	},
 
 	addNewDrawing: function(){
-		this.addGalleryThumbs(this.gallery, ul);
+		//this.addGalleryThumbs(this.gallery, ul);
 	},
 
 	addToTimeline: function(){
 		 $('#side-bar').addClass('show');
 		   $('#drawing-side-bar').removeClass('show');
 		     $('#new-side-bar').addClass('show');
-		 var ul = document.createElement('ul');
+	/*	 var ul = document.createElement('ul');
 		ul.id = "background-images";
-		 this.addGalleryThumbs(this.gallery, ul);
+		 this.addGalleryThumbs(this.gallery, ul);*/
 		 this.drawingBackground.resetDrawing(null);
 			 this.drawingContainer.addClass('show');
 			   $("#timeline-date").removeClass("show");
