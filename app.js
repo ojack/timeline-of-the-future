@@ -745,11 +745,13 @@ socket.on('addVote', function (data) {
     console.log("received from socket" + JSON.stringify(data));
     //visionProvider.addVote(function(error){
     if(data.vote != ""){
+       if(data.vote != null){
       console.log("updating vote");
       visionProvider.addVote(data._id, data.vote, function(err, result){
         if(err) console.log(err);
         console.log("VOTE RESULTS ARE "+JSON.stringify(result));
       });
+    }
     }
      visionProvider.getRandom(function(error, result){
     if(error) console.log(error);
