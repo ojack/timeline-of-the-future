@@ -616,6 +616,12 @@ io.sockets.on('connection', function (socket) {
 /*sends a new random vision to the rating station*/
 socket.on('newRandom', function (data) {
     console.log("received from socket" + socket.id);
+    if(data!=null){
+      console.log(JSON.stringify(data));
+    visionProvider.addLike(data._id, data.like, function(error, result){
+      if(error) console.log(error);
+    });
+    } 
     visionProvider.getRandom(function(error, result){
     if(error) console.log(error);
     var visionJson = JSON.stringify(result);
@@ -753,6 +759,11 @@ socket.on('addVote', function (data) {
       });
     }
     }
+    if(data.like != null){
+     visionProvider.addLike(data._id, data.like, function(error, result){
+      if(error) console.log(error);
+    });
+    } 
      visionProvider.getRandom(function(error, result){
     if(error) console.log(error);
     var visionJson = JSON.stringify(result);

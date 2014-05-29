@@ -1,8 +1,9 @@
 var socketLoc, socket;
-var SLIDER_WIDTH = 700;
+var SLIDER_WIDTH = 600;
+var SLIDER_MULTIPLE = 700/SLIDER_WIDTH;
 var vote;
 var visionData = {};
-
+var like = false;
 
 
 $(function() {
@@ -12,19 +13,21 @@ $(function() {
 	//var visonData = "hey";
 	console.log(visionData);
 
+  $('#like').click(function(e){
+    toggleLike();
+  });
+
 	$('#skip').click(function(e){
-		socket.emit('newRandom', "");
+		socket.emit('newRandom',  {'_id':visionData._id, 'like': like});
     resetSlider();
 	});
 
-  $('#never').click(function(e){
-    highlightNever();
-  });
+  
 
     $('#submit').click(function(e){
       // globalParams = {'_id':id, 'vision': vision, 'year': year, 'tags': tags, 'imgPath':imgPath, 'inspiration': inspiration, 'notes' : notes, 'newVision':isNew};
    
-      var params = {'_id':visionData._id, 'vote':vote};
+      var params = {'_id':visionData._id, 'like': like, 'vote':vote};
       console.log(JSON.stringify(params));
     socket.emit('addVote', params);
      resetSlider();
@@ -38,17 +41,7 @@ $(function() {
        
 });
 
-function highlightNever(){
-  $('#never').css('color', '#00A79D');
-  $('#never').css('font-weight', '900');
-    vote = "never";
-   $('#slider-val').html("");
-}
 
-function unhighlightNever(){
-  $('#never').css('color', '#FFFFFF');
-  $('#never').css('font-weight', '400');
-}
 
 function resetSlider(){
   vote = "";
@@ -61,19 +54,20 @@ function createSlider(){
     $('#slider').simpleSlider();
       $("#slider").bind("slider:changed", function (event, data) {
   // The currently selected value of the slider
-  unhighlightNever();
+ 
   console.log(data.value);
-  var logYear = logslider(data.value);
+  var logYear = logslider(data.value*SLIDER_MULTIPLE);
   var year = new Date().getFullYear();
   console.log("year is" + year);
   var sliderVal = Math.round(logYear);
   if(sliderVal < 10) sliderVal = (sliderVal-5)*2
-  vote = sliderVal + year
+  vote = sliderVal + year;
+  if(vote > year+170) vote = "NEVER";
   $('#slider-val').html("&nbsp;"+ vote);
-   var pos = data.value*SLIDER_WIDTH+20+'px';
+   var pos = data.value*SLIDER_WIDTH*SLIDER_MULTIPLE+20+'px';
   $('#slider-val').css('left', pos);
   // The value as a ratio of the slider (between 0 and 1)
-  console.log(event);
+ // console.log(event);
 });
 }
 function connectToSocket(){
@@ -91,6 +85,7 @@ function connectToSocket(){
 }
 
 function showVision(data){
+  resetLike();
 	 console.log(data.vision);
    $('#vision-text').html("");
 	$('#image').css('background-image', 'url(' + data.imgPath + ')');
@@ -138,7 +133,23 @@ function setLogLabels(){
 	addLabel(20, "20 Years");
 	addLabel(50, "50 Years");
 	addLabel(100, "100 Years");
+  addLabel(200, "NEVER");
 	
+}
+
+function toggleLike(){
+  $('.like').toggleClass('show');
+  if(like==true){
+    like = false;
+  } else {
+    like = true;
+  }
+}
+
+function resetLike(){
+   $('#heart').addClass('show');
+   like = false;
+  $('#heart-down').removeClass('show');
 }
 
 function addLabel(number, text){
@@ -152,6 +163,6 @@ function addLabel(number, text){
     newDiv.css({
         position: "absolute",
         left: pos + "px",
-        bottom: "-8px"
+        bottom: "-24px"
         }).appendTo("#slider-wrapper");
 }

@@ -246,6 +246,23 @@ VisionProvider.prototype.addVote = function(id, vote, callback){
   });
 }
 
+VisionProvider.prototype.addLike = function(visionId, likeVal, callback){
+        var id = new ObjectId(visionId.toString());
+       this.getCollection(function (error, vision_collection) {
+          var update =  {"$inc": {'views': 1}};
+          if(likeVal == true) update =  {"$inc": {'views': 1, 'likes':1}};
+           vision_collection.update(
+               // {_id: vision_collection.db.bson_serializer.ObjectID.createFromHexString(visionId)},
+               {_id: id},
+              update,
+               function(error, vision){
+                if( error ) callback(error, null);
+                console.log("updated :" + JSON.stringify(vision));
+                callback(null, vision)
+            });
+       });
+ } ;
+
 VisionProvider.prototype.addRandom = function(callback){
     //var random = Math.random();
     this.getCollection(function (error, vision_collection) {
