@@ -1,7 +1,7 @@
 var socketLoc, socket;
 var SLIDER_WIDTH = 600;
 var SLIDER_MULTIPLE = 700/SLIDER_WIDTH;
-var vote;
+var vote = ""+2014;
 var visionData = {};
 var like = false;
 
@@ -26,10 +26,10 @@ $(function() {
 
     $('#submit').click(function(e){
       // globalParams = {'_id':id, 'vision': vision, 'year': year, 'tags': tags, 'imgPath':imgPath, 'inspiration': inspiration, 'notes' : notes, 'newVision':isNew};
-   
-      var params = {'_id':visionData._id, 'like': like, 'vote':vote};
-      console.log(JSON.stringify(params));
-    socket.emit('addVote', params);
+    var params = {'_id':visionData._id, 'like': like, 'vote':vote};
+      console.log(vote);
+     showResults(params);
+    
      resetSlider();
   });
 
@@ -44,7 +44,7 @@ $(function() {
 
 
 function resetSlider(){
-  vote = "";
+  vote = ""+2014;
   
    $('#slider').simpleSlider("setValue", 0);
     $('#slider-val').html("");
@@ -82,17 +82,71 @@ function connectToSocket(){
     showVision(visionData);
     //socket.emit('my other event', { my: 'data' });
   });
+/*socket.on('showResults', function (data) {
+   visionData = jQuery.parseJSON(data);
+    showResults(visionData);
+    //socket.emit('my other event', { my: 'data' });
+  });*/
 }
 
 function showVision(data){
   resetLike();
-	 console.log(data.vision);
+	 console.log(JSON.stringify(data));
    $('#vision-text').html("");
 	$('#image').css('background-image', 'url(' + data.imgPath + ')');
 	$('#vision-text').html(data.vision);
 	$('#text-container').textfill({ maxFontPixels: 60, innerTag: 'h3'
         
         });
+}
+
+function showResults(params){
+    console.log(JSON.stringify(params));
+    var likes = 0;
+    var never_count = 0;
+    var vote_count = 0;
+    var new_year = 2014;
+    var year_avg = new Date().getFullYear();
+    if(visionData.vote_results){
+
+      never_count = visionData.vote_results.never_count;
+      vote_count = visionData.vote_results.total_count;
+      year_count = visionData.vote_results.year_count;
+      if(visionData.year != null) {
+        year_avg == visionData.year;
+      } else {
+          if(params.vote != "NEVER") {
+            year_avg = params.vote;
+          }
+      } 
+    }
+      var new_year = year_avg;
+      if(params.vote == "NEVER"){
+        never_count++;
+      } else {
+        new_year = Math.round((year_avg*year_count + params.vote)/(year_count+1));
+        year_count++;
+      }
+       vote_count++;
+       var likelihood = Math.round(never_count/vote_count*100);
+       if(visionData.likes) likes = visionData.likes;
+       if(like) likes++;
+      alert("previous info : "+ JSON.stringify(visionData.vote_results) +"previous average year "+ year_avg +  "Your answer " + params.vote + " Average : "+ new_year + "   "+ likelihood+"% said NEVER! " + likes + "likes");
+
+   }
+
+   params.never_count = never_count;
+   params.vote_count = vote_count;
+   {'_id':visionData._id, 'like': like, 'vote':vote};
+
+   // var never_percent = visionData.vote_results
+ //  alert("")
+ // console.log(JSON.stringify(data));
+
+
+  // socket.emit('addVote', params);
+
+
 }
 
 function logslider(position) {

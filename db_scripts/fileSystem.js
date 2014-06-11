@@ -50,6 +50,37 @@ FileSystem = function (tmpStorage, permStorage) {
     
 };
 
+FileSystem.prototype.remove = function(id, visionProvider){
+  visionProvider.removeVision(id, function(err, pathArray){
+    if(err){
+      console.log(err);
+    } else {
+      var path = pathArray.imgPath.substring(2);
+        var mediumPath = pathArray.mediumPath.substring(2);
+         var smallPath = pathArray.smallPath.substring(2);
+      console.log("PATH IS "+ path);
+      fs.unlink(path, function (err) {
+              if (err) console.log(err);
+ 
+    });
+        fs.unlink(mediumPath, function (err) {
+              if (err) console.log(err);
+ 
+    });
+           fs.unlink(smallPath, function (err) {
+              if (err) console.log(err);
+ 
+    });
+     /* for(var i = 0; i < )
+      fs.unlink(path, function (err) {
+              if (err) callback(err);
+ 
+    });*/
+    }
+  });
+  
+};
+
 FileSystem.prototype.addFrame = function(data, frameNo, callback){
     console.log("adding + "+ frameNo);
     addFrame("testframe", data, frameNo, this.permStorage, function(err){

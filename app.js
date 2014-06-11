@@ -748,32 +748,42 @@ socket.on("make video", function(){
 });
 */
 socket.on('addVote', function (data) {
-    console.log("received from socket" + JSON.stringify(data));
+  console.log("received from socket" + JSON.stringify(data));
+  var results = "";
     //visionProvider.addVote(function(error){
-    if(data.vote != ""){
+      if(data.vote != ""){
        if(data.vote != null){
-      console.log("updating vote");
-      visionProvider.addVote(data._id, data.vote, function(err, result){
-        if(err) console.log(err);
-        console.log("VOTE RESULTS ARE "+JSON.stringify(result));
-      });
+        console.log("updating vote");
+        visionProvider.addVote(data._id, data.vote, function(err, result){
+          if(err) console.log(err);
+          results = result;
+          console.log("VOTE RESULTS ARE "+JSON.stringify(result));
+          if(data.like != null){
+            visionProvider.addLike(data._id, data.like, function(error, likes){
+            if(error) console.log(error);
+            console.log("NUMBER OF LIKES IS "+ likes);
+            visionProvider.getRandom(function(error, vision){
+              if(error) console.log(error);
+              var result = {};
+              result["rating"] = results;
+              result["likes"] = likes;
+              var visionJson = JSON.stringify(vision);
+         // console.log("the result is " + visionJson);
+            //res.render('rating.jade', {visionData: visionJson});
+
+            io.sockets.in(socket.id).emit('showResults', vision);
+          //});
+          });
+          });
+         } 
+
+
+       });
+      }
     }
-    }
-    if(data.like != null){
-     visionProvider.addLike(data._id, data.like, function(error, result){
-      if(error) console.log(error);
-    });
-    } 
-     visionProvider.getRandom(function(error, result){
-    if(error) console.log(error);
-    var visionJson = JSON.stringify(result);
- // console.log("the result is " + visionJson);
-    //res.render('rating.jade', {visionData: visionJson});
-    io.sockets.in(socket.id).emit('newVision', visionJson);
-  //});
-  });
+
     
-});
+  });
 
 socket.on('updateVision', function (data){
  console.log("updated added in socket!!!!!!!!!!HEYYYYY!!!!!  "+JSON.stringify(data));
@@ -784,11 +794,14 @@ socket.on('updateVision', function (data){
 
 socket.on('deleteVision', function(data){
  console.log(" deleting "+ JSON.stringify(data));
+ fileSystem.remove(data, visionProvider);
  //if(data.parent && data.parent.length == 24) visionProvider.removeFromParent(data.parent, data._id, data.children);
  //if(data.children && data.children.length == 24) visionProvider.removeParent(data.parent, data._id);
- visionProvider.removeVision(data);
+
 
 });
+
+
 
 });
 

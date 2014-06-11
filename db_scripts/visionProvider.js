@@ -14,7 +14,7 @@ var gallery_fields = { smallPath: 1, imgPath: 1};
 var gallery_admin_fields = { smallPath: 1, date:1, vision: 1, show_timeline: true};
 var admin_fields = { imgPath: 1, vision: 1, year:1, inspiration:1, tags: 1, date:1, name: 1, adminTags: 1, children: 1, parent: 1, show_rating:1, show_timeline:1, museum:1, show_projection:1};
 var timeline_fields = { imgPath: 1, mediumPath: 1, smallPath: 1, vision: 1, year:1, museum: 1};
-
+var image_fields = { imgPath: 1, mediumPath: 1, smallPath: 1};
 
 VisionProvider = function (host, port) {
     this.db = new Db('futures', new Server(host, port, { safe:true, auto_reconnect: true }, {}));
@@ -204,8 +204,10 @@ VisionProvider.prototype.addVote = function(id, vote, callback){
                       var voteResults = {};
                       var unlikelihood = 0;
 
-                      var newYear = parseInt(result.year);
-                      
+                      var newYear = 2050; 
+                      if(result.year){
+                        newYear = parseInt(result.year);
+                      }
                       if(result.vote_results){
                          var totalYears = parseInt(result.vote_results.year_count) + yearCount;
                       var yearSum = parseInt(result.vote_results.year_sum)+yearAdd;
@@ -214,14 +216,14 @@ VisionProvider.prototype.addVote = function(id, vote, callback){
                                             voteResults = {
                       'year':newYear,
                       'unlikelihood': unlikelihood
-                    };
-                  } else {
-                      if(yearCount==1) {
-                        newYear = (vote+parseInt(result.year))/2;
+                      };
                       } else {
-                        unlikelihood = 0.5;
+                          if(yearCount==1) {
+                            newYear = (vote+parseInt(result.year))/2;
+                          } else {
+                            unlikelihood = 0.5;
+                          }
                       }
-                  }
                       console.log("the new year is "+ newYear + "LIKELIHOOD "+unlikelihood);
                     roundedNewYear = Math.round(newYear).toString();
                       var update = {'$push':{'vote_results.votes':voteDate},
@@ -247,21 +249,35 @@ VisionProvider.prototype.addVote = function(id, vote, callback){
 }
 
 VisionProvider.prototype.addLike = function(visionId, likeVal, callback){
-        var id = new ObjectId(visionId.toString());
+      var id = new ObjectId(visionId.toString());
        this.getCollection(function (error, vision_collection) {
-          var update =  {"$inc": {'views': 1}};
-          if(likeVal == true) update =  {"$inc": {'views': 1, 'likes':1}};
-           vision_collection.update(
-               // {_id: vision_collection.db.bson_serializer.ObjectID.createFromHexString(visionId)},
-               {_id: id},
-              update,
-               function(error, vision){
-                if( error ) callback(error, null);
-                console.log("updated :" + JSON.stringify(vision));
-                callback(null, vision)
-            });
+          vision_collection.findOne( {_id: id}, { likes: 1, views: 1, like_percent: 1}, function(error, result){
+            console.log("LIKE DATA "+ JSON.stringify(result));
+              var likes = 0;
+              var views = 0;
+              if(result.likes) likes = result.likes;
+              if(result.views) views = result.views;
+              views++;
+              if(likeVal == true) likes++;
+              var likePercent = likes/views;
+              console.log("likes are: " + likes + " views are: " + views + "like perecent is: "+ likePercent);
+              var update = {"$set": {'likes': likes, 'views': views, 'like_percent':likePercent}};
+           //   var update =  {"$inc": {'views': 1}};
+            //  if(likeVal == true) update =  {"$inc": {'views': 1, 'likes':1}};
+               vision_collection.update(
+                   // {_id: vision_collection.db.bson_serializer.ObjectID.createFromHexString(visionId)},
+                   {_id: id},
+                  update,
+                   function(error, vision){
+                    if( error ) callback(error, null);
+                    //console.log("updated :" + JSON.stringify(vision));
+                    callback(null, likes);
+                });
+
+          });
+         
        });
- } ;
+ };
 
 VisionProvider.prototype.addRandom = function(callback){
     //var random = Math.random();
@@ -666,43 +682,8 @@ VisionProvider.prototype.updateVision = function (id, vision, callback) {
             });
         }
     });
-};
+}; 
 
-VisionProvider.prototype.removeVision = function (id) {
-    console.log("removing id" + id);
-    this.getCollection(function (error, vision_collection) {
-        if (error) callback(error);
-        else {
-            id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
-          var objectId = new ObjectId(id.toString());
-           vision_collection.findOne(
-                //{ _id: id }, 
-                {_id: objectId},  detailed_fields,
-                function (error, result) {
-                    if (error) {
-                      console.log("error on delete: "+error);
-                    } else {
-                        if(result.parent && result.parent.length == 24) {
-                          console.log("removing from parent");
-                          removeFromParent(result.parent, objectId, result.children, vision_collection);
-                        } else if(result.children.length >= 0){
-                           console.log("removing from children");
-                          removeFromChildren(objectId, vision_collection);
-                        } else {
-                          console.log("straight remove");
-                           vision_collection.remove(
-                                 {_id: objectId}
-                                 );
-       
-                        }
-                        
-                    }
-          });
-         }
-        //}
-    });
-           
-};
 
 
 VisionProvider.prototype.save = function (visions, callback) {
@@ -761,20 +742,101 @@ VisionProvider.prototype.saveGallery = function (gallery, callback) {
 
 
 function addThisChild(parentId, childId, vision_collection, callback){
-    var vision_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(parentId.toString());
-      var query = {_id: vision_id};
-     var update = {'$push':{'children':childId}};
-                   
-      vision_collection.update(query, update, function(err){
-        if(err) callback(err);
-        callback(null);
-      });
+  var vision_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(parentId.toString());
+  var query = {_id: vision_id};
+  var update = {'$push':{'children':childId}};
+
+  vision_collection.update(query, update, function(err){
+    if(err) callback(err);
+    callback(null);
+  });
 }
+
+VisionProvider.prototype.removeVision = function (id, callback) {
+  console.log("removing id" + id);
+  this.getCollection(function (error, vision_collection) {
+    if (error) callback(error);
+    else {
+      /* Delete reference to element from parent element*/
+      var this_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
+      var query = {children: this_id};
+      var update = {$pull: { children: this_id }};
+
+      vision_collection.update(query, update, function(err){
+        if(err) console.log("error removing from parent "+ err);
+
+      });
+      /* Delete reference to element from child elements*/
+      var idString = id.toString();
+      var childQuery = {parent: idString};
+      var childUpdate =  { $set: {parent: null}};
+
+      vision_collection.update(childQuery, childUpdate, function(err){
+       if(err) console.log("error removing from parent "+ err);
+     });
+
+        vision_collection.findOne(
+                //{ _id: id }, 
+                {_id: this_id},  image_fields,
+                function (error, imgPaths) {
+                    if (error) {
+                      callback(error, null);
+                     }  else {
+                      vision_collection.remove(
+                                 {_id: this_id}
+                                 );
+        
+                        callback(null, imgPaths);
+                        //TO DO : ADD remove from database!!
+                      }
+                    });
+        //}
+   
+    }
+  });
+};
+/*    
+
+VisionProvider.prototype.removeVision = function (id) {
+    console.log("removing id" + id);
+    this.getCollection(function (error, vision_collection) {
+        if (error) callback(error);
+        else {
+            id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
+        //  var objectId = new ObjectId(id.toString());
+           vision_collection.findOne(
+                //{ _id: id }, 
+                {_id: id},  detailed_fields,
+                function (error, result) {
+                    if (error) {
+                      console.log("error on delete: "+error);
+                    } else {
+                        if(result.parent && result.parent.length == 24) {
+                          console.log("removing from parent");
+                          removeFromParent(result.parent, id, result.children, vision_collection);
+                        } else if(result.children.length >= 0){
+                           console.log("removing from children");
+                          removeFromChildren(objectId, vision_collection);
+                        } else {
+                          console.log("straight remove");
+                           vision_collection.remove(
+                                 {_id: id}
+                                 );
+       
+                        }
+                        
+                    }
+          });
+         }
+        //}
+    });
+           
+};
 
 function removeFromParent(parent, id, children, vision_collection){
       var parent_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(parent.toString());
       //var this_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
-      var this_id = id.toString();
+      var this_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
       var query = {children: this_id};
       var update = {$pull: { children: this_id }};
       console.log("children is "+ JSON.stringify(children));
@@ -789,25 +851,27 @@ function removeFromParent(parent, id, children, vision_collection){
         } else {
          /* vision_collection.remove(
                                  {_id: this_id}
-                                 );*/
+                                 );
         }
     });
-      var child_query = {parent: this_id};
-      var child_update = { $set: {parent: parent_id}};
+ var id = parent.toString();
+     var child_query = {parent: id};
+      var child_update = { $set: {parent: parent.toString()}};
       vision_collection.update(child_query, child_update, function(err){
         if(err) {
           console.log("error updating children "+ err);
         } else {
           /*vision_collection.remove(
                                  {_id: this_id}
-                                 );*/
+                                 );
         }
     });
        
 };
 
 function removeFromChildren(objectId, vision_collection){
-     var child_query = {parent: objectId};
+  var id = objectId.toString();
+     var child_query = {parent: id};
       var child_update = { $set: {parent: null}};//TO DO check how parent is stored
       vision_collection.update(child_query, child_update, function(err){
         if(err) {
@@ -816,6 +880,6 @@ function removeFromChildren(objectId, vision_collection){
         }
     });
 
-}
+}*/
 
 exports.VisionProvider = VisionProvider;
