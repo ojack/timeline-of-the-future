@@ -122,7 +122,7 @@ VisionProvider.prototype.findTimelineCollection= function(tag, limit, callback){
                 var numberLiked = (limit - curated_results.length)/2;
                 console.log("FOUND "+ JSON.stringify(curated_results));
                 console.log("finding the "+ numberLiked + " most recent");
-                vision_collection.find(timeline_query, timeline_fields).limit(numberLiked).sort({like_percent: -1}).toArray(function (error, liked_results) {
+                vision_collection.find(liked_query, timeline_fields).limit(numberLiked).sort({like_percent: -1}).toArray(function (error, liked_results) {
                   var first_merge = _.union(curated_results, liked_results);
                   console.log("num curated " + curated_results.length + " num_liked "+ liked_results.length + " merged length "+ first_merge.length);
                   /* remaining to add are most recently added ideas*/
