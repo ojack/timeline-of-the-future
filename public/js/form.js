@@ -6,7 +6,7 @@ var params = "parm default";
 var socketLoc;
 var myDropzone;
 var admin_fields = ["vision", "year", "inspiration", "tags", "adminTags", "name", "_id", "notes"];
-var admin_checkboxes = ["show_rating", "show_timeline", "museum", "show_projection"];
+var admin_checkboxes = ["show_timeline", "museum","always_visible"];
 /*Dropzone.options.dropzone = {
   paramName: "file", // The name that will be used to transfer the file
   init: function() {
@@ -251,7 +251,7 @@ window.open(url);
 
 
 function updateHandler(data){
-  // window.location.href = "visions";
+  
   location.reload();
 }
 

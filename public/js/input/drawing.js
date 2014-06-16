@@ -153,6 +153,7 @@ DrawingView.prototype =
   	params["show_rating"] = true;
   	params["show_timeline"] = true;
   	params["show_projection"] = true;
+  	params["always_visible"] = false;
   	params["parent"]= this.parent_id;
   	params["museum"] = false;
   	params["eventArray"] = this.drawingBackground.eventArray;

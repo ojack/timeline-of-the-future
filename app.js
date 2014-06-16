@@ -143,7 +143,7 @@ app.get('/timeline', function(req, res){
   var tag = "";
   if(req.query.tag) {
     console.log("finding tag "+req.query.tag);
-     visionProvider.findByTag(req.query.tag, function(error, visions){
+    visionProvider.findByTag(req.query.tag, function(error, visions){
     if(error) {
       console.log(error);
     } else {
@@ -490,7 +490,8 @@ app.get('/:id', function(req, res) {
 });
 
 function displayTimeline(req, res, visionProvider, jadeTemplate) {
-    visionProvider.findTimeline(function(err, result){
+   // visionProvider.findTimeline(function(err, result){
+    visionProvider.findTimelineCollection("hey", 100, function(err, result){
         //console.log("result is "+ nodes.length);
       /*  for(var i = 0; i < result.length; i++){
           process.stdout.write(result[i] + " ");
@@ -747,6 +748,28 @@ socket.on("make video", function(){
     });
 });
 */
+
+socket.on('addVoteResults', function (data) {
+  visionProvider.addVoteResults(data, function(err){
+    if(err){ console.log(err);
+    }else {
+    /* if(data.like != null){
+      visionProvider.addLike(data._id, data.like, function(error, likes){
+        if(error) console.log(error);
+        //console.log("NUMBER OF LIKES IS "+ likes);
+      
+      });
+    } */
+  }
+});
+ /*   visionProvider.getRandom(function(error, vision){
+          if(error) console.log(error);
+         
+          var visionJson = JSON.stringify(vision);
+            io.sockets.in(socket.id).emit('newVision', vision);
+      });*/
+});
+
 socket.on('addVote', function (data) {
   console.log("received from socket" + JSON.stringify(data));
   var results = "";
@@ -771,7 +794,7 @@ socket.on('addVote', function (data) {
          // console.log("the result is " + visionJson);
             //res.render('rating.jade', {visionData: visionJson});
 
-            io.sockets.in(socket.id).emit('showResults', vision);
+            io.sockets.in(socket.id).emit('newVision', vision);
           //});
           });
           });

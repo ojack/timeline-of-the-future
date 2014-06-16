@@ -3,17 +3,19 @@ var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var BSON = require('mongodb').pure().BSON;
 var ObjectId = require('mongodb').ObjectID;
+var _ = require('lodash');
 
 var vision_fields = { imgPath: 1, vision: 1, year:1};//fields returned for general display of visions
 var vision_query = {};
 var timeline_query = {_id: { $ne: "gallery" }, show_timeline: true, mediumPath: { $exists: true } };
+var curated_query = {_id: { $ne: "gallery" }, show_timeline: true, always_visible: true, mediumPath: { $exists: true } };
 var query_params = { _id: { $ne: "gallery" } };
 var detailed_fields = { imgPath: 1, vision: 1, year:1, smallPath:1, inspiration:1, tags: 1, date:1, name: 1, parent:1, children: 1};
 var thumb_fields = { smallPath: 1, vision:1};
 var gallery_fields = { smallPath: 1, imgPath: 1};
 var gallery_admin_fields = { smallPath: 1, date:1, vision: 1, show_timeline: true};
-var admin_fields = { imgPath: 1, vision: 1, year:1, inspiration:1, tags: 1, date:1, name: 1, adminTags: 1, children: 1, parent: 1, show_rating:1, show_timeline:1, museum:1, show_projection:1};
-var timeline_fields = { imgPath: 1, mediumPath: 1, smallPath: 1, vision: 1, year:1, museum: 1};
+var admin_fields = { imgPath: 1, vision: 1, year:1, inspiration:1, tags: 1, date:1, name: 1, adminTags: 1, children: 1, parent: 1, show_timeline:1, always_visible:1, museum:1};
+var timeline_fields = { mediumPath: 1, smallPath: 1, vision: 1, year:1, museum: 1};
 var image_fields = { imgPath: 1, mediumPath: 1, smallPath: 1};
 
 VisionProvider = function (host, port) {
@@ -108,6 +110,49 @@ VisionProvider.prototype.findTimeline = function (callback) {
         });
 };
 
+VisionProvider.prototype.findTimelineCollection= function(tag, limit, callback){
+    this.getCollection(function (error, vision_collection) {
+    if (error) callback(error)
+        else {
+            vision_collection.find(curated_query, timeline_fields).limit(limit).toArray(function (error, curated_results) {
+              if(error){ 
+                callback(error, null);
+              } else {
+                var numberLiked = (limit - curated_results.length)/2;
+                console.log("FOUND "+ JSON.stringify(curated_results));
+                console.log("finding the "+ numberLiked + " most recent");
+                vision_collection.find(timeline_query, timeline_fields).limit(numberLiked).sort({like_percent: -1}).toArray(function (error, liked_results) {
+                  var first_merge = _.union(curated_results, liked_results);
+                  console.log("num curated " + curated_results.length + " num_liked "+ liked_results.length + " merged length "+ first_merge.length);
+                  /* remaining to add are most recently added ideas*/
+                  var remaining = limit - first_merge.length;
+                /*get most recently added*/
+                  vision_collection.find(timeline_query, timeline_fields).limit(remaining).sort({date: -1}).toArray(function (error, recent_results) {
+                      var merged_result = _.union(first_merge, recent_results);
+                     // var uniqueList = _.uniq(merged_result, _id);
+                     var sorted_result = _.sortBy(merged_result, ['year', 'mediumPath']);
+                     var uniqueList = _.uniq(sorted_result, true, function(item, key, mediumPath) { 
+                      console.log(item);
+                       return item.mediumPath;
+                      });
+                      console.log(" merged length was " + merged_result.length + "unique length is " + uniqueList.length);
+
+                      callback(null, uniqueList);
+                  });
+                });
+              }
+            });
+
+
+         /*   vision_collection.find( { $or: [{tags: tag}, {adminTags: tag} ]}, vision_fields).toArray(function (error, results) {
+            vision_collection.find( { $or: [{tags: tag}, {adminTags: tag} ]}, vision_fields).toArray(function (error, results) {
+                if (error) callback(error)
+                    else callback(null, results)
+                });*/
+        }
+    });
+};
+
 VisionProvider.prototype.findGallery = function (callback) {
     this.getCollection(function (error, vision_collection) {
         if (error) callback(error)
@@ -160,99 +205,46 @@ VisionProvider.prototype.findByTag = function(tag, callback){
                 });
         }
     });
-}
+};
 
-///NOT YET IMPLEMENTED: GET DRAWINGS FOR DRAWING APP
-/*VisionProvider.prototype.getDrawings = function(callback){
-  this.getCollection(function(error, vision_collection){
-    if(error) callback(null, error);
-     vision_collection.find( { "drawingPath" : { "$exists" : true } }).toArray(function (error, results) {
-                if (error) callback(error)
-                    else callback(null, results)
-                });
 
-  }
-}*/
+
 
 /*Each vote is added to an array for each document ("vote_results.vote", containing all votes and the date that the vote was made. Eventually these could be used to
 show voting trends for a particular idea over time. Because a user can either choose a year in the future, or choose "never", the votes are aggregated into two separate results.
 1) year value: The "year" is calculated by adding all of the numerical votes together ("year_sum"), and dividing by the number of numerical votes ("year_count").
 2) the likelihood is the % of people who say that something is never going to happen, equivalent to never_count/total count*/
-VisionProvider.prototype.addVote = function(id, vote, callback){
-  this.getCollection(function(error, vision_collection){
-      if(error) callback(error);
-     var vision_id = id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
-      var voteDate = {};
-      voteDate[new Date()]=vote;
-      var neverCount = 0;
-      var yearCount = 0;
-      var yearAdd = 0;
-      if(vote=="never"){
-        neverCount = 1;
-      } else {
-        yearAdd = parseInt(vote);
-        yearCount = 1;
-      }
-       console.log("updating:" + id + " year add "+yearAdd + ' year_count '+yearCount);
-      var query = {_id: vision_id};
-      var roundedNewYear;
-      vision_collection.findOne(query,
-                function (error, result) {
-                    if (error){ callback(error, null)
-                    } else {
-                     
-                      var voteResults = {};
-                      var unlikelihood = 0;
 
-                      var newYear = 2050; 
-                      if(result.year){
-                        newYear = parseInt(result.year);
-                      }
-                      if(result.vote_results){
-                         var totalYears = parseInt(result.vote_results.year_count) + yearCount;
-                      var yearSum = parseInt(result.vote_results.year_sum)+yearAdd;
-                      newYear = yearSum/totalYears;
-                      unlikelihood = (result.vote_results.never_count+neverCount)/(result.vote_results.total_count+1);
-                                            voteResults = {
-                      'year':newYear,
-                      'unlikelihood': unlikelihood
-                      };
-                      } else {
-                          if(yearCount==1) {
-                            newYear = (vote+parseInt(result.year))/2;
-                          } else {
-                            unlikelihood = 0.5;
-                          }
-                      }
-                      console.log("the new year is "+ newYear + "LIKELIHOOD "+unlikelihood);
-                    roundedNewYear = Math.round(newYear).toString();
-                      var update = {'$push':{'vote_results.votes':voteDate},
-                    '$inc':{
-                      'vote_results.year_count': yearCount,
-                      'vote_results.never_count': neverCount,
-                      'vote_results.total_count': 1,
-                      'vote_results.year_sum': yearAdd
-                    },
+
+VisionProvider.prototype.addVoteResults = function(data, callback){
+     this.getCollection(function(error, vision_collection){
+      if(error) callback(error);
+     var vision_id =  vision_collection.db.bson_serializer.ObjectID.createFromHexString(data._id.toString());
+       var voteDate = {};
+      voteDate[new Date()]=data.vote;
+     var query = {_id: vision_id};
+         var update = {'$push':{'vote_results.votes':voteDate},
                     '$set':{
-                      'year':roundedNewYear,
-                      'unlikelihood': unlikelihood
+                      'year':data.year,
+                      'unlikelihood': data.unlikelihood,
+                      'vote_results.year_count': data.year_count,
+                      'vote_results.never_count':  data.never_count,
+                      'vote_results.total_count': data.total_count,
                     }};
-                      console.log("updating with "+JSON.stringify(update));
-      vision_collection.update(query, update, { multi: true }, function(err){
-        if(err) callback(err);
-        callback(null, voteResults);
+        vision_collection.update(query, update, { multi: true }, function(err){
+            if(err) callback(err);
+            callback(null);
       });
-           }          
-       });
-      
-  });
+   });
 }
+
+
 
 VisionProvider.prototype.addLike = function(visionId, likeVal, callback){
       var id = new ObjectId(visionId.toString());
        this.getCollection(function (error, vision_collection) {
           vision_collection.findOne( {_id: id}, { likes: 1, views: 1, like_percent: 1}, function(error, result){
-            console.log("LIKE DATA "+ JSON.stringify(result));
+          //  console.log("LIKE DATA "+ JSON.stringify(result));
               var likes = 0;
               var views = 0;
               if(result.likes) likes = result.likes;
@@ -260,7 +252,7 @@ VisionProvider.prototype.addLike = function(visionId, likeVal, callback){
               views++;
               if(likeVal == true) likes++;
               var likePercent = likes/views;
-              console.log("likes are: " + likes + " views are: " + views + "like perecent is: "+ likePercent);
+             // console.log("likes are: " + likes + " views are: " + views + "like perecent is: "+ likePercent);
               var update = {"$set": {'likes': likes, 'views': views, 'like_percent':likePercent}};
            //   var update =  {"$inc": {'views': 1}};
             //  if(likeVal == true) update =  {"$inc": {'views': 1, 'likes':1}};
@@ -364,18 +356,18 @@ VisionProvider.prototype.addRandom = function(callback){
 }
 
 function findRandom(random, vision_collection, callback){
-     vision_collection.findOne({_id: { $ne: "gallery" },   show_rating:true, rand : { $gte : random }}, 
+     vision_collection.findOne({_id: { $ne: "gallery" },  museum :false, rand : { $gte : random }}, 
                     function (error, result) {
 
                     if (error) callback(error, null);
                     if(result==null){
-                         vision_collection.findOne({_id: { $ne: "gallery" }, show_rating:1, rand : { $lte : random }}, function (error, result){
+                         vision_collection.findOne({_id: { $ne: "gallery" }, museum:false, rand : { $lte : random }}, function (error, result){
                             if (error){
                               callback(error, null);
                             } else {
                               if(result==null){
                                 var newRand = Math.random();
-                                console.log("COULD NOT FIND RAND");
+                              console.log("COULD NOT FIND RAND");
                                 findRandom(newRand, vision_collection, callback);
                                // callback(null, null);
                               } else {
@@ -390,7 +382,7 @@ function findRandom(random, vision_collection, callback){
 
                     } else {
                         result.rand = Math.random();
-                           console.log("db result is" + JSON.stringify(result));
+                       //    console.log("db result is" + JSON.stringify(result));
                             vision_collection.save(result);
                                     callback(null, result);
                                
@@ -423,8 +415,8 @@ VisionProvider.prototype.findForTimeline = function (visionId, callback) {
    if(id.length != 24) callback(" not valid ID "+ id + "length" + id.length + " type " + typeof id, null);
    this.getCollection(function (error, vision_collection) {
     if (error) callback(error)
-        console.log("ID type is " + typeof id)
-        console.log("id is " + id)
+      //  console.log("ID type is " + typeof id)
+       // console.log("id is " + id)
    /* if(typeof id == 'string') {
         console.log("getting object");
         id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
@@ -597,7 +589,7 @@ VisionProvider.prototype.updateTimelineVisibility = function (visionId, visibili
             vision_collection.update(
                // {_id: vision_collection.db.bson_serializer.ObjectID.createFromHexString(visionId)},
                {_id: id},
-               {"$set": {'show_timeline': visibility, "show_rating": visibility}},
+               {"$set": {'show_timeline': visibility}},
                function(error, vision){
                 if( error ) callback(error, null);
                // console.log("updated :" + JSON.stringify(vision));

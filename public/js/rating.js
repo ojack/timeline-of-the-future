@@ -29,7 +29,7 @@ $(function() {
     var params = {'_id':visionData._id, 'like': like, 'vote':vote};
       console.log(vote);
      showResults(params);
-    
+      socket.emit('newRandom',  {'_id':visionData._id, 'like': like});
      resetSlider();
   });
 
@@ -79,6 +79,7 @@ function connectToSocket(){
   socket = io.connect(socketLoc);
   socket.on('newVision', function (data) {
    visionData = jQuery.parseJSON(data);
+   console.log("data is "+ visionData);
     showVision(visionData);
     //socket.emit('my other event', { my: 'data' });
   });
@@ -91,7 +92,7 @@ function connectToSocket(){
 
 function showVision(data){
   resetLike();
-	 console.log(JSON.stringify(data));
+	 console.log("data is" + JSON.stringify(data));
    $('#vision-text').html("");
 	$('#image').css('background-image', 'url(' + data.imgPath + ')');
 	$('#vision-text').html(data.vision);
@@ -100,17 +101,19 @@ function showVision(data){
         });
 }
 
+/*calculate results based off of new votes and send to server*/
 function showResults(params){
     console.log(JSON.stringify(params));
     var likes = 0;
     var never_count = 0;
-    var vote_count = 0;
+    var total_count = 0;
+    var year_count = 0;
     var new_year = 2014;
     var year_avg = new Date().getFullYear();
-    if(visionData.vote_results){
 
+    if(visionData.vote_results){
       never_count = visionData.vote_results.never_count;
-      vote_count = visionData.vote_results.total_count;
+     total_count = visionData.vote_results.total_count;
       year_count = visionData.vote_results.year_count;
       if(visionData.year != null) {
         year_avg == visionData.year;
@@ -119,7 +122,7 @@ function showResults(params){
             year_avg = params.vote;
           }
       } 
-    }
+     }
       var new_year = year_avg;
       if(params.vote == "NEVER"){
         never_count++;
@@ -127,24 +130,29 @@ function showResults(params){
         new_year = Math.round((year_avg*year_count + params.vote)/(year_count+1));
         year_count++;
       }
-       vote_count++;
-       var likelihood = Math.round(never_count/vote_count*100);
+      total_count++;
+       var unlikelihood = Math.round(never_count/total_count*100);
        if(visionData.likes) likes = visionData.likes;
        if(like) likes++;
-      alert("previous info : "+ JSON.stringify(visionData.vote_results) +"previous average year "+ year_avg +  "Your answer " + params.vote + " Average : "+ new_year + "   "+ likelihood+"% said NEVER! " + likes + "likes");
+    //  alert("previous info : "+ JSON.stringify(visionData.vote_results) +"previous average year "+ year_avg +  "Your answer " + params.vote + " Average : "+ new_year + "   "+ unlikelihood+"% said NEVER! " + likes + "likes");
 
-   }
+   //}
 
    params.never_count = never_count;
-   params.vote_count = vote_count;
-   {'_id':visionData._id, 'like': like, 'vote':vote};
+   params.total_count = total_count;
+   params.year_count = year_count;
+   params.year = new_year;
+   params.unlikelihood = unlikelihood;
+   params.likes = likes;
+   console.log(JSON.stringify(params));
+  // {'_id':visionData._id, 'like': like, 'vote':vote};
 
    // var never_percent = visionData.vote_results
  //  alert("")
  // console.log(JSON.stringify(data));
 
 
-  // socket.emit('addVote', params);
+  socket.emit('addVoteResults', params);
 
 
 }
