@@ -356,7 +356,7 @@ VisionProvider.prototype.addRandom = function(callback){
 }
 
 function findRandom(random, vision_collection, callback){
-     vision_collection.findOne({_id: { $ne: "gallery" },  museum :false, rand : { $gte : random }}, 
+     vision_collection.findOne({_id: { $ne: "gallery" },  show_timeline: true, museum :false, rand : { $gte : random }}, 
                     function (error, result) {
 
                     if (error) callback(error, null);
