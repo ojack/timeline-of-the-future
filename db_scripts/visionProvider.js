@@ -8,6 +8,7 @@ var _ = require('lodash');
 var vision_fields = { imgPath: 1, vision: 1, year:1};//fields returned for general display of visions
 var vision_query = {};
 var timeline_query = {_id: { $ne: "gallery" }, show_timeline: true, mediumPath: { $exists: true } };
+var liked_query = {_id: { $ne: "gallery" }, show_timeline: true, likes: { $gte : 4 },  mediumPath: { $exists: true } }; 
 var curated_query = {_id: { $ne: "gallery" }, show_timeline: true, always_visible: true, mediumPath: { $exists: true } };
 var query_params = { _id: { $ne: "gallery" } };
 var detailed_fields = { imgPath: 1, vision: 1, year:1, smallPath:1, inspiration:1, tags: 1, date:1, name: 1, parent:1, children: 1};
