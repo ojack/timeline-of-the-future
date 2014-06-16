@@ -132,7 +132,7 @@ VisionProvider.prototype.findTimelineCollection= function(tag, limit, callback){
                      // var uniqueList = _.uniq(merged_result, _id);
                      var sorted_result = _.sortBy(merged_result, ['year', 'mediumPath']);
                      var uniqueList = _.uniq(sorted_result, true, function(item, key, mediumPath) { 
-                      console.log(item);
+                   //   console.log(item);
                        return item.mediumPath;
                       });
                       console.log(" merged length was " + merged_result.length + "unique length is " + uniqueList.length);
@@ -361,7 +361,7 @@ function findRandom(random, vision_collection, callback){
 
                     if (error) callback(error, null);
                     if(result==null){
-                         vision_collection.findOne({_id: { $ne: "gallery" }, museum:false, rand : { $lte : random }}, function (error, result){
+                         vision_collection.findOne({_id: { $ne: "gallery" }, show_timeline: true, museum:false, rand : { $lte : random }}, function (error, result){
                             if (error){
                               callback(error, null);
                             } else {
