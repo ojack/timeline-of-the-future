@@ -2,8 +2,8 @@
 var numPerRow = 40;
 var numElements = 600;
 
-var hex_width = 80;
-var numRows = 1080/hex_width;
+var hex_width = 100;
+var numRows = 1080/(hex_width)-1;
 
 $(window).load(function() {
     loadVisions();
