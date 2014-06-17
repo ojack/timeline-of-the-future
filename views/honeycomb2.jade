@@ -1,0 +1,31 @@
+!!! 5
+html
+  head
+    meta(charset='UTF-8')
+    title Hexagons in CSS - CodePen
+    link(rel='stylesheet', href='stylesheets/honeycomb2.css', media='screen', type='text/css')
+  body
+    input(type='hidden',id='visionData',value=visionData)
+    input(type='hidden',id='imageData',value=imageData)
+    #hex-container
+      .row.top
+        .hexagon
+          .hexagon-in1
+        .hexagon
+          .hexagon-in1
+            .hexagon-in2
+        .hexagon
+          .hexagon-in1
+            .hexagon-in2
+      .row.even
+        .hexagon
+          .hexagon-in1
+            .hexagon-in2
+        .hexagon
+          .hexagon-in1
+            .hexagon-in2
+        .hexagon
+          .hexagon-in1
+            .hexagon-in2
+    script(src='js/jquery-1.10.2.min.js')
+    script(src='js/input/honeycomb.js')

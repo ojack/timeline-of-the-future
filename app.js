@@ -231,6 +231,28 @@ app.get('/harmony-gallery', function(req, res) {
 });
 });
 */
+app.get('/honeycomb', function(req, res){
+  console.log(req.query.tag);
+  var tag = "";
+  if(req.query.tag) {
+    console.log("finding tag "+req.query.tag);
+     visionProvider.findByTag(req.query.tag, function(error, visions){
+    if(error) {
+      console.log(error);
+    } else {
+      var dataJson = JSON.stringify(visions);
+      res.render('honeycomb2.jade', {
+       visionData: dataJson
+     });
+    }
+  });
+  } else {
+    displayTimeline(req, res, visionProvider, 'honeycomb2.jade');
+  }
+  
+ 
+});
+
 app.get('/gallery', function(req, res) {
  /* imageProvider.findAllThumbs(function(err, result){
   if(err) throw(err);

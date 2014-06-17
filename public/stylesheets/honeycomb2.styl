@@ -1,0 +1,96 @@
+
+transition-all(){
+  -webkit-transition: arguments;
+    -moz-transition: arguments;
+    -o-transition: arguments;
+    -ms-transition: arguments;
+    transition: arguments;
+}
+
+transform-all(){
+  -webkit-transform: arguments;
+  -moz-transform: arguments;
+  -ms-transform: arguments;
+  transform: arguments;
+}
+
+unselectable-all(){
+   -moz-user-select: none; 
+        -khtml-user-select: none; 
+        -webkit-user-select: none; 
+        -o-user-select: none; 
+}
+
+filter-all(){
+  filter: arguments;
+    -webkit-filter: arguments;
+    -moz-filter: arguments;
+    -o-filter: arguments;
+    -ms-filter: arguments;
+}
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+body {
+  background: #000;
+  font-family: 'Open Sans', san-serif;
+  text-align: center;
+  color: #000;
+}
+
+
+#hex-container{
+  background-color: #f00;
+  width: 11000px;
+}
+.row { margin: 0px 0px; 
+text-align: center; 
+}
+.top { margin-top: 0px; text-align: center; }
+.even{ margin-left: 21.6%; }
+.hexagon {
+  overflow: hidden;
+  visibility: hidden;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  /*opacity: 0.8;
+  transform-all: scale(2) rotate(120deg);*/
+  opacity: 1;
+  transform-all: scale(0.9) rotate(120deg);
+ /* -webkit-transform: rotate(120deg);
+  -moz-transform: rotate(120deg);
+  -o-transform: rotate(120deg);
+  transform: rotate(120deg);*/
+  display: inline-block;
+  cursor: pointer;
+ /* width: 150px;
+  height: 300px;*/
+  margin: 0px;
+ /* margin: -100px auto 0 auto;*/
+}
+
+.hexagon-in1 {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  transform-all: rotate(-60deg);
+}
+
+.innerText{
+  position: absolute;
+  top: 100px;
+}
+
+.hexagon-in2 {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  color: #000;
+  visibility: visible;
+  transform-all: rotate(-60deg);
+  
+}
+
+
