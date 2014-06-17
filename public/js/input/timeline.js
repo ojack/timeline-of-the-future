@@ -88,7 +88,7 @@ function loadVisions(){
 
 	}
   setPositions();
-   
+    setAnimation();
 	containerWidth = (timeline.length+1)/2*(ITEM_WIDTH+30);
 container.css('width', containerWidth+"px");
 //$('#container').css('width', "10000px");
@@ -126,7 +126,7 @@ function showElement(_id){
 
 
 function setAnimation(){
- //animation = setInterval(function(){toggleRandom();}, ANIMATION_INTERVAL);    
+ animation = setInterval(function(){toggleRandom();}, ANIMATION_INTERVAL);    
 }
 
 function clearAnimation(){
@@ -196,10 +196,15 @@ function updatePositions(){
 }
 
 function initTimelineObj(data, index){
+    var bgHeight = 1080/4-3;
+  var bgWidth = bgHeight *1400/820;
     var thisObj = data;
     console.log("initializing this "+ data);
     var thisIMG  =  document.createElement('img');
-    thisIMG.src =data.mediumPath;
+    thisIMG.src =data.smallPath;
+    thisIMG.width = bgWidth;
+   
+    thisIMG.height = bgHeight;
     thisIMG.class = "item-image show";// newDiv.prepend('<img class="item-image show" src="'+ data.mediumPath + '" />');
     var item = document.createElement('div');
     item.className = 'item';
@@ -208,7 +213,7 @@ function initTimelineObj(data, index){
 
     item.setAttribute('data-id', data._id);
      var textDiv = document.createElement('h1');
-    if(data.vision){
+    //if(data.vision){
      
       textDiv.innerHTML = data.vision;
       
@@ -218,16 +223,19 @@ function initTimelineObj(data, index){
          textDiv.className = 'item-text show';
       }
        
-      item.appendChild(textDiv);
-    } else {
+      
+   // } else {
        var thatIMG  =  document.createElement('img');
       thatIMG.src =data.mediumPath;
-      thatIMG.class = "front";
+      thatIMG.className = "item-alternate";
       item.appendChild(thatIMG);
-    }
-    background_container.appendChild(thisIMG);
+   // }
+    item.appendChild(textDiv);
+ background_container.appendChild(thisIMG);
+
     thisObj.imgDiv=thisIMG;
     thisObj.textDiv=textDiv;
+    thisObj.itemAlternate = thatIMG;
      thisObj.div=item;
     return thisObj;
    
@@ -262,7 +270,7 @@ function setPositions(){
   var left = 600+ (i/2)*ITEM_WIDTH;
    //var left = (width+30)* index;
  // console.log(timeline[i].vision + " x " + left);
-    var top = 1080/4 + row *400;
+    var top =400 + row *400;
      timeline[i].div.style.position = 'absolute';
   timeline[i].div.style.top = top+'px';
    timeline[i].div.style.left = left+'px';
@@ -280,7 +288,9 @@ function setPositions(){
 
 
 
-function toggleImage(index){
+function toggleImage(i){
+  $(timeline[i].textDiv).toggleClass('show');
+   $(timeline[i].itemAlternate).toggleClass('show');
 	 // var thisItem = container.children().get(index);
    /* visionArray[index].find( ".item-text").toggleClass('show');
     visionArray[index].find( ".item-image").toggleClass('show');*/
@@ -293,11 +303,11 @@ function toggleImage(index){
 }
 
 function toggleRandom(){
-  /*for(var i = 0; i < NUM_ANIMATED; i++){
-    var randIndex = Math.floor((Math.random()*numVisions));
+ for(var i = 0; i < 1; i++){
+    var randIndex = Math.floor((Math.random()*timeline.length));
    // console.log("toggling "+ randIndex);
     toggleImage(randIndex);
-  }*/
+  }
 }
  // Function to slabtext the H1 headings
     function slabTextHeadlines() {

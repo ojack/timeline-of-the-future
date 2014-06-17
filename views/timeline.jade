@@ -8,6 +8,7 @@ head
     link(href="/stylesheets/bootstrap.min.css", rel='stylesheet')
     link(href="/stylesheets/slabtext.css", rel='stylesheet')
     link(href="/stylesheets/timeline.css", rel='stylesheet')
+    link(href="/stylesheets/animation.css", rel='stylesheet')
   body.demos
     input(type='hidden',id='visionData',value=visionData)
     input(type='hidden',id='imageData',value=imageData)
@@ -63,30 +64,58 @@ head
         button.btn.btn-default(type="button", id='back') Back
       div#moreInfo
         #popup-heading Tell us more about your idea
-        form.form-horizontal(value="Send" id="inputForm")
-           fieldset
-            .control-group
-              .input-label-large(for='selectbasic') When will this happen?
-              .controls
-                select#yearSelect(id='year')
-            .control-group
-              label.control-label(for='Submit')
-              .controls
-            fieldset#secondary
-              .control-group
-                .input-label(for='') What inspired you to write this prediction?
-                textarea(rows='6', cols='40', id="inspiration", class="keyboard")
-              .control-group
-                .input-label-large(for='') Tags (e.g. climate, utopia, Oakland)
-                .controls
-                  input#tags.keyboard
-              .control-group
-                .input-label(for='') Name
-                .controls
-                    input#name.keyboard
+          form.form-horizontal(value="Send" id="inputForm")
+             .control-group(id=checkboxes)
+                    p.pull-left What is your idea about? (check all that apply)
+                      .controls.span2
+                        label.checkbox
+                          input#inlineCheckbox1(type='checkbox', value='option1')
+                          | People
+                        label.checkbox
+                          input#inlineCheckbox2(type='checkbox', value='option2')
+                          | Animals
+                        label.checkbox
+                          input#inlineCheckbox3(type='checkbox', value='option3')
+                          | Plants
+                        label.checkbox
+                          input#inlineCheckbox3(type='checkbox', value='option3')
+                          | Land use
+                      .controls.span2
+                        label.checkbox
+                          input#inlineCheckbox1(type='checkbox', value='option1')
+                          | Climate
+                        label.checkbox
+                          input#inlineCheckbox2(type='checkbox', value='option2')
+                          | Food
+                        label.checkbox
+                          input#inlineCheckbox3(type='checkbox', value='option3')
+                          | Water
+                        label.checkbox
+                          input#inlineCheckbox3(type='checkbox', value='option3')
+                          | Energy
+              fieldset
+                .control-group
+                  .input-label-large(for='selectbasic') When will this happen?
+                  .controls
+                    select#yearSelect(id='year')
+                .control-group
+                  label.control-label(for='Submit')
+                  .controls
+                fieldset#secondary
+                  .control-group
+                    .input-label(for='') What inspired you to write this prediction?
+                    textarea(rows='6', cols='40', id="inspiration", class="keyboard")
+                  .control-group
+                    .input-label-large(for='') Tags (e.g. climate, utopia, Oakland)
+                    .controls
+                      input#tags.keyboard
+                  .control-group
+                    .input-label(for='') Name
+                    .controls
+                        input#name.keyboard
         div#bottomButtons
-            button.btn.btn-default.form-btn(type="button", id='Submit') Submit
             button.btn.btn-default.form-btn(type="button", id='Edit') Keep Editing
+            button.btn.btn-default.form-btn(type="button", id='Submit') Submit
     #timeline-date 2034
     #bottom-bar
     button.btn.btn-default(type="button", id='add-new') + Add your prediction!
