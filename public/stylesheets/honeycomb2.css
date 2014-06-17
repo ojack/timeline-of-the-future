@@ -1,10 +1,3 @@
-@import url("http://fonts.googleapis.com/css?family=OpenSans");
-body {
-  background: #000;
-  font-family: 'Open Sans', san-serif;
-  text-align: center;
-  color: #000;
-}
 #hex-container {
   background-color: #f00;
   width: 11000px;

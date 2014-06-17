@@ -124,7 +124,7 @@ function showElement(_id){
     if(_id){
                 socket.emit('findById', _id);
                console.log(" data of clicked " + JSON.stringify($(this).data('id')));
-              // clearAnimation();
+              clearAnimation();
               $("timeline-date").hide();
              }
 }
@@ -205,12 +205,7 @@ function initTimelineObj(data, index){
   var bgWidth = bgHeight *1400/820;
     var thisObj = data;
     console.log("initializing this "+ data);
-    var thisIMG  =  document.createElement('img');
-    thisIMG.src =data.smallPath;
-    thisIMG.width = bgWidth;
-   
-    thisIMG.height = bgHeight;
-    thisIMG.class = "item-image show";// newDiv.prepend('<img class="item-image show" src="'+ data.mediumPath + '" />');
+    
     var item = document.createElement('div');
     item.className = 'item';
    // background_container.appendChild(item);
@@ -218,15 +213,17 @@ function initTimelineObj(data, index){
 
     item.setAttribute('data-id', data._id);
      var textDiv = document.createElement('h1');
-    //if(data.vision){
-     
-      textDiv.innerHTML = data.vision;
-      
-      if(data.museum){
+  if(data.vision){
+       if(data.museum){
         textDiv.className = 'item-text omca show';
       } else {
          textDiv.className = 'item-text show';
       }
+      textDiv.innerHTML = data.vision;
+      } else {
+        textDiv.className = 'item-text-hidden show';
+      }
+     
        
       
    // } else {
@@ -236,10 +233,26 @@ function initTimelineObj(data, index){
       item.appendChild(thatIMG);
    // }
     item.appendChild(textDiv);
-    orderedHoneycomb(data, index, background_container);
- //background_container.appendChild(thisIMG);
+   // orderedHoneycomb(data, index, background_container);
+ 
+     var hex = document.createElement('div');
+    hex.className = 'hexagon';
+ 
+hex.style.width = hex_width+'px';
+  hex.style.height = hex_width*2+'px';
+    var hex1 = document.createElement('div');
+    hex1.className = 'hexagon-in1';
+      var hex2 = document.createElement('div');
+    hex2.className = 'hexagon-in2';
+   
+  
+    hex2.style.backgroundImage="url('"+data.smallPath+"')";
 
-    thisObj.imgDiv=thisIMG;
+   // background_container.appendChild(item);
+   hex.appendChild(hex1);
+  hex1.appendChild(hex2);
+   background_container.appendChild(hex);
+    thisObj.imgDiv=hex;
     thisObj.textDiv=textDiv;
     thisObj.itemAlternate = thatIMG;
      thisObj.div=item;
@@ -255,10 +268,51 @@ function initTimelineObj(data, index){
   }*/
 }
 
+
+function getYear(){
+ 
+  var index = Math.floor((myScroll.x)*(-2/ITEM_WIDTH));
+   
+  if(index < timeline.length){
+    if(index > 0){
+   console.log(myScroll.x + " index is " + index + " year "+ timeline[index].year);
+   timeline_date.innerHTML = Math.round(timeline[index].year);
+ }
+ }
+}
+
+
+function setPositions(){
+  currRow = 0;
+  currCol= 0;
+  var bgHeight = 1080/4-3;
+  var bgWidth = bgHeight *1400/820;
+    for(var i = 0; i < timeline.length; i++){
+       var row = i%2;
+  var left = 600+ (i/2)*ITEM_WIDTH;
+   //var left = (width+30)* index;
+ // console.log(timeline[i].vision + " x " + left);
+    var top =400 + row *400;
+     timeline[i].div.style.position = 'absolute';
+  timeline[i].div.style.top = top+'px';
+   timeline[i].div.style.left = left+'px';
+
+
+   var imgRow = i%4;
+   var imgLeft = (i/4)*bgWidth;
+   var imgTop = imgRow *bgHeight;
+ /*   timeline[i].imgDiv.style.position = 'absolute';
+  timeline[i].imgDiv.style.top = imgTop+'px';
+   timeline[i].imgDiv.style.left = imgLeft+'px';*/
+   orderedHoneycomb(i, timeline[i].imgDiv);
+    
+    }
+}
+
 var currRow = 0;
 var currCol = 0;
 
-function orderedHoneycomb(data, index, hexContainer){
+function orderedHoneycomb(index, hex_object){
   currRow++;
       if(currRow > numRows){
         currRow = 0;
@@ -282,61 +336,10 @@ function orderedHoneycomb(data, index, hexContainer){
   if(currRow%2==0)offset = hex_width/2;
     var left = offset + hex_width* currCol;
   var top= currRow*(hex_width*0.88)-hex_width/2;
-  var hex = document.createElement('div');
-    hex.className = 'hexagon';
-  hex.style.top = top+'px';
-  hex.style.left = left+'px';
-hex.style.width = hex_width+'px';
-  hex.style.height = hex_width*2+'px';
-    var hex1 = document.createElement('div');
-    hex1.className = 'hexagon-in1';
-      var hex2 = document.createElement('div');
-    hex2.className = 'hexagon-in2';
-   
-  
-    hex2.style.backgroundImage="url('"+data.smallPath+"')";
-
-   // background_container.appendChild(item);
-   hex.appendChild(hex1);
-  hex1.appendChild(hex2);
-    hexContainer.appendChild(hex);
-}
-
-function getYear(){
  
-  var index = Math.floor((myScroll.x)*(-2/ITEM_WIDTH));
-   
-  if(index < timeline.length){
-    if(index > 0){
-   console.log(myScroll.x + " index is " + index + " year "+ timeline[index].year);
-   timeline_date.innerHTML = Math.round(timeline[index].year);
- }
- }
-}
+  hex_object.style.top = top+'px';
+  hex_object.style.left = left+'px';
 
-
-function setPositions(){
-  var bgHeight = 1080/4-3;
-  var bgWidth = bgHeight *1400/820;
-    for(var i = 0; i < timeline.length; i++){
-       var row = i%2;
-  var left = 600+ (i/2)*ITEM_WIDTH;
-   //var left = (width+30)* index;
- // console.log(timeline[i].vision + " x " + left);
-    var top =400 + row *400;
-     timeline[i].div.style.position = 'absolute';
-  timeline[i].div.style.top = top+'px';
-   timeline[i].div.style.left = left+'px';
-
-
-   var imgRow = i%4;
-   var imgLeft = (i/4)*bgWidth;
-   var imgTop = imgRow *bgHeight;
-    timeline[i].imgDiv.style.position = 'absolute';
-  timeline[i].imgDiv.style.top = imgTop+'px';
-   timeline[i].imgDiv.style.left = imgLeft+'px';
-    
-    }
 }
 
 
@@ -374,7 +377,7 @@ function toggleRandom(){
       el: document.getElementById('background'),
       resize: false,
       ignoreBoundaries: true,
-      speedRatioX: 0.03
+      speedRatioX: 0.07
     }]
     });
    }

@@ -78,6 +78,9 @@
   background-color: #fff;
   color: #000;
 }
+.item-text-hidden {
+  visibility: hidden;
+}
 .item-text.omca {
   border-style: solid;
   border-width: 40px;
