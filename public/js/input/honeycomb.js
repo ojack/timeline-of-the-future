@@ -55,7 +55,7 @@ function orderedHoneycomb(data, index, hexContainer){
         currCol++;
       }
   while(true){
-     var rowProb = 0.7 - (Math.abs((currRow - numRows/2)/(numRows/2)))*0.7;
+     var rowProb = 0.75 - (Math.abs((currRow - numRows/2)/(numRows/2)))*0.75;
      var randIndex = Math.random();
      if(randIndex > rowProb){
       currRow++;

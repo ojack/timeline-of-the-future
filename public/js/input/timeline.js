@@ -32,6 +32,11 @@ var visionContainer;
 var timeline = [];
 //TO DO : create object that stores data and all objects
 //var xOffset = [0, 0, 0];
+
+/* honeycomb variables*/
+var hex_width = 100;
+var numRows = 1080/(hex_width)-1;
+
 var offset = 0;
 
 $(window).load(function() {
@@ -231,7 +236,8 @@ function initTimelineObj(data, index){
       item.appendChild(thatIMG);
    // }
     item.appendChild(textDiv);
- background_container.appendChild(thisIMG);
+    orderedHoneycomb(data, index, background_container);
+ //background_container.appendChild(thisIMG);
 
     thisObj.imgDiv=thisIMG;
     thisObj.textDiv=textDiv;
@@ -247,6 +253,53 @@ function initTimelineObj(data, index){
     newDiv.html('<h1 class="item-text show" >'+data.vision+'</h1>');
     console.log("showing text "+ data.vision);
   }*/
+}
+
+var currRow = 0;
+var currCol = 0;
+
+function orderedHoneycomb(data, index, hexContainer){
+  currRow++;
+      if(currRow > numRows){
+        currRow = 0;
+        currCol++;
+      }
+  while(true){
+     var rowProb = 0.75 - (Math.abs((currRow - numRows/2)/(numRows/2)))*0.75;
+     var randIndex = Math.random();
+     if(randIndex > rowProb){
+      currRow++;
+      if(currRow > numRows){
+        currRow = 0;
+        currCol++;
+      }
+     } else {
+      break;
+     }
+  }
+  console.log("showing "+ index + " at row " + currRow + " and col " + currCol);
+  var offset = 0;
+  if(currRow%2==0)offset = hex_width/2;
+    var left = offset + hex_width* currCol;
+  var top= currRow*(hex_width*0.88)-hex_width/2;
+  var hex = document.createElement('div');
+    hex.className = 'hexagon';
+  hex.style.top = top+'px';
+  hex.style.left = left+'px';
+hex.style.width = hex_width+'px';
+  hex.style.height = hex_width*2+'px';
+    var hex1 = document.createElement('div');
+    hex1.className = 'hexagon-in1';
+      var hex2 = document.createElement('div');
+    hex2.className = 'hexagon-in2';
+   
+  
+    hex2.style.backgroundImage="url('"+data.smallPath+"')";
+
+   // background_container.appendChild(item);
+   hex.appendChild(hex1);
+  hex1.appendChild(hex2);
+    hexContainer.appendChild(hex);
 }
 
 function getYear(){
@@ -321,7 +374,7 @@ function toggleRandom(){
       el: document.getElementById('background'),
       resize: false,
       ignoreBoundaries: true,
-      speedRatioX: 0.35
+      speedRatioX: 0.03
     }]
     });
    }
