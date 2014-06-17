@@ -2,7 +2,7 @@
 var numPerRow = 40;
 var numElements = 600;
 
-var width = 160;
+var width = 80;
 var numRows = 1080/width;
 
 $(window).load(function() {
@@ -55,7 +55,7 @@ hex.style.width = width+'px';
       var hex2 = document.createElement('div');
     hex2.className = 'hexagon-in2';
     var randIndex = Math.random();
-   if (randIndex > 0.4){
+   if (randIndex > 0.6){
        hex2.style.backgroundImage="";
        var text = document.createElement('div');
        text.className = "innerTest";
