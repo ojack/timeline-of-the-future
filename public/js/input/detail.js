@@ -266,5 +266,6 @@ function initThumbs(){
          // $('#shade').hide();
           $('#detail-backdrop').removeClass('show');
            $("timeline-date").show();
+           setAnimation();
            //$('#detail').hide();
     }

@@ -11,7 +11,7 @@ Main scripts for the timeline go here
 var socket, socketLoc, container, containerWidth, detailView, drawingView;
 var VERT_SPACING = 360;
 var HOR_SPACING = 540;
-var ITEM_WIDTH = 640;
+var ITEM_WIDTH = 760;
 var ITEM_HEIGHT = 200;
 /*var BG_WIDTH = 461;
 var BG_HEIGHT = 270;*/
@@ -332,8 +332,8 @@ function orderedHoneycomb(index, hex_object){
      }
   }
   console.log("showing "+ index + " at row " + currRow + " and col " + currCol);
-  var offset = 0;
-  if(currRow%2==0)offset = hex_width/2;
+  var offset = 300;
+  if(currRow%2==0)offset = 300+ hex_width/2;
     var left = offset + hex_width* currCol;
   var top= currRow*(hex_width*0.88)-hex_width/2;
  
@@ -377,7 +377,7 @@ function toggleRandom(){
       el: document.getElementById('background'),
       resize: false,
       ignoreBoundaries: true,
-      speedRatioX: 0.07
+      speedRatioX: 0.03
     }]
     });
    }
