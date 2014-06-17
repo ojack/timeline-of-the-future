@@ -34,8 +34,8 @@ var timeline = [];
 //var xOffset = [0, 0, 0];
 
 /* honeycomb variables*/
-var hex_width = 100;
-var numRows = 1080/(hex_width)-1;
+var hex_width = 108;
+var numRows = 1080/(hex_width);
 
 var offset = 0;
 
@@ -319,7 +319,8 @@ function orderedHoneycomb(index, hex_object){
         currCol++;
       }
   while(true){
-     var rowProb = 0.75 - (Math.abs((currRow - numRows/2)/(numRows/2)))*0.75;
+  //   var rowProb = 0.75 - (Math.abs((currRow - numRows/2)/(numRows/2)))*0.75; //densest in the middle
+    var rowProb = currRow/numRows;
      var randIndex = Math.random();
      if(randIndex > rowProb){
       currRow++;
