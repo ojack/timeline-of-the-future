@@ -292,7 +292,7 @@ function setPositions(){
   var left = 600+ (i/2)*ITEM_WIDTH;
    //var left = (width+30)* index;
  // console.log(timeline[i].vision + " x " + left);
-    var top =400 + row *400;
+    var top =350 + row *500;
      timeline[i].div.style.position = 'absolute';
   timeline[i].div.style.top = top+'px';
    timeline[i].div.style.left = left+'px';
