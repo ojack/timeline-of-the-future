@@ -292,7 +292,7 @@ function setPositions(){
   var left = 600+ (i/2)*ITEM_WIDTH;
    //var left = (width+30)* index;
  // console.log(timeline[i].vision + " x " + left);
-    var top =350 + row *500;
+    var top =400 + row *450;
      timeline[i].div.style.position = 'absolute';
   timeline[i].div.style.top = top+'px';
    timeline[i].div.style.left = left+'px';
@@ -320,7 +320,7 @@ function orderedHoneycomb(index, hex_object){
       }
   while(true){
   //   var rowProb = 0.75 - (Math.abs((currRow - numRows/2)/(numRows/2)))*0.75; //densest in the middle
-    var rowProb = currRow/numRows;
+    var rowProb = 0.95*(currRow/numRows);
      var randIndex = Math.random();
      if(randIndex > rowProb){
       currRow++;
@@ -332,9 +332,9 @@ function orderedHoneycomb(index, hex_object){
       break;
      }
   }
-  console.log("showing "+ index + " at row " + currRow + " and col " + currCol);
-  var offset = 300;
-  if(currRow%2==0)offset = 300+ hex_width/2;
+ // console.log("showing "+ index + " at row " + currRow + " and col " + currCol);
+  var offset = 30;
+  if(currRow%2==0)offset = 30+ hex_width/2;
     var left = offset + hex_width* currCol;
   var top= currRow*(hex_width*0.88)-hex_width/2;
  
