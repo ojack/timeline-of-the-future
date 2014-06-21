@@ -513,8 +513,8 @@ app.get('/:id', function(req, res) {
 
 function displayTimeline(req, res, visionProvider, jadeTemplate) {
    // visionProvider.findTimeline(function(err, result){
-   // visionProvider.findTimelineCollection("hey", 10, function(err, result){
-    visionProvider.findTaggedCollection("hey", 10, function(err, result){
+   visionProvider.findTimelineCollection("hey", 100, function(err, result){
+  //  visionProvider.findTaggedCollection("hey", 10, function(err, result){
         //console.log("result is "+ nodes.length);
       /*  for(var i = 0; i < result.length; i++){
           process.stdout.write(result[i] + " ");
@@ -713,7 +713,7 @@ socket.on('findById', function (data) {
 
 socket.on('filterCollection', function(data){
     console.log("filter is "+ data);
-     visionProvider.findTaggedCollection(data, 10, function(err, result){
+     visionProvider.findTaggedCollection(data, 100, function(err, result){
       if(err){
         console.log(err);
       } else {
