@@ -35,6 +35,10 @@
 /* width: 150px;
   height: 300px;*/
   margin: 0px;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -ms-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
 /* margin: -100px auto 0 auto;*/
 }
 .hexagon-in1 {
@@ -61,4 +65,5 @@
   -moz-transform: rotate(-60deg);
   -ms-transform: rotate(-60deg);
   transform: rotate(-60deg);
+  background-size: 200%;
 }

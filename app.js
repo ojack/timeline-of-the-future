@@ -22,7 +22,7 @@
 var tempStorage = "./uploads"; //folder location where http requests are posted
 var imageStorage = "../TEST_STORAGE"; //file path to image stoage location
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 8000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
@@ -513,7 +513,8 @@ app.get('/:id', function(req, res) {
 
 function displayTimeline(req, res, visionProvider, jadeTemplate) {
    // visionProvider.findTimeline(function(err, result){
-    visionProvider.findTimelineCollection("hey", 100, function(err, result){
+   // visionProvider.findTimelineCollection("hey", 10, function(err, result){
+    visionProvider.findTaggedCollection("hey", 10, function(err, result){
         //console.log("result is "+ nodes.length);
       /*  for(var i = 0; i < result.length; i++){
           process.stdout.write(result[i] + " ");
@@ -709,6 +710,20 @@ socket.on('findById', function (data) {
    }
   });
   });
+
+socket.on('filterCollection', function(data){
+    console.log("filter is "+ data);
+     visionProvider.findTaggedCollection(data, 10, function(err, result){
+      if(err){
+        console.log(err);
+      } else {
+        var visionJson = JSON.stringify(result);
+          io.sockets.in(socket.id).emit('newVisionCollection', visionJson);
+      }
+     });
+        //console.log("result is "+ nodes.length);
+
+});
 
 socket.on("get next page", function(data){
     console.log("data is "+ JSON.stringify(data));

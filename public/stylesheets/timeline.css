@@ -43,15 +43,6 @@ body {
   -o-transform: translateZ(0);
   transform: translateZ(0);
 }
-#bottom-bar {
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  height: 70px;
-  width: 1920px;
-  opacity: 0.9;
-  background: url("/images/bottom-bar-01.png");
-}
 #timeline-date {
   z-index: 200;
   font-size: 48px;

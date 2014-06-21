@@ -115,6 +115,7 @@ VisionProvider.prototype.findTimelineCollection= function(tag, limit, callback){
     this.getCollection(function (error, vision_collection) {
     if (error) callback(error)
         else {
+            
             vision_collection.find(curated_query, timeline_fields).limit(limit).toArray(function (error, curated_results) {
               if(error){ 
                 callback(error, null);
@@ -122,6 +123,7 @@ VisionProvider.prototype.findTimelineCollection= function(tag, limit, callback){
                 var numberLiked = (limit - curated_results.length)/2;
                 console.log("FOUND "+ JSON.stringify(curated_results));
                 console.log("finding the "+ numberLiked + " most recent");
+
                 vision_collection.find(liked_query, timeline_fields).limit(numberLiked).sort({like_percent: -1}).toArray(function (error, liked_results) {
                   var first_merge = _.union(curated_results, liked_results);
                   console.log("num curated " + curated_results.length + " num_liked "+ liked_results.length + " merged length "+ first_merge.length);
@@ -129,6 +131,49 @@ VisionProvider.prototype.findTimelineCollection= function(tag, limit, callback){
                   var remaining = limit - first_merge.length;
                 /*get most recently added*/
                   vision_collection.find(timeline_query, timeline_fields).limit(remaining).sort({date: -1}).toArray(function (error, recent_results) {
+                      var merged_result = _.union(first_merge, recent_results);
+                     // var uniqueList = _.uniq(merged_result, _id);
+                     var sorted_result = _.sortBy(merged_result, ['year', 'mediumPath']);
+                     var uniqueList = _.uniq(sorted_result, true, function(item, key, mediumPath) { 
+                   //   console.log(item);
+                       return item.mediumPath;
+                      });
+                      console.log(" merged length was " + merged_result.length + "unique length is " + uniqueList.length);
+
+                      callback(null, uniqueList);
+                  });
+                });
+              }
+            });
+}
+});
+};
+
+VisionProvider.prototype.findTaggedCollection= function(tag, limit, callback){
+    this.getCollection(function (error, vision_collection) {
+    if (error) callback(error)
+        else {
+            var tag_curated_query = curated_query;
+            tag_curated_query['tags'] = tag;
+            console.log("looking for "+ JSON.stringify(tag_curated_query));
+            vision_collection.find(tag_curated_query, timeline_fields).limit(limit).toArray(function (error, curated_results) {
+              if(error){ 
+                callback(error, null);
+              } else {
+                var numberLiked = (limit - curated_results.length)/2;
+                console.log("FOUND "+ JSON.stringify(curated_results));
+                console.log("finding the "+ numberLiked + " most recent");
+                  var tag_liked_query = liked_query;
+            tag_liked_query['tags'] = tag;
+                vision_collection.find(tag_liked_query, timeline_fields).limit(numberLiked).sort({like_percent: -1}).toArray(function (error, liked_results) {
+                  var first_merge = _.union(curated_results, liked_results);
+                  console.log("num curated " + curated_results.length + " num_liked "+ liked_results.length + " merged length "+ first_merge.length);
+                  /* remaining to add are most recently added ideas*/
+                  var remaining = limit - first_merge.length;
+                    var tag_timeline_query = timeline_query;
+            tag_timeline_query['tags'] = tag;
+                /*get most recently added*/
+                  vision_collection.find(tag_timeline_query, timeline_fields).limit(remaining).sort({date: -1}).toArray(function (error, recent_results) {
                       var merged_result = _.union(first_merge, recent_results);
                      // var uniqueList = _.uniq(merged_result, _id);
                      var sorted_result = _.sortBy(merged_result, ['year', 'mediumPath']);
@@ -152,6 +197,17 @@ VisionProvider.prototype.findTimelineCollection= function(tag, limit, callback){
                 });*/
         }
     });
+};
+
+VisionProvider.prototype.findMostLiked = function(limit, callback){
+    this.getCollection(function (error, vision_collection) {
+    if (error) callback(error, null)
+        else {
+          vision_collection.find(liked_query, timeline_fields).limit(numberLiked).sort({like_percent: -1}).toArray(function (error, liked_results) {
+             var sorted_result = _.sortBy(liked_results, ['year', 'mediumPath']);
+          });
+        }
+      });
 };
 
 VisionProvider.prototype.findGallery = function (callback) {

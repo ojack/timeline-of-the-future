@@ -11,13 +11,14 @@ Main scripts for the timeline go here
 var socket, socketLoc, container, containerWidth, detailView, drawingView;
 var VERT_SPACING = 360;
 var HOR_SPACING = 540;
-var ITEM_WIDTH = 760;
+var ITEM_WIDTH = 540;
 var ITEM_HEIGHT = 200;
 /*var BG_WIDTH = 461;
 var BG_HEIGHT = 270;*/
 var BG_WIDTH = 614;
 var BG_HEIGHT = 360;
 
+var filters = ['people', 'animals', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
 var timeline_date;
 var numVisions;
 var NUM_ANIMATED = 1;
@@ -44,8 +45,9 @@ $(window).load(function() {
   background_container = document.getElementById("background-texture");
   timeline_date = document.getElementById("timeline-date");
 	connectToSocket();
-	loadVisions();
-    $("#timeline-date").addClass("show");
+	initVisions();
+  initFilters();
+  $("#timeline-date").addClass("show");
 $("#add-new").click(function(){
 
   drawingView.addToTimeline();
@@ -64,21 +66,62 @@ function connectToSocket(){
  
 	socket.on('showPopupData', detailView.showPopupData);
 	socket.on('addToTimeline', addToTimeline);
+  socket.on('newVisionCollection', newVisionCollection);
   socket.on('restart drawing', reloadPage);
+}
+
+function initFilters(){
+  for(var i = 0; i < filters.length; i++){
+    var thisClass = 'filter-button';
+    if(i==0) {
+      thisClass = 'filter-button left';
+  } else if( i==(filters.length-1)){
+       thisClass = 'filter-button right';
+  }
+    var newDiv = jQuery('<div/>', {
+         'class': thisClass
+      });
+
+  /// if(i==0)
+  
+    newDiv.text(filters[i]).attr("id", filters[i]).appendTo("#bottom-bar-filter");
+    $(newDiv).click(function(){
+      $(".filter-button").removeClass('active');
+   $(this).addClass('active'); 
+    socket.emit('filterCollection', event.target.id);
+});
+  }
 }
 
 function reloadPage(){
   location.reload(true);
 }
 
-/*Load all visions from the server*/
-function loadVisions(){
-	visionData = jQuery.parseJSON($('#visionData').val());
+ function newVisionCollection(data){
+        //console.log("adding to timeline "+data);
+       visionData = jQuery.parseJSON(data);
+       loadVisions();
+}
+
+function initVisions(){
+    visionData = jQuery.parseJSON($('#visionData').val());
 
   var galleryData = jQuery.parseJSON($('#imageData').val());
   drawingView = new DrawingView(galleryData);
   numVisions = visionData.length;
-	container = $('#container');
+  container = $('#container');
+  loadVisions();
+}
+
+/*Load all visions from the server*/
+function loadVisions(){
+timeline = [];
+while (this_container.firstChild) {
+    this_container.removeChild(this_container.firstChild);
+}
+/*while (background_container.firstChild) {
+    background_container.removeChild(background_container.firstChild);
+}*/
   //console.log("VISIONS ARE "+ JSON.stringify(visionData));
   //addVision(visionData[0], 0, '#container', 1);
 /* for(var i = 0; i < 2; i++){*/
@@ -223,14 +266,30 @@ function initTimelineObj(data, index){
       } else {
         textDiv.className = 'item-text-hidden show';
       }
-     
+       var that_hex = document.createElement('div');
+    that_hex.className = 'hexagon';
+ 
+that_hex.style.width = ITEM_WIDTH+'px';
+  that_hex.style.height =ITEM_WIDTH*2+'px';
+    var that_hex1 = document.createElement('div');
+    that_hex1.className = 'hexagon-in1';
+      var that_hex2 = document.createElement('div');
+    that_hex2.className = 'hexagon-in2';
+   
+  
+    that_hex2.style.backgroundImage="url('"+data.mediumPath+"')";
+
+   // background_container.appendChild(item);
+   that_hex.appendChild(that_hex1);
+  that_hex1.appendChild(that_hex2);
        
       
    // } else {
-       var thatIMG  =  document.createElement('img');
+    /*  var thatIMG  =  document.createElement('img');
       thatIMG.src =data.mediumPath;
-      thatIMG.className = "item-alternate";
-      item.appendChild(thatIMG);
+      thatIMG.className = "item-alternate";*/
+       item.appendChild(that_hex);
+    //  item.appendChild(thatIMG);
    // }
     item.appendChild(textDiv);
    // orderedHoneycomb(data, index, background_container);
@@ -254,7 +313,8 @@ hex.style.width = hex_width+'px';
    background_container.appendChild(hex);
     thisObj.imgDiv=hex;
     thisObj.textDiv=textDiv;
-    thisObj.itemAlternate = thatIMG;
+    //thisObj.itemAlternate = thatIMG;
+    thisObj.itemAlternate = that_hex;
      thisObj.div=item;
     return thisObj;
    
@@ -347,7 +407,7 @@ function orderedHoneycomb(index, hex_object){
 
 function toggleImage(i){
   $(timeline[i].textDiv).toggleClass('show');
-   $(timeline[i].itemAlternate).toggleClass('show');
+ $(timeline[i].itemAlternate).toggleClass('show');
 	 // var thisItem = container.children().get(index);
    /* visionArray[index].find( ".item-text").toggleClass('show');
     visionArray[index].find( ".item-image").toggleClass('show');*/
@@ -370,8 +430,9 @@ function toggleRandom(){
     function slabTextHeadlines() {
         $(".item-text").slabText({
             // Don't slabtext the headers if the viewport is under 380px
-            "fontRatio": 0.5,
-            "viewportBreakpoint":380
+            "fontRatio": 0.3,
+            //"viewportBreakpoint":380,
+           "maxFontSize":80
         });
         myScroll = new IScroll('#scroll-wrapper', { 
             scrollX: true, scrollY: false, /*momentum: false,*/ tap:true, indicators: [{
