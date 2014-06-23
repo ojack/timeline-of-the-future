@@ -58,6 +58,7 @@ a {
 	height: 200px;
 	bottom: 0px;
 	background: #0f0;
+	background-width: 100%;
 }
 
 #brush-container{
