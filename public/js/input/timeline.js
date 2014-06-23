@@ -265,9 +265,9 @@ function initTimelineObj(data, index){
      var textDiv = document.createElement('h1');
   if(data.vision){
        if(data.museum){
-        textDiv.className = 'item-text show';
+        textDiv.className = 'item-text omca show';
       } else {
-         textDiv.className = 'item-text omca show';
+         textDiv.className = 'item-text show';
       }
       textDiv.innerHTML = data.vision;
       } else {
