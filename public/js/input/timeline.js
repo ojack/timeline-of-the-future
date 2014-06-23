@@ -22,7 +22,7 @@ var filters = ['people', 'animals', 'land use', 'climate', 'food', 'water', 'ene
 var timeline_date;
 var numVisions;
 var NUM_ANIMATED = 1;
-var ANIMATION_INTERVAL = 300;
+var ANIMATION_INTERVAL = 800;
 var visionArray = [];
 var backgroundArray = [];
 var animation;
@@ -48,6 +48,9 @@ $(window).load(function() {
 	initVisions();
   initFilters();
   $("#timeline-date").addClass("show");
+ $("#filter").click(function(){
+       $('#bottom-bar-main').removeClass('show');
+ });
 $("#add-new").click(function(){
 
   drawingView.addToTimeline();
@@ -83,7 +86,11 @@ function initFilters(){
       });
 
   /// if(i==0)
-  
+   $('#bottom-bar-back').click(function(){
+      $(".filter-button").removeClass('active');
+      socket.emit('filterShowAll', '');
+       $('#bottom-bar-main').addClass('show');
+   });
     newDiv.text(filters[i]).attr("id", filters[i]).appendTo("#bottom-bar-filter");
     $(newDiv).click(function(){
       $(".filter-button").removeClass('active');
@@ -258,16 +265,16 @@ function initTimelineObj(data, index){
      var textDiv = document.createElement('h1');
   if(data.vision){
        if(data.museum){
-        textDiv.className = 'item-text omca show';
+        textDiv.className = 'item-text show';
       } else {
-         textDiv.className = 'item-text show';
+         textDiv.className = 'item-text omca show';
       }
       textDiv.innerHTML = data.vision;
       } else {
         textDiv.className = 'item-text-hidden show';
       }
        var that_hex = document.createElement('div');
-    that_hex.className = 'hexagon';
+    that_hex.className = 'hexagon hide';
  
 that_hex.style.width = ITEM_WIDTH+'px';
   that_hex.style.height =ITEM_WIDTH*2+'px';
@@ -349,10 +356,16 @@ function setPositions(){
   var bgWidth = bgHeight *1400/820;
     for(var i = 0; i < timeline.length; i++){
        var row = i%2;
+       var col = Math.floor(i/2);
+        var offset = ITEM_WIDTH;
+  if(col%2==0)offset = offset+ ITEM_WIDTH/2;
+    var left =  ITEM_WIDTH+ (ITEM_WIDTH*0.88)* col;
+  var top= offset + row*(ITEM_WIDTH)-ITEM_WIDTH/2;
+     /*  var row = i%2;
   var left = 600+ (i/2)*ITEM_WIDTH;
    //var left = (width+30)* index;
  // console.log(timeline[i].vision + " x " + left);
-    var top =400 + row *450;
+    var top =200+ row *450;*/
      timeline[i].div.style.position = 'absolute';
   timeline[i].div.style.top = top+'px';
    timeline[i].div.style.left = left+'px';
@@ -393,11 +406,14 @@ function orderedHoneycomb(index, hex_object){
      }
   }
  // console.log("showing "+ index + " at row " + currRow + " and col " + currCol);
-  var offset = 30;
+ /* var offset = 30;
   if(currRow%2==0)offset = 30+ hex_width/2;
     var left = offset + hex_width* currCol;
-  var top= currRow*(hex_width*0.88)-hex_width/2;
- 
+  var top= currRow*(hex_width*0.88)-hex_width/2;*/
+ var offset = 30;
+  if(currCol%2==0)offset = 30+ hex_width/2;
+    var left =  (hex_width*0.88)* currCol;
+  var top= offset + currRow*(hex_width)-hex_width/2;
   hex_object.style.top = top+'px';
   hex_object.style.left = left+'px';
 
@@ -407,7 +423,7 @@ function orderedHoneycomb(index, hex_object){
 
 function toggleImage(i){
   $(timeline[i].textDiv).toggleClass('show');
- $(timeline[i].itemAlternate).toggleClass('show');
+ $(timeline[i].itemAlternate).toggleClass('hide');
 	 // var thisItem = container.children().get(index);
    /* visionArray[index].find( ".item-text").toggleClass('show');
     visionArray[index].find( ".item-image").toggleClass('show');*/
@@ -421,9 +437,12 @@ function toggleImage(i){
 
 function toggleRandom(){
  for(var i = 0; i < 1; i++){
-    var randIndex = Math.floor((Math.random()*timeline.length));
+   // var randIndex = Math.floor((Math.random()*timeline.length));
+   var randIndex = Math.floor((Math.random()*200));
    // console.log("toggling "+ randIndex);
+   if(randIndex < timeline.length){
     toggleImage(randIndex);
+  }
   }
 }
  // Function to slabtext the H1 headings

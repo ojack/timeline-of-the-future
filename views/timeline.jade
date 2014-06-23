@@ -92,9 +92,12 @@ head
             button.btn.btn-default.form-btn(type="button", id='Submit') Submit
     #timeline-date 2034
     #bottom-bar
-      #bottom-bar-main
       #bottom-bar-filter
-    button.btn.btn-default(type="button", id='add-new') + Add your prediction!
+        #bottom-bar-back
+      #bottom-bar-main.show
+        #futures-logo
+        #add-new
+        #filter
     script(src="/socket.io/socket.io.js")
     script(src='js/jquery-1.10.2.min.js')
     script(src='js/jquery.slabtext.js')

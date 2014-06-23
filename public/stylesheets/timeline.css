@@ -69,15 +69,6 @@ body {
   width: 10000px;
   height: 100%;
 }
-#add-new {
-  position: absolute;
-  bottom: 12px;
-  right: 30px;
-  font-size: 18px;
-  color: #fff;
-  padding-left: 30px;
-  padding-right: 30px;
-}
 #container {
   width: 10000px;
   height: 100%;

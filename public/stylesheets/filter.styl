@@ -40,16 +40,71 @@ border-radius-all(){
   left: 0px;
   height: 110px;
   width: 1920px;
-  opacity: 0.9;
-  background: url('/images/bottom-bar-01.png');
+  opacity: 1;
+  background: #000;
 }
 
+#bottom-bar-back{
+  width: 80px;
+  height: 80px;
+  float: left;
+  margin: 15px;
+   display: inline;
+   background: url('/images/back.png');
+}
+
+
 #bottom-bar-filter{
+  position: absolute;
+  top: 0px; 
+  left: 0px;
   width: 100%;
   height: 100%;
   //background-color: #f00;
   
   //display: inline;
+}
+
+#bottom-bar-main{
+ position: absolute;
+  top: 110px; 
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  //opacity: 0;
+}
+
+#bottom-bar-main.show{
+  top: 0px; 
+
+}
+
+#futures-logo{
+  width: 454px;
+  height: 110px;
+  float: left;
+  margin-left: 15px;
+   display: inline;
+   background: url('/images/futures-logo.png');
+}
+
+#add-new{
+  width: 182px;
+  height: 110px;
+  float: right;
+  margin-left: 15px;
+   display: inline;
+   background: url('/images/add-new.png');
+}
+
+#filter{
+  width: 182px;
+  height: 110px;
+  float: right;
+  margin-left: 15px;
+   display: inline;
+   background: url('/images/filter-button.png');
 }
 
 .filter-button{

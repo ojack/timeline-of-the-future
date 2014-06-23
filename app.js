@@ -513,8 +513,8 @@ app.get('/:id', function(req, res) {
 
 function displayTimeline(req, res, visionProvider, jadeTemplate) {
    // visionProvider.findTimeline(function(err, result){
-   visionProvider.findTimelineCollection("hey", 100, function(err, result){
-  //  visionProvider.findTaggedCollection("hey", 10, function(err, result){
+  visionProvider.findTimelineCollection(100, function(err, result){
+  //visionProvider.findTaggedCollection('*', 100, function(err, result){
         //console.log("result is "+ nodes.length);
       /*  for(var i = 0; i < result.length; i++){
           process.stdout.write(result[i] + " ");
@@ -721,8 +721,20 @@ socket.on('filterCollection', function(data){
           io.sockets.in(socket.id).emit('newVisionCollection', visionJson);
       }
      });
-        //console.log("result is "+ nodes.length);
+     });
 
+socket.on('filterShowAll', function(data){
+    console.log("filter is "+ data);
+     visionProvider.findTimelineCollection(100, function(err, result){
+      if(err){
+        console.log(err);
+      } else {
+        var visionJson = JSON.stringify(result);
+          io.sockets.in(socket.id).emit('newVisionCollection', visionJson);
+      }
+     });
+        //console.log("result is "+ nodes.length);
+        //
 });
 
 socket.on("get next page", function(data){
