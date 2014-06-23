@@ -7,6 +7,7 @@ var socketLoc;
 var myDropzone;
 var admin_fields = ["vision", "year", "inspiration", "tags", "adminTags", "name", "_id", "notes"];
 var admin_checkboxes = ["show_timeline", "museum","always_visible"];
+ var sampleTags = ['people', 'animals', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
 /*Dropzone.options.dropzone = {
   paramName: "file", // The name that will be used to transfer the file
   init: function() {
@@ -17,6 +18,10 @@ var admin_checkboxes = ["show_timeline", "museum","always_visible"];
 };*/
 
 $(document).ready(function(){
+   for(var i = 0; i < sampleTags.length; i++){
+      $('#checkboxes').append('<input type="checkbox" id="'+sampleTags[i]+'"/> ' + sampleTags[i] + '<br />');
+    }
+          
   myDropzone = new Dropzone("form#bg", { 
   thumbnailWidth: 800,
   thumbnailHeight: 600,
@@ -65,6 +70,18 @@ if(visionParams == 'new' || visionParams== 'null') {
   //creating new vision
 } else {
   visionData = jQuery.parseJSON(visionParams);
+  var tags = [];
+  for(var i = 0; i < visionData['tags'].length; i++){
+    if(sampleTags.indexOf(visionData['tags'][i]) >= 0) {
+      $( "#"+ visionData['tags'][i]).prop( "checked", true );
+     // var tagIndex = tags.indexOf(visionData['tags'][i]);
+//tags.splice(tagIndex, 1);
+
+    }else {
+      tags.push(visionData['tags'][i]);
+    }
+  }
+  visionData['tags'] = tags;
   for(var i = 0; i < admin_fields.length; i++){
     if(visionData[admin_fields[i]]){
       $( "#"+admin_fields[i] ).val(visionData[admin_fields[i]]);
@@ -111,6 +128,19 @@ $('#restart-projection').click(function(){socket.emit("restart projection", "")}
         params[admin_fields[i]] =  $( "#"+admin_fields[i] ).val();
 
     }
+
+    for(var i = 0; i < sampleTags.length; i++){
+     // alert($( "#"+sampleTags[i]).is(':checked'));
+      if($( "#"+sampleTags[i]).is(':checked')==true){
+        var newString = ","+ sampleTags[i];
+        params['tags']+=newString;
+      //  alert(params['tags']);
+      //params['tags'].push(sampleTags[i]);
+        //alert(sampleTags[i]);
+      }
+        //;
+     // params[admin_checkboxes[i]] = $( "#"+admin_checkboxes[i]).is(':checked');
+    }
      var year = $("#year").children(':selected').text();
     
     if(year=="Tomorrow"){
@@ -129,6 +159,8 @@ $('#restart-projection').click(function(){socket.emit("restart projection", "")}
     for(var i = 0; i < admin_checkboxes.length; i++){
       params[admin_checkboxes[i]] = $( "#"+admin_checkboxes[i]).is(':checked');
     }
+
+    
     /*if($( "#show_timeline").is(':checked')){
       console.log(" checked ");
   } else {
@@ -183,10 +215,6 @@ $('#delete').click(function(e) {
 
 });
 
-$('#newVision').click(function(e) {
- var url = socketLoc + "/harmony-gallery?id="+visionData._id;
-window.open(url);
-});
 
 
 
@@ -208,9 +236,10 @@ window.open(url);
       
     }*/
 
-    var sampleTags = ['climate change', 'water', 'population', 'fires', 'food', 'agriculture', 'weather', 'drought', 'flood', 'technology', 'dystopia', 'utopia', 'Oakland', 'urban', 'apocalypse', 'sustainability', 'revolution', 'energy', 'CO2'];
-    var adminTags = ['oseed'];
-            //-------------------------------
+   
+
+    var text = "CHECKBOX";
+     //-------------------------------
             // Minimal
             //-------------------------------
 

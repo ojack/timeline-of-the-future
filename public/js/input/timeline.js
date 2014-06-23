@@ -11,7 +11,11 @@ Main scripts for the timeline go here
 var socket, socketLoc, container, containerWidth, detailView, drawingView;
 var VERT_SPACING = 360;
 var HOR_SPACING = 540;
-var ITEM_WIDTH = 540;
+var ITEM_SPACING = 540;
+var hex_border = 0.1;
+var ITEM_WIDTH = ITEM_SPACING*(1-hex_border);
+var small_hex_spacing = ITEM_SPACING/3;
+var hex_width = small_hex_spacing*(1-hex_border);
 var ITEM_HEIGHT = 200;
 /*var BG_WIDTH = 461;
 var BG_HEIGHT = 270;*/
@@ -35,7 +39,7 @@ var timeline = [];
 //var xOffset = [0, 0, 0];
 
 /* honeycomb variables*/
-var hex_width = 108;
+
 var numRows = 1080/(hex_width);
 
 var offset = 0;
@@ -274,10 +278,11 @@ function initTimelineObj(data, index){
         textDiv.className = 'item-text-hidden show';
       }
        var that_hex = document.createElement('div');
-    that_hex.className = 'hexagon hide';
+    that_hex.className = 'hexagon';
+    //that_hex.className = 'hexagon hide';
  
-that_hex.style.width = ITEM_WIDTH+'px';
-  that_hex.style.height =ITEM_WIDTH*2+'px';
+that_hex.style.width = ITEM_WIDTH*2+'px';
+  that_hex.style.height =ITEM_WIDTH+'px';
     var that_hex1 = document.createElement('div');
     that_hex1.className = 'hexagon-in1';
       var that_hex2 = document.createElement('div');
@@ -304,8 +309,8 @@ that_hex.style.width = ITEM_WIDTH+'px';
      var hex = document.createElement('div');
     hex.className = 'hexagon';
  
-hex.style.width = hex_width+'px';
-  hex.style.height = hex_width*2+'px';
+hex.style.width = hex_width*2+'px';
+  hex.style.height = hex_width+'px';
     var hex1 = document.createElement('div');
     hex1.className = 'hexagon-in1';
       var hex2 = document.createElement('div');
@@ -355,12 +360,30 @@ function setPositions(){
   var bgHeight = 1080/4-3;
   var bgWidth = bgHeight *1400/820;
     for(var i = 0; i < timeline.length; i++){
-       var row = i%2;
+
+      var row = i%3;
+       var col = Math.floor(i/3);
+       var left = 0;
+       var top = 0; 
+        var offset = 0;
+  if(i%3==0){
+      left = ITEM_SPACING*1.87 + (ITEM_SPACING*1.74)*col;
+    top = ITEM_SPACING;
+  } else {
+    //  left =ITEM_WIDTH + (ITEM_WIDTH*1.74)*col;
+    left = ITEM_SPACING + ITEM_SPACING* 1.74* col;
+  //  var left =  ITEM_WIDTH+ (ITEM_WIDTH*0.87)* col;
+     top= row*(ITEM_SPACING)-ITEM_SPACING/2;
+    }
+   /*    var row = i%2;
        var col = Math.floor(i/2);
         var offset = ITEM_WIDTH;
   if(col%2==0)offset = offset+ ITEM_WIDTH/2;
-    var left =  ITEM_WIDTH+ (ITEM_WIDTH*0.88)* col;
-  var top= offset + row*(ITEM_WIDTH)-ITEM_WIDTH/2;
+    var left =  ITEM_WIDTH+ (ITEM_WIDTH*0.87)* col;
+  var top= offset + row*(ITEM_WIDTH)-ITEM_WIDTH/2;*/
+
+
+  //console.log("row is "+ row + " offset is "+ offset + " top is " + top);
      /*  var row = i%2;
   var left = 600+ (i/2)*ITEM_WIDTH;
    //var left = (width+30)* index;
@@ -411,9 +434,9 @@ function orderedHoneycomb(index, hex_object){
     var left = offset + hex_width* currCol;
   var top= currRow*(hex_width*0.88)-hex_width/2;*/
  var offset = 30;
-  if(currCol%2==0)offset = 30+ hex_width/2;
-    var left =  (hex_width*0.88)* currCol;
-  var top= offset + currRow*(hex_width)-hex_width/2;
+  if(currCol%2==0)offset = 30+ small_hex_spacing/2;
+    var left =  (small_hex_spacing*0.88)* currCol;
+  var top= offset + currRow*(small_hex_spacing)-small_hex_spacing/2;
   hex_object.style.top = top+'px';
   hex_object.style.left = left+'px';
 
@@ -423,7 +446,7 @@ function orderedHoneycomb(index, hex_object){
 
 function toggleImage(i){
   $(timeline[i].textDiv).toggleClass('show');
- $(timeline[i].itemAlternate).toggleClass('hide');
+// $(timeline[i].itemAlternate).toggleClass('hide');
 	 // var thisItem = container.children().get(index);
    /* visionArray[index].find( ".item-text").toggleClass('show');
     visionArray[index].find( ".item-image").toggleClass('show');*/
@@ -451,7 +474,7 @@ function toggleRandom(){
             // Don't slabtext the headers if the viewport is under 380px
             "fontRatio": 0.3,
             //"viewportBreakpoint":380,
-           "maxFontSize":80
+          // "maxFontSize":80
         });
         myScroll = new IScroll('#scroll-wrapper', { 
             scrollX: true, scrollY: false, /*momentum: false,*/ tap:true, indicators: [{
