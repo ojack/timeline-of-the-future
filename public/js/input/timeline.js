@@ -14,14 +14,15 @@ var HOR_SPACING = 540;
 var ITEM_SPACING = 540;
 var hex_border = 0.1;
 var ITEM_WIDTH = ITEM_SPACING*(1-hex_border);
-var small_hex_spacing = ITEM_SPACING/3;
+var small_hex_spacing = ITEM_SPACING/5;
 var hex_width = small_hex_spacing*(1-hex_border);
+var num_hexes = 100;
 var ITEM_HEIGHT = 200;
 /*var BG_WIDTH = 461;
 var BG_HEIGHT = 270;*/
 var BG_WIDTH = 614;
 var BG_HEIGHT = 360;
-
+var background_hexes = [];
 var filters = ['people', 'animals', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
 var timeline_date;
 var numVisions;
@@ -54,6 +55,7 @@ $(window).load(function() {
   $("#timeline-date").addClass("show");
  $("#filter").click(function(){
        $('#bottom-bar-main').removeClass('show');
+
  });
 $("#add-new").click(function(){
 
@@ -111,7 +113,11 @@ function reloadPage(){
  function newVisionCollection(data){
         //console.log("adding to timeline "+data);
        visionData = jQuery.parseJSON(data);
+       shuffle(background_hexes);
+//console.log(JSON.stringify(background_hexes[10]));
+       positionHexes();
        loadVisions();
+
 }
 
 function initVisions(){
@@ -121,9 +127,16 @@ function initVisions(){
   drawingView = new DrawingView(galleryData);
   numVisions = visionData.length;
   container = $('#container');
+  loadBackground();
   loadVisions();
 }
 
+function loadBackground(){
+  for(var i = 0; i < num_hexes; i++){
+    var hex_index = Math.floor(Math.random()*visionData.length);
+    addNewHex(i, visionData[hex_index].smallPath);
+  }
+}
 /*Load all visions from the server*/
 function loadVisions(){
 timeline = [];
@@ -147,8 +160,10 @@ while (this_container.firstChild) {
 
 	}
   setPositions();
+  positionHexes();
     setAnimation();
-	containerWidth = (timeline.length+1)/2*(ITEM_WIDTH+30);
+	containerWidth = 20000+((timeline.length)/3+1)*(ITEM_SPACING*1.74);
+  //containerWidth = 20000;
 container.css('width', containerWidth+"px");
 //$('#container').css('width', "10000px");
   setTimeout(slabTextHeadlines, 1000);
@@ -244,7 +259,7 @@ function updatePositions(){
          console.log("just added this "+ newObj.vision);
          // timeline[index] = newObj;
      timeline.splice(index, 0, newObj);
-     console.log("index is "+ index + " new timeline length is "+ timeline.length);
+    // console.log("index is "+ index + " new timeline length is "+ timeline.length);
      setPositions();
      containerWidth = (timeline.length+1)/2*(ITEM_WIDTH+30);
      container.css('width', containerWidth+"px");
@@ -306,24 +321,8 @@ that_hex.style.width = ITEM_WIDTH*2+'px';
     item.appendChild(textDiv);
    // orderedHoneycomb(data, index, background_container);
  
-     var hex = document.createElement('div');
-    hex.className = 'hexagon';
- 
-hex.style.width = hex_width*2+'px';
-  hex.style.height = hex_width+'px';
-    var hex1 = document.createElement('div');
-    hex1.className = 'hexagon-in1';
-      var hex2 = document.createElement('div');
-    hex2.className = 'hexagon-in2';
-   
-  
-    hex2.style.backgroundImage="url('"+data.smallPath+"')";
-
-   // background_container.appendChild(item);
-   hex.appendChild(hex1);
-  hex1.appendChild(hex2);
-   background_container.appendChild(hex);
-    thisObj.imgDiv=hex;
+    
+    //thisObj.imgDiv=hex;
     thisObj.textDiv=textDiv;
     //thisObj.itemAlternate = thatIMG;
     thisObj.itemAlternate = that_hex;
@@ -340,6 +339,26 @@ hex.style.width = hex_width*2+'px';
   }*/
 }
 
+function addNewHex(position, path){
+   var hex = document.createElement('div');
+    hex.className = 'hexagon';
+ //if(Math.random()> 0.4){
+hex.style.width = hex_width*2+'px';
+  hex.style.height = hex_width+'px';
+    var hex1 = document.createElement('div');
+    hex1.className = 'hexagon-in1';
+      var hex2 = document.createElement('div');
+    hex2.className = 'hexagon-in2';
+   
+  
+    hex2.style.backgroundImage="url('"+path+"')";
+
+   // background_container.appendChild(item);
+   hex.appendChild(hex1);
+  hex1.appendChild(hex2);//}
+   background_container.appendChild(hex);
+   background_hexes[position] = hex;
+}
 
 function getYear(){
  
@@ -400,13 +419,36 @@ function setPositions(){
  /*   timeline[i].imgDiv.style.position = 'absolute';
   timeline[i].imgDiv.style.top = imgTop+'px';
    timeline[i].imgDiv.style.left = imgLeft+'px';*/
-   orderedHoneycomb(i, timeline[i].imgDiv);
+  // orderedHoneycomb(i, timeline[i].imgDiv);
     
     }
+    positionHexes();
 }
 
 var currRow = 0;
 var currCol = 0;
+
+function positionHexes(){
+  currRow = 0;
+currCol = 0;
+  for(var i = 0; i < num_hexes; i++){
+      //set_hex_position(background_hexes[i], i);
+      orderedHoneycomb(i, background_hexes[i]);
+    }
+
+}
+function set_hex_position(hex_object, index){
+  var col = Math.floor(index/numRows);
+  var row = Math.floor(index%numRows);
+   var offset = 30;
+  if(col%2==0)offset = 30+ small_hex_spacing/2;
+    var left =  400+(small_hex_spacing*0.88)* col;
+  var top= offset + row*(small_hex_spacing)-small_hex_spacing/2;
+  hex_object.style.top = top+'px';
+  hex_object.style.left = left+'px';
+ // console.log(index + "row "+ row + " offset "+ offset);
+
+}
 
 function orderedHoneycomb(index, hex_object){
   currRow++;
@@ -416,7 +458,7 @@ function orderedHoneycomb(index, hex_object){
       }
   while(true){
   //   var rowProb = 0.75 - (Math.abs((currRow - numRows/2)/(numRows/2)))*0.75; //densest in the middle
-    var rowProb = 0.95*(currRow/numRows);
+    var rowProb = 0.6*(currRow/numRows);
      var randIndex = Math.random();
      if(randIndex > rowProb){
       currRow++;
@@ -442,7 +484,27 @@ function orderedHoneycomb(index, hex_object){
 
 }
 
+function shuffle(array) {
+  var currentIndex = array.length
+    , temporaryValue
+    , randomIndex
+    ;
 
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
 
 function toggleImage(i){
   $(timeline[i].textDiv).toggleClass('show');
