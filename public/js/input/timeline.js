@@ -15,8 +15,8 @@ var ITEM_SPACING = 540;
 var hex_border = 0.07;
 var ITEM_WIDTH = ITEM_SPACING*(1-hex_border);
 var small_hex_spacing = ITEM_SPACING/5;
-var hex_width = small_hex_spacing*(1-hex_border);
-var num_hexes = 100;
+var hex_width = small_hex_spacing*(0.75);
+var num_hexes = 400;
 
 /*var BG_WIDTH = 461;
 var BG_HEIGHT = 270;*/
@@ -35,12 +35,13 @@ var background_container;
 var visionData;
 var visionContainer;
 var timeline = [];
+var background_images = [];
 //TO DO : create object that stores data and all objects
 //var xOffset = [0, 0, 0];
 
 /* honeycomb variables*/
 
-var numRows = 1080/(hex_width);
+var numRows = 1080/(small_hex_spacing);
 
 var offset = 0;
 
@@ -133,9 +134,14 @@ function initVisions(){
 }
 
 function loadBackground(){
+  for(var i = 0; i < visionData.length; i++){
+    background_images[i] = new Image(); 
+    background_images[i].src = visionData[i].smallPath;
+  }
+
   for(var i = 0; i < num_hexes; i++){
     var hex_index = Math.floor(Math.random()*visionData.length);
-    addNewHex(i, visionData[hex_index].smallPath);
+    addNewHex(i,  background_images[hex_index].src);
   }
 }
 /*Load all visions from the server*/
@@ -361,7 +367,7 @@ hex.style.width = hex_width*2+'px';
     var hex1 = document.createElement('div');
     hex1.className = 'hexagon-in1';
       var hex2 = document.createElement('div');
-    hex2.className = 'hexagon-in2';
+    hex2.className = 'hexagon-in2-small';
    
   
     hex2.style.backgroundImage="url('"+path+"')";
@@ -468,7 +474,7 @@ function orderedHoneycomb(index, hex_object){
       }
   while(true){
   //   var rowProb = 0.75 - (Math.abs((currRow - numRows/2)/(numRows/2)))*0.75; //densest in the middle
-    var rowProb = 0.6*(currRow/numRows);
+    var rowProb = 0.95*((currRow-numRows/2)/(numRows/2));
      var randIndex = Math.random();
      if(randIndex > rowProb){
       currRow++;
@@ -559,7 +565,7 @@ function toggleRandom(){
       el: document.getElementById('background'),
       resize: false,
       ignoreBoundaries: true,
-      speedRatioX: 0.1
+      speedRatioX: 0.5
     }]
     });
      // $(background_container).css('width', 4000+"px");
