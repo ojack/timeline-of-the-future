@@ -282,19 +282,27 @@ function initTimelineObj(data, index){
 
     item.setAttribute('data-id', data._id);
      var textDiv = document.createElement('h1');
+      var that_hex = document.createElement('div');
+
   if(data.vision){
        if(data.museum){
-        textDiv.className = 'item-text omca show';
+        textDiv.className = 'item-text omca';
       } else {
-         textDiv.className = 'item-text show';
+         textDiv.className = 'item-text';
       }
       textDiv.innerHTML = data.vision;
       } else {
         textDiv.className = 'item-text-hidden show';
       }
-       var that_hex = document.createElement('div');
-    that_hex.className = 'hexagon';
-    //that_hex.className = 'hexagon hide';
+       that_hex.className = 'hexagon';
+    if(Math.random()> 0.5){
+      $(that_hex).addClass('hide');
+      $(textDiv).addClass('show');
+
+    }
+
+         // that_hex.className = 'hexagon';
+   
  
 that_hex.style.width = ITEM_WIDTH*2+'px';
   that_hex.style.height =ITEM_WIDTH+'px';
@@ -508,7 +516,7 @@ function shuffle(array) {
 
 function toggleImage(i){
   $(timeline[i].textDiv).toggleClass('show');
-// $(timeline[i].itemAlternate).toggleClass('hide');
+  $(timeline[i].itemAlternate).toggleClass('hide');
 	 // var thisItem = container.children().get(index);
    /* visionArray[index].find( ".item-text").toggleClass('show');
     visionArray[index].find( ".item-image").toggleClass('show');*/
