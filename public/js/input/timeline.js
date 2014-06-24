@@ -129,6 +129,8 @@ function initVisions(){
   container = $('#container');
   loadBackground();
   loadVisions();
+  setAnimation();
+  initIScroll();
 }
 
 function loadBackground(){
@@ -161,12 +163,16 @@ while (this_container.firstChild) {
 	}
   setPositions();
   positionHexes();
-    setAnimation();
-	containerWidth = 20000+((timeline.length)/3+1)*(ITEM_SPACING*1.74);
+    
+	containerWidth = 1080+((timeline.length)/3+1)*(ITEM_SPACING*1.74);
   //containerWidth = 20000;
 container.css('width', containerWidth+"px");
+
 //$('#container').css('width', "10000px");
-  setTimeout(slabTextHeadlines, 1000);
+  setTimeout(slabTextHeadlines, 0);
+  setTimeout(function () {
+        myScroll.refresh();
+    }, 0);
 	/*for(var i = 0; i < visionData.length; i++){
 		if(Math.random() > 0.6) toggleImage(i);
 	}*/
@@ -546,12 +552,19 @@ function toggleRandom(){
             //"viewportBreakpoint":380,
           // "maxFontSize":80
         });
-        myScroll = new IScroll('#scroll-wrapper', { 
+       
+       
+   }
+
+   function initIScroll(){
+     myScroll = new IScroll('#scroll-wrapper', { 
             scrollX: true, scrollY: false, /*momentum: false,*/ tap:true, indicators: [{
       el: document.getElementById('background'),
       resize: false,
       ignoreBoundaries: true,
-      speedRatioX: 0.03
+      speedRatioX: 0.1
     }]
     });
+     // $(background_container).css('width', 4000+"px");
+
    }
