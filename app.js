@@ -22,7 +22,7 @@
 var tempStorage = "./uploads"; //folder location where http requests are posted
 var imageStorage = "../TEST_STORAGE"; //file path to image stoage location
 // all environments
-app.set('port', process.env.PORT || 8000);
+app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
