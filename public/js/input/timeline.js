@@ -164,7 +164,7 @@ while (this_container.firstChild) {
   setPositions();
   positionHexes();
     
-	containerWidth = 1080+((timeline.length)/3+1)*(ITEM_SPACING*1.74);
+	containerWidth = ((timeline.length)/3+1)*(ITEM_SPACING*1.74);
   //containerWidth = 20000;
 container.css('width', containerWidth+"px");
 
