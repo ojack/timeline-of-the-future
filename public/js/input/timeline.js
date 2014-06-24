@@ -12,16 +12,15 @@ var socket, socketLoc, container, containerWidth, detailView, drawingView;
 var VERT_SPACING = 360;
 var HOR_SPACING = 540;
 var ITEM_SPACING = 540;
-var hex_border = 0.1;
+var hex_border = 0.07;
 var ITEM_WIDTH = ITEM_SPACING*(1-hex_border);
 var small_hex_spacing = ITEM_SPACING/5;
 var hex_width = small_hex_spacing*(1-hex_border);
 var num_hexes = 100;
-var ITEM_HEIGHT = 200;
+
 /*var BG_WIDTH = 461;
 var BG_HEIGHT = 270;*/
-var BG_WIDTH = 614;
-var BG_HEIGHT = 360;
+
 var background_hexes = [];
 var filters = ['people', 'animals', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
 var timeline_date;
@@ -276,8 +275,7 @@ function updatePositions(){
 }
 
 function initTimelineObj(data, index){
-    var bgHeight = 1080/4-3;
-  var bgWidth = bgHeight *1400/820;
+   
     var thisObj = data;
     console.log("initializing this "+ data);
     
@@ -296,7 +294,7 @@ function initTimelineObj(data, index){
       } else {
          textDiv.className = 'item-text';
       }
-      textDiv.innerHTML = '<p>'+data.year+'</p><div class="inner-text">' + data.vision+'</div>';
+      textDiv.innerHTML = '<p id="timeline-year">'+data.year+'</p><div class="inner-text">' + data.vision+'</div>';
       } else {
         textDiv.className = 'item-text-hidden show';
       }
@@ -306,7 +304,7 @@ function initTimelineObj(data, index){
       $(textDiv).addClass('show');
 
     }
-    textDiv.style.width = 0.4*ITEM_WIDTH;
+    textDiv.style.width = 0.85*ITEM_WIDTH+'px';
 
          // that_hex.className = 'hexagon';
    
@@ -391,8 +389,7 @@ function getYear(){
 function setPositions(){
   currRow = 0;
   currCol= 0;
-  var bgHeight = 1080/4-3;
-  var bgWidth = bgHeight *1400/820;
+ 
     for(var i = 0; i < timeline.length; i++){
 
       var row = i%3;
@@ -428,9 +425,7 @@ function setPositions(){
    timeline[i].div.style.left = left+'px';
 
 
-   var imgRow = i%4;
-   var imgLeft = (i/4)*bgWidth;
-   var imgTop = imgRow *bgHeight;
+  
  /*   timeline[i].imgDiv.style.position = 'absolute';
   timeline[i].imgDiv.style.top = imgTop+'px';
    timeline[i].imgDiv.style.left = imgLeft+'px';*/

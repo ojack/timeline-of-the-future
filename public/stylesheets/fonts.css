@@ -31,6 +31,14 @@
 }
 
 @font-face {
+	font-family: 'Oita-Bold';
+	src: url('../fonts/Oita-NorBol.eot');
+	src: local('☺'), url('../fonts/Oita-NorBol.woff') format('woff'), url('../fonts/Oita-NorBol.ttf') format('truetype'), url('../fonts/Oita-NorBol.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
 	font-family: 'BentonSansCond-Regular';
 	src: url('../fonts/BentonSansCond-Regular.eot');
 	src: local('☺'), url('../fonts/BentonSansCond-Regular.woff') format('woff'), url('../fonts/BentonSansCond-Regular.ttf') format('truetype'), url('../fonts/BentonSansCond-Regular.svg') format('svg');
