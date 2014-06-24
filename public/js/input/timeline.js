@@ -296,7 +296,7 @@ function initTimelineObj(data, index){
       } else {
          textDiv.className = 'item-text';
       }
-      textDiv.innerHTML = data.vision;
+      textDiv.innerHTML = '<p>'+data.year+'</p><div class="inner-text">' + data.vision+'</div>';
       } else {
         textDiv.className = 'item-text-hidden show';
       }
@@ -306,6 +306,7 @@ function initTimelineObj(data, index){
       $(textDiv).addClass('show');
 
     }
+    textDiv.style.width = 0.4*ITEM_WIDTH;
 
          // that_hex.className = 'hexagon';
    
@@ -546,7 +547,8 @@ function toggleRandom(){
 }
  // Function to slabtext the H1 headings
     function slabTextHeadlines() {
-        $(".item-text").slabText({
+       // $(".item-text").slabText({
+         $(".inner-text").slabText({
             // Don't slabtext the headers if the viewport is under 380px
             "fontRatio": 0.3,
             //"viewportBreakpoint":380,

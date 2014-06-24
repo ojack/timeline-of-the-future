@@ -23,6 +23,14 @@
 }
 
 @font-face {
+	font-family: 'Oita-Book';
+	src: url('../fonts/Oita-NorBoo.eot');
+	src: local('☺'), url('../fonts/Oita-NorBoo.woff') format('woff'), url('../fonts/Oita-NorBoo.ttf') format('truetype'), url('../fonts/Oita-NorBoo.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
 	font-family: 'BentonSansCond-Regular';
 	src: url('../fonts/BentonSansCond-Regular.eot');
 	src: local('☺'), url('../fonts/BentonSansCond-Regular.woff') format('woff'), url('../fonts/BentonSansCond-Regular.ttf') format('truetype'), url('../fonts/BentonSansCond-Regular.svg') format('svg');

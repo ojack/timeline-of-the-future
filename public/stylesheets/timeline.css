@@ -28,7 +28,7 @@ body {
   -webkit-user-select: none;
   -o-user-select: none;
   overflow: hidden;
-  font-family: 'BentonSans-Regular', Sans-Serif;
+  font-family: 'Oita-Book', Sans-Serif;
 }
 #background {
   position: absolute;
@@ -104,7 +104,7 @@ body {
   font-size: 20px;
 }*/
 .side-text {
-  font-family: 'BentonSans-Regular', Sans-Serif;
+  font-family: 'Oita-Book', Sans-Serif;
   font-size: 16px;
   padding: 0px;
 }
@@ -122,7 +122,7 @@ body {
   height: 300px;
 }
 #detail {
-  font-family: 'BentonSans-Regular', Sans-Serif;
+  font-family: 'Oita-Book', Sans-Serif;
   position: absolute;
   top: 540px;
   left: 960px;
@@ -212,7 +212,7 @@ body {
 #detail-h1-container {
 /*position: absolute;*/
 /*font-family:'BentonSansCond-Regular',b;*/
-  font-family: 'BentonSans-Regular', Sans-Serif;
+  font-family: 'Oita-Book', Sans-Serif;
   font-weight: 100;
   width: 90%;
   left: 0px;
