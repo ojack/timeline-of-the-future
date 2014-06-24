@@ -9,19 +9,19 @@ Main scripts for the timeline go here
 */
 
 var socket, socketLoc, container, containerWidth, detailView, drawingView;
-var VERT_SPACING = 360;
-var HOR_SPACING = 540;
-var ITEM_WIDTH = 1000;
-var ITEM_HEIGHT = 200;
-/*var BG_WIDTH = 461;
-var BG_HEIGHT = 270;*/
-var BG_WIDTH = 614;
-var BG_HEIGHT = 360;
 
-var timeline_date;
+var ITEM_SPACING = 540;
+var hex_border = 0.07;
+var ITEM_WIDTH = ITEM_SPACING*(1-hex_border);
+var small_hex_spacing = ITEM_SPACING/5;
+var hex_width = small_hex_spacing*(0.75);
+var num_hexes = 300;
+var background_hexes = [];
+var numRows = 1080/(small_hex_spacing)-1;
+
 var numVisions;
 var NUM_ANIMATED = 1;
-var ANIMATION_INTERVAL = 300;
+var ANIMATION_INTERVAL = 800;
 var visionArray = [];
 var backgroundArray = [];
 var animation;
@@ -30,6 +30,7 @@ var background_container;
 var visionData;
 var visionContainer;
 var timeline = [];
+var background_images = [];
 var maxScroll = 1000;
 var SCROLL_STEP = 1;
 var currScroll = 0;
@@ -40,12 +41,15 @@ var START_OFFSET = 1920;
 var offset = 0;
 
 $(window).load(function() {
+  visionData = jQuery.parseJSON($('#visionData').val());
   this_container = document.getElementById("container");
   background_container = document.getElementById("background-texture");
-  timeline_date = document.getElementById("projection-date");
+  numVisions = visionData.length;
+  container = $('#container');
 	connectToSocket();
+  loadBackground();
 	loadVisions();
-
+  initIScroll();
 	
 });
 
@@ -70,7 +74,7 @@ function step(timestamp) {
 //console.log(currScroll);
   //d.style.left = Math.min(progress/10, 200) + "px";
   //if (progress < 2000) {
-    getYear();
+   
     requestAnimationFrame(step);
   }
  // }
@@ -94,14 +98,21 @@ function reloadPage(){
   location.reload(true);
 }
 
+function loadBackground(){
+  for(var i = 0; i < visionData.length; i++){
+    background_images[i] = new Image(); 
+    background_images[i].src = visionData[i].smallPath;
+  }
+
+  for(var i = 0; i < num_hexes; i++){
+    var hex_index = Math.floor(Math.random()*visionData.length);
+    addNewHex(i,  background_images[hex_index].src);
+  }
+}
 /*Load all visions from the server*/
 function loadVisions(){
-	visionData = jQuery.parseJSON($('#visionData').val());
-
-  var galleryData = jQuery.parseJSON($('#imageData').val());
- 
-  numVisions = visionData.length;
-	container = $('#container');
+	
+  
   //console.log("VISIONS ARE "+ JSON.stringify(visionData));
   //addVision(visionData[0], 0, '#container', 1);
 /* for(var i = 0; i < 2; i++){*/
@@ -116,15 +127,21 @@ function loadVisions(){
 
 	}
   setPositions();
-   
-	containerWidth = START_OFFSET+ (timeline.length+1)/2*(ITEM_WIDTH+30);
-maxScroll = containerWidth+800;
+   positionHexes();
+    
+ 
+     containerWidth = START_OFFSET +   ((timeline.length)/3+1)*(ITEM_SPACING*1.74);
+  //containerWidth = 20000;
 container.css('width', containerWidth+"px");
+
+     maxScroll = containerWidth;
+
 //$('#container').css('width', "10000px");
-  setTimeout(slabTextHeadlines, 1000);
-	/*for(var i = 0; i < visionData.length; i++){
-		if(Math.random() > 0.6) toggleImage(i);
-	}*/
+  setTimeout(slabTextHeadlines, 0);
+  setTimeout(function () {
+        myScroll.refresh();
+    }, 0);
+  /*for(var i = 0; i < visionData.length; i++){
 	 $( ".item" ).on('tap', function() {
               var  _id = $(this).data('id');
                // currId =  "?id="+ _id;
@@ -138,7 +155,7 @@ container.css('width', containerWidth+"px");
                //NEED: user feedback to show that is loading
                // document.getElementById('form').src = _id;
              //  console.log(visionData[_id]);
-      });
+      });*/
 
 }
 
@@ -154,7 +171,7 @@ function showElement(_id){
 
 
 function setAnimation(){
- //animation = setInterval(function(){toggleRandom();}, ANIMATION_INTERVAL);    
+   animation = setInterval(function(){toggleRandom();}, ANIMATION_INTERVAL);    
 }
 
 function clearAnimation(){
@@ -203,9 +220,13 @@ function updatePositions(){
      timeline.splice(index, 0, newObj);
      console.log("index is "+ index + " new timeline length is "+ timeline.length);
      setPositions();
-     containerWidth = START_OFFSET+ (timeline.length+1)/2*(ITEM_WIDTH+30);
+   
+     containerWidth = START_OFFSET +   ((timeline.length)/3+1)*(ITEM_SPACING*1.74);
+  //containerWidth = 20000;
+container.css('width', containerWidth+"px");
+
      maxScroll = containerWidth;
-     container.css('width', containerWidth+"px");
+   //  container.css('width', containerWidth+"px");
      setTimeout(function () {
         myScroll.refresh();
     }, 10);
@@ -213,11 +234,10 @@ function updatePositions(){
 }
 
 function initTimelineObj(data, index){
+   
     var thisObj = data;
     console.log("initializing this "+ data);
-    var thisIMG  =  document.createElement('img');
-    thisIMG.src =data.mediumPath;
-    thisIMG.class = "item-image show";// newDiv.prepend('<img class="item-image show" src="'+ data.mediumPath + '" />');
+    
     var item = document.createElement('div');
     item.className = 'item';
    // background_container.appendChild(item);
@@ -225,26 +245,59 @@ function initTimelineObj(data, index){
 
     item.setAttribute('data-id', data._id);
      var textDiv = document.createElement('h1');
-    if(data.vision){
-     
-      textDiv.innerHTML = data.vision;
-      
-      if(data.museum){
-        textDiv.className = 'item-text omca show';
+      var that_hex = document.createElement('div');
+
+  if(data.vision){
+       if(data.museum){
+        textDiv.className = 'item-text omca';
       } else {
-         textDiv.className = 'item-text show';
+         textDiv.className = 'item-text';
       }
-       
-      item.appendChild(textDiv);
-    } else {
-       var thatIMG  =  document.createElement('img');
-      thatIMG.src =data.mediumPath;
-      thatIMG.class = "front";
-      item.appendChild(thatIMG);
+      textDiv.innerHTML = '<p id="timeline-year">'+data.year+'</p><div class="inner-text">' + data.vision+'</div>';
+      } else {
+        textDiv.className = 'item-text-hidden show';
+      }
+       that_hex.className = 'hexagon';
+    if(Math.random()> 0.5){
+      $(that_hex).addClass('hide');
+      $(textDiv).addClass('show');
+
     }
-    background_container.appendChild(thisIMG);
-    thisObj.imgDiv=thisIMG;
+    textDiv.style.width = 0.85*ITEM_WIDTH+'px';
+
+         // that_hex.className = 'hexagon';
+   
+ 
+that_hex.style.width = ITEM_WIDTH*2+'px';
+  that_hex.style.height =ITEM_WIDTH+'px';
+    var that_hex1 = document.createElement('div');
+    that_hex1.className = 'hexagon-in1';
+      var that_hex2 = document.createElement('div');
+    that_hex2.className = 'hexagon-in2';
+   
+  
+    that_hex2.style.backgroundImage="url('"+data.mediumPath+"')";
+
+   // background_container.appendChild(item);
+   that_hex.appendChild(that_hex1);
+  that_hex1.appendChild(that_hex2);
+       
+      
+   // } else {
+    /*  var thatIMG  =  document.createElement('img');
+      thatIMG.src =data.mediumPath;
+      thatIMG.className = "item-alternate";*/
+       item.appendChild(that_hex);
+    //  item.appendChild(thatIMG);
+   // }
+    item.appendChild(textDiv);
+   // orderedHoneycomb(data, index, background_container);
+ 
+    
+    //thisObj.imgDiv=hex;
     thisObj.textDiv=textDiv;
+    //thisObj.itemAlternate = thatIMG;
+    thisObj.itemAlternate = that_hex;
      thisObj.div=item;
     return thisObj;
    
@@ -258,46 +311,153 @@ function initTimelineObj(data, index){
   }*/
 }
 
-function getYear(){
- 
-  var index = Math.floor((myScroll.x)*(-2/ITEM_WIDTH));
+function addNewHex(position, path){
+  console.log("adding hex "+ position + " path "+path);
+   var hex = document.createElement('div');
+    hex.className = 'hexagon-small';
+ //if(Math.random()> 0.4){
+hex.style.width = hex_width*2+'px';
+  hex.style.height = hex_width+'px';
+    var hex1 = document.createElement('div');
+    hex1.className = 'hexagon-in1';
+      var hex2 = document.createElement('div');
+    hex2.className = 'hexagon-in2-small';
    
-  if(index < timeline.length){
-    if(index > 0){
-  // console.log(myScroll.x + " index is " + index + " year "+ timeline[index].year);
-   timeline_date.innerHTML = Math.round(timeline[index].year);
-   //timeline_jquery.HTML(timeline[index].year);
- }
- }
+  
+    hex2.style.backgroundImage="url('"+path+"')";
+
+   // background_container.appendChild(item);
+   hex.appendChild(hex1);
+  hex1.appendChild(hex2);//}
+   background_container.appendChild(hex);
+
+   background_hexes[position] = hex;
 }
 
 
+
 function setPositions(){
-  var bgHeight = 1080/4-3;
-  var bgWidth = bgHeight *1400/820;
+  currRow = 0;
+  currCol= 0;
+ 
     for(var i = 0; i < timeline.length; i++){
-       var row = i%2;
-  var left = START_OFFSET + 600+ (i/2)*ITEM_WIDTH;
+
+      var row = i%3;
+       var col = Math.floor(i/3);
+       var left = 0;
+       var top = 0; 
+        var offset = 0;
+  if(i%3==0){
+      left = ITEM_SPACING*1.87 + (ITEM_SPACING*1.74)*col;
+    top = ITEM_SPACING;
+  } else {
+    //  left =ITEM_WIDTH + (ITEM_WIDTH*1.74)*col;
+    left = ITEM_SPACING + ITEM_SPACING* 1.74* col;
+  //  var left =  ITEM_WIDTH+ (ITEM_WIDTH*0.87)* col;
+     top= row*(ITEM_SPACING)-ITEM_SPACING/2;
+    }
+   /*    var row = i%2;
+       var col = Math.floor(i/2);
+        var offset = ITEM_WIDTH;
+  if(col%2==0)offset = offset+ ITEM_WIDTH/2;
+    var left =  ITEM_WIDTH+ (ITEM_WIDTH*0.87)* col;
+  var top= offset + row*(ITEM_WIDTH)-ITEM_WIDTH/2;*/
+
+
+  //console.log("row is "+ row + " offset is "+ offset + " top is " + top);
+     /*  var row = i%2;
+  var left = 600+ (i/2)*ITEM_WIDTH;
    //var left = (width+30)* index;
  // console.log(timeline[i].vision + " x " + left);
-    var top = 1080/4 + row *400;
+    var top =200+ row *450;*/
      timeline[i].div.style.position = 'absolute';
   timeline[i].div.style.top = top+'px';
    timeline[i].div.style.left = left+'px';
 
 
-   var imgRow = i%4;
-   var imgLeft = START_OFFSET/2+ (i/4)*bgWidth;
-   var imgTop = imgRow *bgHeight;
-    timeline[i].imgDiv.style.position = 'absolute';
+  
+ /*   timeline[i].imgDiv.style.position = 'absolute';
   timeline[i].imgDiv.style.top = imgTop+'px';
-   timeline[i].imgDiv.style.left = imgLeft+'px';
+   timeline[i].imgDiv.style.left = imgLeft+'px';*/
+  // orderedHoneycomb(i, timeline[i].imgDiv);
     
     }
+   // positionHexes();
+}
+
+var currRow = 0;
+var currCol = 0;
+
+function positionHexes(){
+  currRow = 0;
+currCol = 0;
+  for(var i = 0; i < num_hexes; i++){
+      //set_hex_position(background_hexes[i], i);
+      orderedHoneycomb(i, background_hexes[i]);
+    }
+
 }
 
 
+function orderedHoneycomb(index, hex_object){
+  currRow++;
+      if(currRow > numRows){
+        currRow = 0;
+        currCol++;
+      }
+  while(true){
+  //   var rowProb = 0.75 - (Math.abs((currRow - numRows/2)/(numRows/2)))*0.75; //densest in the middle
+    var rowProb = 0.95*((currRow-numRows/2)/(numRows/2));
+     var randIndex = Math.random();
+     if(randIndex > rowProb){
+      currRow++;
+      if(currRow > numRows){
+        currRow = 0;
+        currCol++;
+      }
+     } else {
+      break;
+     }
+  }
+ // console.log("showing "+ index + " at row " + currRow + " and col " + currCol);
+ /* var offset = 30;
+  if(currRow%2==0)offset = 30+ hex_width/2;
+    var left = offset + hex_width* currCol;
+  var top= currRow*(hex_width*0.88)-hex_width/2;*/
+ var offset = 30;
+  if(currCol%2==0)offset = 30+ small_hex_spacing/2;
+    var left =  (small_hex_spacing*0.88)* currCol;
+  var top= offset + currRow*(small_hex_spacing)-small_hex_spacing/2;
+  hex_object.style.top = top+'px';
+  hex_object.style.left = left+'px';
+
+}
+
+function shuffle(array) {
+  var currentIndex = array.length
+    , temporaryValue
+    , randomIndex
+    ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
 function toggleImage(index){
+  $(timeline[i].textDiv).toggleClass('show');
+  $(timeline[i].itemAlternate).toggleClass('hide');
 	 // var thisItem = container.children().get(index);
    /* visionArray[index].find( ".item-text").toggleClass('show');
     visionArray[index].find( ".item-image").toggleClass('show');*/
@@ -318,18 +478,30 @@ function toggleRandom(){
 }
  // Function to slabtext the H1 headings
     function slabTextHeadlines() {
-        $(".item-text").slabText({
+      
+       // $(".item-text").slabText({
+         $(".inner-text").slabText({
             // Don't slabtext the headers if the viewport is under 380px
-            "fontRatio": 0.5,
-            "viewportBreakpoint":380
+            "fontRatio": 0.3,
+            //"viewportBreakpoint":380,
+          // "maxFontSize":80
         });
-        myScroll = new IScroll('#scroll-wrapper', { 
-            scrollX: true, scrollY: false, momentum: false, indicators: [{
+       
+       
+   
+
+        requestAnimationFrame(step);
+   }
+
+   function initIScroll(){
+     myScroll = new IScroll('#scroll-wrapper', { 
+            scrollX: true, scrollY: false, /*momentum: false,*/ tap:true, indicators: [{
       el: document.getElementById('background'),
       resize: false,
       ignoreBoundaries: true,
-      speedRatioX: 0.22
+      speedRatioX: 0.25
     }]
     });
-        requestAnimationFrame(step);
+     // $(background_container).css('width', 4000+"px");
+
    }

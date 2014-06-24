@@ -7,7 +7,7 @@ var socketLoc;
 var myDropzone;
 var admin_fields = ["vision", "year", "inspiration", "tags", "adminTags", "name", "_id", "notes"];
 var admin_checkboxes = ["show_timeline", "museum","always_visible"];
- var sampleTags = ['people', 'animals', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
+ var sampleTags = ['people', 'animals', 'plants', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
 /*Dropzone.options.dropzone = {
   paramName: "file", // The name that will be used to transfer the file
   init: function() {

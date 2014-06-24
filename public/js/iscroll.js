@@ -519,8 +519,8 @@ IScroll.prototype = {
 		if ( !this.enabled || utils.eventType[e.type] !== this.initiated ) {
 			return;
 		}
-		console.log("scrollEND ");
-		getYear();
+		//console.log("scrollEND ");
+		//getYear();
 		if ( this.options.preventDefault && !utils.preventDefaultException(e.target, this.options.preventDefaultException) ) {
 			e.preventDefault();
 		}

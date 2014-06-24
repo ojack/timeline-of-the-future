@@ -9,21 +9,20 @@ Main scripts for the timeline go here
 */
 
 var socket, socketLoc, container, containerWidth, detailView, drawingView;
-var VERT_SPACING = 360;
-var HOR_SPACING = 540;
+
 var ITEM_SPACING = 540;
 var hex_border = 0.07;
 var ITEM_WIDTH = ITEM_SPACING*(1-hex_border);
 var small_hex_spacing = ITEM_SPACING/5;
 var hex_width = small_hex_spacing*(0.75);
-var num_hexes = 400;
+var num_hexes = 300;
 
 /*var BG_WIDTH = 461;
 var BG_HEIGHT = 270;*/
 
 var background_hexes = [];
-var filters = ['people', 'animals', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
-var timeline_date;
+var filters = ['people', 'animals', 'plants', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
+
 var numVisions;
 var NUM_ANIMATED = 1;
 var ANIMATION_INTERVAL = 800;
@@ -41,18 +40,18 @@ var background_images = [];
 
 /* honeycomb variables*/
 
-var numRows = 1080/(small_hex_spacing);
+var numRows = 1080/(small_hex_spacing)-1;
 
 var offset = 0;
 
 $(window).load(function() {
   this_container = document.getElementById("container");
   background_container = document.getElementById("background-texture");
-  timeline_date = document.getElementById("timeline-date");
+  
 	connectToSocket();
 	initVisions();
   initFilters();
-  $("#timeline-date").addClass("show");
+
  $("#filter").click(function(){
        $('#bottom-bar-main').removeClass('show');
 
@@ -199,13 +198,13 @@ container.css('width', containerWidth+"px");
 }
 
 function showElement(_id){
-  getYear();
+ // getYear();
  
     if(_id){
                 socket.emit('findById', _id);
                console.log(" data of clicked " + JSON.stringify($(this).data('id')));
               clearAnimation();
-              $("timeline-date").hide();
+
              }
 }
 
@@ -360,7 +359,7 @@ that_hex.style.width = ITEM_WIDTH*2+'px';
 
 function addNewHex(position, path){
    var hex = document.createElement('div');
-    hex.className = 'hexagon';
+    hex.className = 'hexagon-small';
  //if(Math.random()> 0.4){
 hex.style.width = hex_width*2+'px';
   hex.style.height = hex_width+'px';
@@ -379,17 +378,6 @@ hex.style.width = hex_width*2+'px';
    background_hexes[position] = hex;
 }
 
-function getYear(){
- 
-  var index = Math.floor((myScroll.x)*(-2/ITEM_WIDTH));
-   
-  if(index < timeline.length){
-    if(index > 0){
-   console.log(myScroll.x + " index is " + index + " year "+ timeline[index].year);
-   timeline_date.innerHTML = Math.round(timeline[index].year);
- }
- }
-}
 
 
 function setPositions(){
@@ -453,18 +441,7 @@ currCol = 0;
     }
 
 }
-function set_hex_position(hex_object, index){
-  var col = Math.floor(index/numRows);
-  var row = Math.floor(index%numRows);
-   var offset = 30;
-  if(col%2==0)offset = 30+ small_hex_spacing/2;
-    var left =  400+(small_hex_spacing*0.88)* col;
-  var top= offset + row*(small_hex_spacing)-small_hex_spacing/2;
-  hex_object.style.top = top+'px';
-  hex_object.style.left = left+'px';
- // console.log(index + "row "+ row + " offset "+ offset);
 
-}
 
 function orderedHoneycomb(index, hex_object){
   currRow++;
@@ -565,7 +542,7 @@ function toggleRandom(){
       el: document.getElementById('background'),
       resize: false,
       ignoreBoundaries: true,
-      speedRatioX: 0.5
+      speedRatioX: 0.25
     }]
     });
      // $(background_container).css('width', 4000+"px");
