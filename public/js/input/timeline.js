@@ -297,7 +297,8 @@ function initTimelineObj(data, index){
 
   if(data.vision){
        if(data.museum){
-       textDiv.className = 'item-text omca show';
+     //  textDiv.className = 'item-text omca show';
+     textDiv.className = 'item-text show';
         outerTextDiv.className = 'item-text-hex omca';
       } else {
         textDiv.className = 'item-text show';
