@@ -11,7 +11,7 @@ Main scripts for the timeline go here
 var socket, socketLoc, container, containerWidth, detailView, drawingView;
 
 var ITEM_SPACING = 540;
-var hex_border = 0.07;
+var hex_border = 0.08;
 var ITEM_WIDTH = ITEM_SPACING*(1-hex_border);
 var small_hex_spacing = ITEM_SPACING/5;
 var hex_width = small_hex_spacing*(0.75);
@@ -396,7 +396,7 @@ function setPositions(){
  
     for(var i = 0; i < timeline.length; i++){
         var col = i;
-        var left = (ITEM_SPACING*0.87)*col;
+        var left = (ITEM_SPACING*0.87)*(col+1);
         var top;
         if(i%2==0){
          // left = ;

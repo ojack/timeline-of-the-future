@@ -34,7 +34,8 @@ var background_images = [];
 var maxScroll = 1000;
 var SCROLL_STEP = 1;
 var currScroll = 0;
-var START_OFFSET = 1920;
+//var START_OFFSET = 1920;
+var START_OFFSET = 0;
 
 //TO DO : create object that stores data and all objects
 //var xOffset = [0, 0, 0];
@@ -66,7 +67,7 @@ function step(timestamp) {
  // if (start === null) start = timestamp;
  // progress = timestamp - start;
  if(currScroll >= maxScroll){
-  myScroll.scrollTo(0, 0);
+  myScroll.scrollTo(2000, 0);
   requestAnimationFrame(step);
   currScroll = 0;
  }else { myScroll.scrollBy(-SCROLL_STEP, 0);
@@ -351,7 +352,7 @@ function setPositions(){
  
   for(var i = 0; i < timeline.length; i++){
         var col = i;
-        var left = (ITEM_SPACING*0.87)*col;
+        var left = (ITEM_SPACING*0.87)*(col+1);
         var top;
         if(i%2==0){
          // left = ;
