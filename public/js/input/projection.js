@@ -20,8 +20,8 @@ var background_hexes = [];
 var numRows = 1080/(small_hex_spacing)-1;
 
 var numVisions;
-var NUM_ANIMATED = 1;
-var ANIMATION_INTERVAL = 800;
+var NUM_ANIMATED = 5;
+var ANIMATION_INTERVAL = 1000;
 var visionArray = [];
 var backgroundArray = [];
 var animation;
@@ -50,7 +50,7 @@ $(window).load(function() {
   loadBackground();
 	loadVisions();
   initIScroll();
-	
+	setAnimation();
 });
 
 
@@ -130,7 +130,7 @@ function loadVisions(){
    positionHexes();
     
  
-     containerWidth = START_OFFSET +   ((timeline.length)/3+1)*(ITEM_SPACING*1.74);
+     containerWidth = START_OFFSET +  (timeline.length+1)*ITEM_SPACING*0.87;
   //containerWidth = 20000;
 container.css('width', containerWidth+"px");
 
@@ -221,7 +221,7 @@ function updatePositions(){
      console.log("index is "+ index + " new timeline length is "+ timeline.length);
      setPositions();
    
-     containerWidth = START_OFFSET +   ((timeline.length)/3+1)*(ITEM_SPACING*1.74);
+    containerWidth = START_OFFSET +  (timeline.length+1)*ITEM_SPACING*0.87;
   //containerWidth = 20000;
 container.css('width', containerWidth+"px");
 
@@ -244,30 +244,36 @@ function initTimelineObj(data, index){
     this_container.appendChild(item);
 
     item.setAttribute('data-id', data._id);
+    var outerTextDiv = document.createElement('div');
      var textDiv = document.createElement('h1');
       var that_hex = document.createElement('div');
 
   if(data.vision){
        if(data.museum){
-        textDiv.className = 'item-text omca';
+       textDiv.className = 'item-text omca show';
+        outerTextDiv.className = 'item-text-hex omca';
       } else {
-         textDiv.className = 'item-text';
+        textDiv.className = 'item-text show';
+      outerTextDiv.className = 'item-text-hex';
+    //  textDiv.className = 'hexagon-in2-small-hex ';
       }
       textDiv.innerHTML = '<p id="timeline-year">'+data.year+'</p><div class="inner-text">' + data.vision+'</div>';
       } else {
-        textDiv.className = 'item-text-hidden show';
+      //  textDiv.className = 'item-text-hidden show';
       }
        that_hex.className = 'hexagon';
     if(Math.random()> 0.5){
-      $(that_hex).addClass('hide');
-      $(textDiv).addClass('show');
+     // $(that_hex).addClass('hide');
+      $(outerTextDiv).addClass('show');
 
     }
-    textDiv.style.width = 0.85*ITEM_WIDTH+'px';
+    textDiv.style.width = 0.9*ITEM_WIDTH+'px';
+    //  textDiv.style.width = 5*ITEM_WIDTH+'px';
+   //   textDiv.style.height = 5*ITEM_WIDTH+'px';
 
          // that_hex.className = 'hexagon';
    
- 
+ outerTextDiv.appendChild(textDiv);
 that_hex.style.width = ITEM_WIDTH*2+'px';
   that_hex.style.height =ITEM_WIDTH+'px';
     var that_hex1 = document.createElement('div');
@@ -288,14 +294,16 @@ that_hex.style.width = ITEM_WIDTH*2+'px';
       thatIMG.src =data.mediumPath;
       thatIMG.className = "item-alternate";*/
        item.appendChild(that_hex);
+    //that_hex2.appendChild(textDiv);
+    that_hex2.appendChild(outerTextDiv);
     //  item.appendChild(thatIMG);
    // }
-    item.appendChild(textDiv);
+   // item.appendChild(textDiv);
    // orderedHoneycomb(data, index, background_container);
  
     
     //thisObj.imgDiv=hex;
-    thisObj.textDiv=textDiv;
+    thisObj.textDiv=outerTextDiv;
     //thisObj.itemAlternate = thatIMG;
     thisObj.itemAlternate = that_hex;
      thisObj.div=item;
@@ -329,7 +337,7 @@ hex.style.width = hex_width*2+'px';
    // background_container.appendChild(item);
    hex.appendChild(hex1);
   hex1.appendChild(hex2);//}
-   background_container.appendChild(hex);
+  // background_container.appendChild(hex);
 
    background_hexes[position] = hex;
 }
@@ -340,22 +348,17 @@ function setPositions(){
   currRow = 0;
   currCol= 0;
  
-    for(var i = 0; i < timeline.length; i++){
-
-      var row = i%3;
-       var col = Math.floor(i/3);
-       var left = 0;
-       var top = 0; 
-        var offset = 0;
-  if(i%3==0){
-      left = ITEM_SPACING*1.87 + (ITEM_SPACING*1.74)*col;
-    top = ITEM_SPACING;
-  } else {
-    //  left =ITEM_WIDTH + (ITEM_WIDTH*1.74)*col;
-    left = ITEM_SPACING + ITEM_SPACING* 1.74* col;
-  //  var left =  ITEM_WIDTH+ (ITEM_WIDTH*0.87)* col;
-     top= row*(ITEM_SPACING)-ITEM_SPACING/2;
-    }
+  for(var i = 0; i < timeline.length; i++){
+        var col = i;
+        var left = (ITEM_SPACING*0.87)*col;
+        var top;
+        if(i%2==0){
+         // left = ;
+          top = ITEM_SPACING;
+        } else {
+          top = (1+ Math.round(Math.random()))*(ITEM_SPACING)-ITEM_SPACING/2;
+        }
+    /*  var row = i%3;
    /*    var row = i%2;
        var col = Math.floor(i/2);
         var offset = ITEM_WIDTH;
@@ -456,8 +459,8 @@ function shuffle(array) {
 }
 
 function toggleImage(index){
-  $(timeline[i].textDiv).toggleClass('show');
-  $(timeline[i].itemAlternate).toggleClass('hide');
+  $(timeline[index].textDiv).toggleClass('show');
+  //$(timeline[i].itemAlternate).toggleClass('hide');
 	 // var thisItem = container.children().get(index);
    /* visionArray[index].find( ".item-text").toggleClass('show');
     visionArray[index].find( ".item-image").toggleClass('show');*/
@@ -470,11 +473,15 @@ function toggleImage(index){
 }
 
 function toggleRandom(){
-  /*for(var i = 0; i < NUM_ANIMATED; i++){
-    var randIndex = Math.floor((Math.random()*numVisions));
+  for(var i = 0; i < NUM_ANIMATED; i++){
+   // var randIndex = Math.floor((Math.random()*timeline.length));
+   var randIndex = Math.floor((Math.random()*100));
    // console.log("toggling "+ randIndex);
+   if(randIndex < timeline.length){
+  //  console.log("toggling "+ randIndex);
     toggleImage(randIndex);
-  }*/
+  }
+  }
 }
  // Function to slabtext the H1 headings
     function slabTextHeadlines() {
