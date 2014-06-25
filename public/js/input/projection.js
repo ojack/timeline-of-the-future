@@ -490,7 +490,7 @@ function toggleRandom(){
        // $(".item-text").slabText({
          $(".inner-text").slabText({
             // Don't slabtext the headers if the viewport is under 380px
-            "fontRatio": 0.5,
+            "fontRatio": 0.4,
             //"viewportBreakpoint":380,
           // "maxFontSize":80
         });
