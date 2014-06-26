@@ -20,7 +20,7 @@ var THUMB_WIDTHS = [{name: 'medium', size: 461}, {name: 'small', size: 230}];
     params["museum"] = false;
     params["eventArray"
 */
-var drawing_fields =  ['vision', 'inspiration', 'date', 'name', 'tags', 'parent', 'show_timeline', 'always_visible', 'museum'];//fields to save to database from new drawing submission
+var drawing_fields =  ['vision', 'inspiration', 'date', 'name', 'tags', 'year', 'parent', 'show_timeline', 'always_visible', 'museum'];//fields to save to database from new drawing submission
 
 var im = require('imagemagick');
 
