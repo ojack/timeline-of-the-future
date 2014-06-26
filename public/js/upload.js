@@ -4,18 +4,9 @@ var newImage = false;
 var visionData;
 var params = "parm default";
 var socketLoc;
-//var myDropzone;
-var admin_fields = ["vision", "inspiration", "tags", "name", "_id"];
+var myDropzone;
+var admin_fields = ["vision", "year", "inspiration", "tags", "name", "_id"];
 var admin_checkboxes = ["show_timeline", "museum","always_visible"];
-var checkbox_text = ["Show in gallery", "Curator favorites", "OMCA"];
-/*input(type='checkbox', id='show_timeline', value='visible')
-               | Show in gallery
-               br
-               input(type='checkbox', id='always_visible')
-               | Curator favorites
-               br
-               input(type='checkbox', id='museum')
-               | OMCA*/
  var sampleTags = ['people', 'animals', 'plants', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
 /*Dropzone.options.dropzone = {
   paramName: "file", // The name that will be used to transfer the file
@@ -27,18 +18,11 @@ var checkbox_text = ["Show in gallery", "Curator favorites", "OMCA"];
 };*/
 
 $(document).ready(function(){
-  var middle = Math.ceil(sampleTags.length/2);
-   for(var i = 0; i < middle; i++){
-      $('#leftCol').append('<input type="checkbox"  id="tags-'+i+'"/> <span class="checkboxtext">' + sampleTags[i] + '</span> <br />');
-    }
-     for(var i = middle; i < sampleTags.length; i++){
-      $('#rightCol').append('<input type="checkbox"  id="tags-'+i+'"/> <span class="checkboxtext">' + sampleTags[i] + '</span> <br />');
-    }
-     for(var i = 0; i < admin_checkboxes.length; i++){
-      $('#adminCheckboxes').append('<input type="checkbox"  id="'+ admin_checkboxes[i]+'"/> <span class="checkboxtext">' + checkbox_text[i] + '</span> <br />');
+   for(var i = 0; i < sampleTags.length; i++){
+      $('#checkboxes').append('<input type="checkbox" id="tags-'+i+'"/> ' + sampleTags[i] + '<br />');
     }
           
-  /*myDropzone = new Dropzone("form#bg", { 
+  myDropzone = new Dropzone("form#bg", { 
   thumbnailWidth: 800,
   thumbnailHeight: 600,
    init: function() {
@@ -59,7 +43,7 @@ $(document).ready(function(){
   uploadMultiple:false,
   autoProcessQueue: false
 
-});*/
+});
 
 /*myDropzone.on("sending", function(file, xhr, formData) {
     var paramString = JSON.stringify(params);
@@ -110,12 +94,20 @@ if(visionParams == 'new' || visionParams== 'null') {
         $( "#"+ admin_checkboxes[i]).prop( "checked", visionData[admin_checkboxes[i]] );
       }
     }
-  
+  console.log( "select items are" + $("#year").children);
   if(visionData.imgPath!=null) $('#bg').css('background-image', 'url(' + visionData.imgPath + ')');
   
   //alert(visionParams);
 }
 
+var myselect = document.getElementById('year'), year = new Date().getFullYear()-1;
+var gen = function(max){do{
+  year++; 
+  var selected = false; 
+  if(visionData!=null){
+    if(year==visionData.year) selected = true; 
+  }
+    myselect.add(new Option(year,max--, false, selected),null);}while(max>0);}(100);
 
 //var visionData = jQuery.parseJSON($('#visionData').val());
 //alert(visionData);
@@ -127,7 +119,8 @@ socket.on('connect', function() {
 socket.on('update', updateHandler);
   //$("#popup").draggable();
 
-
+$('#restart-drawing').click(function(){socket.emit("restart drawing", "")});
+$('#restart-projection').click(function(){socket.emit("restart projection", "")});
 
   $('#Submit').click(function(e) {
     params = {};
@@ -149,7 +142,14 @@ socket.on('update', updateHandler);
         //;
      // params[admin_checkboxes[i]] = $( "#"+admin_checkboxes[i]).is(':checked');
     }
-   
+     var year = $("#year").children(':selected').text();
+    
+    if(year=="Tomorrow"){
+      params["year"] = 2014;
+    } else {
+      params["year"] = year;
+    }
+    
     if(!isNew)params["_id"] = visionData._id;
     if(!isNew)params["imgPath"] = visionData.imgPath;
     if(isNew){
@@ -196,17 +196,17 @@ socket.on('update', updateHandler);
     }*/
             // broadcastToSocket(str);
               //alert("submit called" + year +prediction + type + notes);*/
-    /* var files = myDropzone.getQueuedFiles();
+     var files = myDropzone.getQueuedFiles();
      if(files.length > 0){
        myDropzone.processQueue();
      } else {
-      console.log("updating without image");*/
+      console.log("updating without image");
       if(isNew){
          socket.emit('addNewVision', params);
       } else {
         socket.emit('updateVision', params);
       }
- //    }
+     }
      
               
   });

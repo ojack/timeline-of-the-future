@@ -20,7 +20,7 @@ var THUMB_WIDTHS = [{name: 'medium', size: 461}, {name: 'small', size: 230}];
     params["museum"] = false;
     params["eventArray"
 */
-var drawing_fields =  ['vision', 'year', 'inspiration', 'date', 'name', 'tags', 'parent', 'show_timeline', 'always_visible', 'museum'];//fields to save to database from new drawing submission
+var drawing_fields =  ['vision', 'inspiration', 'date', 'name', 'tags', 'parent', 'show_timeline', 'always_visible', 'museum'];//fields to save to database from new drawing submission
 
 var im = require('imagemagick');
 
@@ -243,9 +243,9 @@ FileSystem.prototype.addNewImage = function(req, visionProvider){
 FileSystem.prototype.saveVision = function (data, file, visionProvider){
   var newVision = data;
   var tagArray = data.tags.split(',');
-  var adminArray = data.adminTags.split(',');
+ 
   newVision["tags"] = tagArray;
-  newVision["adminTags"]= adminArray;
+
   //var fileType = req.files.type;
   var permStorage = this.permStorage;
   visionProvider.saveVision(newVision, function (error, visions) {
@@ -272,10 +272,10 @@ FileSystem.prototype.updateVision = function(data, file, visionProvider){
   var permStorage = this.permStorage;
 var newVision = data;
       var tagArray = data.tags.split(',');
-     var adminArray = data.adminTags.split(',');
+   
      var newVision = data;
   newVision["tags"] = tagArray;
-  newVision["adminTags"]= adminArray;
+ 
   //delete newVision['_id'];
       console.log("updating "+ data._id);
       visionProvider.updateVision(data._id, newVision, function (err) {

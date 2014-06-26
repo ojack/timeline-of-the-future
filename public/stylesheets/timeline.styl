@@ -48,11 +48,7 @@ background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.8) 100%); /
     -webkit-border-radius: 10px;
     border-radius: 10px;
 }
- 
-#checkboxes{
-  background-color: #f00;
-  width: 400px;
-}
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
     -webkit-border-radius: 10px;
@@ -429,7 +425,50 @@ font-family:'BentonSansCond-Regular', Sans-Serif;
   left: 520px;
 }
 
+.input-label-large{
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 18px; 
+}
 
+#checkboxes{
+  height: 180px;
+  width: 200px;
+}
+#rightCol{
+  position: absolute;
+  left: 150px;
+}
+
+#leftCol{
+  position: absolute;
+  left: 40px;
+  
+}
+
+#tagHolder{
+  position: absolute;
+  top: 350px;
+  right: 10px;
+}
+
+#tags{
+  width: 200px;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
+input[type=checkbox]
+{
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+  padding: 5px;
+  margin: 5px;
+}
 
 #textArea{
         width: 1084px;
@@ -478,6 +517,7 @@ border-width:3px;
 
 #popup-heading{
   font-size: 26px;
+  font-family:'Oita-Bold',Sans-Serif;
 }
 
 #shade{
@@ -513,7 +553,7 @@ border-width:3px;
   right: 0px;
   color: #333;
   padding: 30px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.9);
   opacity: 0;
 }
 
@@ -523,7 +563,7 @@ border-width:3px;
 }
 
 #inputForm{
-        font-size: 18px;
+        font-size: 20px;
         width: 150px;
 
 }
@@ -545,6 +585,10 @@ border-width:3px;
     font-family: 'BentonSans-Regular', sans-serif;
     
 }
+#bottomButtons{
+  margin-top: 200px;
+}
+
 #back{
      width: 317px;
   position: absolute;

@@ -1,5 +1,5 @@
 //drawing.js
-
+var sampleTags = ['people', 'animals', 'plants', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
 
 function DrawingView(gallery){
 	this.init(gallery);
@@ -81,6 +81,13 @@ DrawingView.prototype =
 	initForm : function(){
 		var form = this.infoForm;
 		var thisObj = this;
+		var middle = Math.ceil(sampleTags.length/2);
+   for(var i = 0; i < middle; i++){
+      $('#leftCol').append('<input type="checkbox"  id="tags-'+i+'"/> <span class="checkboxtext">' + sampleTags[i] + '</span> <br />');
+    }
+     for(var i = middle; i < sampleTags.length; i++){
+      $('#rightCol').append('<input type="checkbox"  id="tags-'+i+'"/> <span class="checkboxtext">' + sampleTags[i] + '</span> <br />');
+    }
 		$('#next').click(function(){
 			console.log("clicked next");
 			form.addClass('show');
@@ -145,6 +152,13 @@ DrawingView.prototype =
     } else {
     	params["year"] = year;
     }
+
+      for(var i = 0; i < sampleTags.length; i++){
+	      if($( "#tags-"+i).is(':checked')==true){
+	        var newString = ","+ sampleTags[i];
+	        params['tags']+=newString;
+	      }
+	   }
       params['date'] = new Date();
       params['newVision']= "true";
       params['backgroundPath'] =iFrameCanvas.toDataURL('image/png');

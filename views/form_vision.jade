@@ -2,13 +2,13 @@
 html
   head
     meta(charset='UTF-8')
-    title Form
+    title Edit Vision
     script(src="/socket.io/socket.io.js")
     script(src='js/jquery-1.10.2.min.js')
     script(type='text/javascript', src='http://code.jquery.com/ui/1.10.3/jquery-ui.js')
     script(type='text/javascript', src='js/tag-it/tag-it.js')
-    script(type='text/javascript', src='js/dropzone.js')
     script(type='text/javascript', src='js/form.js')
+    link(rel='stylesheet', href='/stylesheets/fonts.css', type='text/css')
     link(href="/stylesheets/bootstrap.min.css", rel='stylesheet')
     link(href="/stylesheets/ui-lightness/jquery-ui.css", rel='stylesheet')
     link(href="/stylesheets/ui-lightness/jquery.ui.theme.css", rel='stylesheet')
@@ -16,57 +16,37 @@ html
     link(href="/stylesheets/tag-it/tagit.ui-zendesk.css", rel='stylesheet')
     link(rel='stylesheet', href='/stylesheets/form.css')
   body
-    input(type='hidden',id='visionData',value=visionData)
-    form#bg(action='/file-upload')
-        drag drag and drop an image
-    #popup
-      #title CALIFORNIA FUTURES //// Admin
-        input.input-large(name='prediction', type='text', placeholder='', id="vision")
-      #_id
-      form.form-horizontal(value="Send" id="inputForm")
-       input.input-label-large(type='checkbox', id='show_timeline', value='visible')
-       | Visible in timeline
-       br
-       input(type='checkbox', id='always_visible')
-       | Curator favorites
-       br
-       input(type='checkbox', id='museum')
-       | OMCA
-       fieldset
-        .control-group
-          .input-label-large(for='selectbasic') When does this happen?
-          .controls
-            select#yearSelect(id='year')
-              option Tomorrow
-        .control-group
-          .input-label-large(for='') Tags
-          div#checkboxes
-          .controls
-            input#tags
-        .control-group
-          label.control-label(for='Submit')
-          .controls
-        button.btn.btn-default(type="button", id='Submit') Submit
-        fieldset#secondary
-          .control-group
-            .input-label-large(for='') Tags
-            .controls
-              input#adminTags
-          .control-group
-            .input-label-large(for='') Name
-            .controls
-              input#name
-          .control-group
-            .input-label(for='') What informed or inspired this idea?
-            textarea(rows='6', cols='40', id="inspiration")
-          .control-group
-            .input-label(for='') Comments
-            .controls
-            textarea(rows='6', cols='40', id="notes")
-      button.btn.btn-default(type="button", id='delete') Delete
-      button.btn.btn-default(type="button", id='newVision') >
-      button.btn.btn-default(type="button", id='restart-drawing') Refresh Gallery Input Stations
-      button.btn.btn-default(type="button", id='restart-projection') Refresh Gallery Projection
+      input(type='hidden',id='visionData',value=visionData)
+      form#bg(action='/file-upload')
+      #popup
+        #title FUTURES LOUNGE //// Edit Vision:
+          input.input-large(name='prediction', type='text', placeholder='', id="vision")
+        #_id
+        form.form-horizontal(value="Send" id="inputForm")
+              div#adminCheckboxes
+              fieldset
+                .control-group
+                    .input-label-large(for='') Name
+                    .controls
+                      input#name
+                .control-group
+                    .input-label-large(for='') Inspiration
+                    textarea(rows='6', cols='40', id="inspiration")
+                .control-group
+                  .input-label-large(for='') Tags
+                  div#checkboxes
+                    div#leftCol
+                    div#rightCol
+                  .controls
+                    input#tags
+                .control-group
+                  label.control-label(for='Submit')
+                  .controls
+                fieldset
+                  
+    #bottomBar
+    button.btn.btn-default(type="button", id='delete') Delete Vision
+    button.btn.btn-default(type="button", id='Submit') Submit
       #dialog-confirm(title='Delete this vision?')
         p
           span.ui-icon.ui-icon-alert(style='float: left; margin: 0 7px 20px 0;')

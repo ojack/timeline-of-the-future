@@ -96,15 +96,15 @@
 /*-----[Customisable styles]--------------------------------------------------*/
 
 #osk-container {
-	width: 47%;     /* Account for 2% padding and a vertical scroll bar */
+	width: 45%;     /* Account for 2% padding and a vertical scroll bar */
 	min-width: 500px;
-	max-width: 1200px;
+	max-width: 900px;
 	background: #EEE;
 	border-radius: 5%;
 	color: #000;
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	position: absolute;
-	left: 520px;
+	left: 100px;
 	top: 700px;
 }
 

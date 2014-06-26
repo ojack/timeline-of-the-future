@@ -66,7 +66,7 @@ head
         button.btn.btn-default(type="button", id='back') Back
       div#moreInfo
         #popup-heading Tell us more about your idea
-          form.form-horizontal(value="Send" id="inputForm")
+        form.form-horizontal(value="Send" id="inputForm")
               fieldset
                 .control-group
                   .input-label-large(for='selectbasic') When will this happen?
@@ -76,15 +76,20 @@ head
                   label.control-label(for='Submit')
                   .controls
                 fieldset#secondary
+
                   .control-group
-                    .input-label(for='') What inspired you to write this prediction?
+                    .input-label-large(for='') What is this about? (check all that apply)
+                    div#checkboxes
+                      div#leftCol
+                      div#rightCol
+                    .controls
+                      div#tagHolder Add your own: 
+                        input#tags.keyboard
+                  .control-group
+                    .input-label-large(for='') What inspired you to write this prediction?
                     textarea(rows='6', cols='40', id="inspiration", class="keyboard")
                   .control-group
-                    .input-label-large(for='') Tags (e.g. climate, utopia, Oakland)
-                    .controls
-                      input#tags.keyboard
-                  .control-group
-                    .input-label(for='') Name
+                    .input-label-large(for='') Name
                     .controls
                         input#name.keyboard
         div#bottomButtons
