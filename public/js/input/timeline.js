@@ -10,11 +10,12 @@ Main scripts for the timeline go here
 
 var socket, socketLoc, container, containerWidth, detailView, drawingView;
 
-var ITEM_SPACING = 540;
+//var ITEM_SPACING = 540;
+var ITEM_SPACING = 490;
 var hex_border = 0.08;
 var ITEM_WIDTH = ITEM_SPACING*(1-hex_border);
-var small_hex_spacing = ITEM_SPACING/5;
-var hex_width = small_hex_spacing*(0.75);
+var small_hex_spacing = ITEM_SPACING/4;
+var hex_width = small_hex_spacing*(1-hex_border);
 var num_hexes = 300;
 
 /*var BG_WIDTH = 461;
@@ -545,12 +546,12 @@ function toggleRandom(){
  // Function to slabtext the H1 headings
     function slabTextHeadlines() {
        // $(".item-text").slabText({
-         $(".inner-text").slabText({
+   /*      $(".inner-text").slabText({
             // Don't slabtext the headers if the viewport is under 380px
             "fontRatio": 0.4,
             //"viewportBreakpoint":380,
           // "maxFontSize":80
-        });
+        });*/
        
        
    }

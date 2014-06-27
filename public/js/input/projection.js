@@ -489,12 +489,12 @@ function toggleRandom(){
     function slabTextHeadlines() {
       
        // $(".item-text").slabText({
-         $(".inner-text").slabText({
+      /*   $(".inner-text").slabText({
             // Don't slabtext the headers if the viewport is under 380px
             "fontRatio": 0.4,
             //"viewportBreakpoint":380,
           // "maxFontSize":80
-        });
+        });*/
        
        
    

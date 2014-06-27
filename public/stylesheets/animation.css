@@ -1,5 +1,5 @@
 #timeline-year {
-  font-size: 28px;
+  font-size: 34px;
   margin-bottom: 20px;
   color: #bed62f;
   font-family: 'Oita-Bold', Sans-Serif;
@@ -87,6 +87,7 @@
   border-width: 30px 40px 40px 40px;
   background-color: #fff;
   color: #000;
+  font-size: 28px;
 }
 .item-text-hidden {
   visibility: hidden;
@@ -119,6 +120,7 @@
   -ms-transform: translateX(-50%) translateY(-50%);
   transform: translateX(-50%) translateY(-50%);
   font-family: 'Oita-Book', Sans-Serif;
+  font-size: 24;
   -webkit-transition: opacity 800ms ease;
   -moz-transition: opacity 800ms ease;
   -o-transition: opacity 800ms ease;
