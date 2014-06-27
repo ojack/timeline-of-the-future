@@ -41,7 +41,7 @@ var background_images = [];
 
 /* honeycomb variables*/
 
-var numRows = 1080/(small_hex_spacing)-1;
+var numRows = 1080/(small_hex_spacing);
 
 var offset = 0;
 
@@ -546,12 +546,12 @@ function toggleRandom(){
  // Function to slabtext the H1 headings
     function slabTextHeadlines() {
        // $(".item-text").slabText({
-   /*      $(".inner-text").slabText({
+      $(".inner-text").slabText({
             // Don't slabtext the headers if the viewport is under 380px
             "fontRatio": 0.4,
             //"viewportBreakpoint":380,
           // "maxFontSize":80
-        });*/
+        });
        
        
    }
