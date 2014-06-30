@@ -5,6 +5,7 @@ var BSON = require('mongodb').pure().BSON;
 var ObjectId = require('mongodb').ObjectID;
 var _ = require('lodash');
 
+var MAX_CURATED = 30; //maximum number of "curator favories" to show in timeline 
 var vision_fields = { imgPath: 1, vision: 1, year:1};//fields returned for general display of visions
 var vision_query = {};
 var timeline_query = {_id: { $ne: "gallery" }, show_timeline: true, mediumPath: { $exists: true } };
@@ -116,22 +117,24 @@ VisionProvider.prototype.findTimelineCollection= function(limit, callback){
     if (error) callback(error)
         else {
            // console.log("queries "+ JSON.stringify(curated_query) + " liked query "+ JSON.stringify())
-            vision_collection.find(curated_query, timeline_fields).limit(limit).toArray(function (error, curated_results) {
+            vision_collection.find(curated_query, timeline_fields).limit(MAX_CURATED).sort({date: -1}).toArray(function (error, curated_results) {
               if(error){ 
                 callback(error, null);
               } else {
                 var numberLiked = (limit - curated_results.length)/2;
-                console.log("FOUND "+ JSON.stringify(curated_results));
-                console.log("finding the "+ numberLiked + " most recent");
+                console.log("curated results "+ JSON.stringify(curated_results));
+               
 
                 vision_collection.find(liked_query, timeline_fields).limit(numberLiked).sort({like_percent: -1}).toArray(function (error, liked_results) {
                   var first_merge = _.union(curated_results, liked_results);
                   console.log("num curated " + curated_results.length + " num_liked "+ liked_results.length + " merged length "+ first_merge.length);
                   /* remaining to add are most recently added ideas*/
+                 //  console.log("found"+ numberLiked + " most liked");
                   var remaining = limit - first_merge.length;
                 /*get most recently added*/
                   vision_collection.find(timeline_query, timeline_fields).limit(remaining).sort({date: -1}).toArray(function (error, recent_results) {
                       var merged_result = _.union(first_merge, recent_results);
+                       console.log("found "+ recent_results.length + " most recent");
                      // var uniqueList = _.uniq(merged_result, _id);
                      var sorted_result = _.sortBy(merged_result, ['year', 'mediumPath']);
                      var uniqueList = _.uniq(sorted_result, true, function(item, key, mediumPath) { 
