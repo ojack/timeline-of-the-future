@@ -110,27 +110,44 @@ function showResults(params){
     var year_count = 0;
     var new_year = 2014;
     var year_avg = new Date().getFullYear();
-
-    if(visionData.vote_results){
-      never_count = visionData.vote_results.never_count;
-     total_count = visionData.vote_results.total_count;
-      year_count = visionData.vote_results.year_count;
-      if(visionData.year != null) {
-        year_avg == visionData.year;
+      var thisObj = {};
+      var thisDate = new Date();
+      thisObj[thisDate] = params.vote;
+      var allVotes;
+      if(visionData.vote_results){
+        allVotes = visionData.vote_results.votes;
       } else {
-          if(params.vote != "NEVER") {
-            year_avg = params.vote;
-          }
-      } 
-     }
-      var new_year = year_avg;
-      if(params.vote == "NEVER"){
-        never_count++;
-      } else {
-        new_year = Math.round((year_avg*year_count + params.vote)/(year_count+1));
-        year_count++;
+        allVotes = new Array();
       }
-      total_count++;
+      allVotes.push(thisObj);
+      console.log(JSON.stringify(allVotes));
+      var average = 0;
+      var count = 0;
+      total_count = allVotes.length;
+      for(var i = 0; i < total_count; i++){
+        var key = Object.keys(allVotes[i])[0];
+        var vote = allVotes[i][key];
+        if(vote !="never" && vote !="NEVER"){
+          console.log("adding "+ vote);
+          average += parseInt(vote);
+          count++;
+          }
+
+       //   alert(JSON.stringify(visionData.vote_results.votes[i][key]));
+        }
+//alert(Math.round(average/count));
+      never_count = total_count - count;
+      year_count = count;
+      if(average > 0 ){
+        year_avg = Math.round(average/count);
+      } else {
+        year_avg = 2045;
+      }
+    
+     
+     // var new_year = year_avg;
+      
+      
        var unlikelihood = Math.round(never_count/total_count*100);
        if(visionData.likes) likes = visionData.likes;
        if(like) likes++;
@@ -141,9 +158,10 @@ function showResults(params){
    params.never_count = never_count;
    params.total_count = total_count;
    params.year_count = year_count;
-   params.year = new_year;
+   params.year = year_avg;
    params.unlikelihood = unlikelihood;
    params.likes = likes;
+   params.votes = allVotes;
    console.log(JSON.stringify(params));
   // {'_id':visionData._id, 'like': like, 'vote':vote};
 

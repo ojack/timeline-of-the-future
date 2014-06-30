@@ -280,13 +280,14 @@ VisionProvider.prototype.addVoteResults = function(data, callback){
        var voteDate = {};
       voteDate[new Date()]=data.vote;
      var query = {_id: vision_id};
-         var update = {'$push':{'vote_results.votes':voteDate},
+         var update = {//'$push':{'vote_results.votes':voteDate},
                     '$set':{
                       'year':data.year,
                       'unlikelihood': data.unlikelihood,
                       'vote_results.year_count': data.year_count,
                       'vote_results.never_count':  data.never_count,
                       'vote_results.total_count': data.total_count,
+                      'votes': data.votes
                     }};
         vision_collection.update(query, update, { multi: true }, function(err){
             if(err) callback(err);
