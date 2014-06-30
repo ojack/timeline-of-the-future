@@ -6,7 +6,7 @@ var params = "parm default";
 var socketLoc;
 //var myDropzone;
 var admin_fields = ["vision", "inspiration", "tags", "name", "_id"];
-var admin_checkboxes = ["show_timeline", "museum","always_visible"];
+var admin_checkboxes = ["show_timeline", "always_visible", "museum"];
 var checkbox_text = ["Show in gallery", "Curator favorites", "OMCA"];
 /*input(type='checkbox', id='show_timeline', value='visible')
                | Show in gallery
