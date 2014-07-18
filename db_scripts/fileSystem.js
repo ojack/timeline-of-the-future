@@ -55,22 +55,30 @@ FileSystem.prototype.remove = function(id, visionProvider){
     if(err){
       console.log(err);
     } else {
+      if(pathArray.imgPath){
       var path = pathArray.imgPath.substring(2);
-        var mediumPath = pathArray.mediumPath.substring(2);
-         var smallPath = pathArray.smallPath.substring(2);
-      console.log("PATH IS "+ path);
-      fs.unlink(path, function (err) {
+        fs.unlink(path, function (err) {
               if (err) console.log(err);
  
     });
+      }
+       if(pathArray.mediumPath){
+        var mediumPath = pathArray.mediumPath.substring(2);
+        
+      console.log("PATH IS "+ path);
+    
         fs.unlink(mediumPath, function (err) {
               if (err) console.log(err);
  
     });
+      }
+        if(pathArray.smallPath){
+       var smallPath = pathArray.smallPath.substring(2);
            fs.unlink(smallPath, function (err) {
               if (err) console.log(err);
  
     });
+      }
      /* for(var i = 0; i < )
       fs.unlink(path, function (err) {
               if (err) callback(err);
@@ -87,6 +95,8 @@ FileSystem.prototype.addFrame = function(data, frameNo, callback){
       callback(err);
     });
 };
+
+/*Receives data of newly created vision, adds to server*/
 
 FileSystem.prototype.addNewDrawing = function(data, visionProvider, callback){
   var permStorage = this.permStorage;
@@ -109,14 +119,7 @@ FileSystem.prototype.addNewDrawing = function(data, visionProvider, callback){
     //init vote count with year as first vote
    visionProvider.saveVision(newVision, function (error, visions) {
   var _id = visions._id;
-   if(data.eventArray!= undefined){
-   console.log("sending data to canvas.  event array is "+ backgroundPath);
-
-    //var canvas = new Canvas(_id, data.eventArray, data.backgroundPath);
-    
-  } else {
-    console.log("EVENT ARRAY IS UNDEFINED");
-  }
+  
       console.log("error is "+ error + "visions are "+ JSON.stringify(visions));
   
  
@@ -141,6 +144,7 @@ FileSystem.prototype.addNewDrawing = function(data, visionProvider, callback){
   var _id = visions[0]._id;*/
   //console.log(data.drawingPath);
      addPNG(_id, img, visionProvider, permStorage, function(err, path){
+
     if(err) callback(err, null);
    /* addPNG(_id, drawing, visionProvider, "-draw", permStorage, function(err, path){
    if(err) callback(err, null);*/
@@ -419,6 +423,7 @@ function addThumbs(id, newPath, filepath, extension, visionProvider, callback){
                     var public_thumb_path ="./"+ thumb_path;
                     var index = THUMB_WIDTHS[i].name + 'Path';
                     paths[index] = public_thumb_path ="./"+ thumb_path;
+                    console.log("adding thumb");
                     im.resize({
                         srcPath: newPath,
                         dstPath: thumb_path,

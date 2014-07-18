@@ -172,7 +172,7 @@ var noScroll = function(event) {event.preventDefault()};
 	 var rgb = t.toRgb();
 	 setForegroundColor(rgb);
 	console.log("color is : " + JSON.stringify(COLOR) );
-	resetDrawing("./TEST_STORAGE/0/5/53448b2008ba4e7724000005.png");
+	resetDrawing();
 }
 
 function setForegroundColor(col){

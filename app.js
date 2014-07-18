@@ -587,20 +587,26 @@ io.sockets.on('connection', function (socket) {
 
  socket.on('update from gallery admin', function(data){
         for(var i = 0; i < data.length; i++){
-          console.log(JSON.stringify(data[i]));
-          visionProvider.updateTimelineVisibility(data[i]._id, data[i].show_timeline, function(error, vision){
+          console.log(JSON.stringify(data[i].update));
+         visionProvider.updateTimelineVisibility(data[i]._id, data[i].update, function(error, vision){
             if(error) console.log(error);
-            io.sockets.in(socket.id).emit('refresh gallery admin', "");
+            if(i==(data.length-1)){
+               io.sockets.in(socket.id).emit('refresh gallery admin', "");
+            }
           });
         }
  });
 
+/* A new vision is created and added to the server */
   socket.on('addNewDrawing', function (data){
+    /*upload file and add to database*/
     fileSystem.addNewDrawing(data, visionProvider, function(error, id){
      if(error)console.log(error);
      console.log("CALLBACK HOLLLA "+id);
+     /*Find newly created file from database. Add new vision to client*/
       visionProvider.findForTimeline(id, function(error, vision){
    //   console.log("looking for id ");
+   
    if(error){
     console.log("cannot find id")
   } else {

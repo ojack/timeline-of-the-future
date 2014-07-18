@@ -15,7 +15,7 @@ var query_params = { _id: { $ne: "gallery" } };
 var detailed_fields = { imgPath: 1, vision: 1, year:1, smallPath:1, inspiration:1, tags: 1, date:1, name: 1, parent:1, children: 1};
 var thumb_fields = { smallPath: 1, vision:1};
 var gallery_fields = { smallPath: 1, imgPath: 1};
-var gallery_admin_fields = { smallPath: 1, date:1, vision: 1, show_timeline: true};
+var gallery_admin_fields = { smallPath: 1, date:1, vision: 1, show_timeline: true, always_visible:1};
 var admin_fields = { imgPath: 1, vision: 1, year:1, inspiration:1, tags: 1, date:1, name: 1, adminTags: 1, children: 1, parent: 1, show_timeline:1, always_visible:1, museum:1};
 var timeline_fields = { mediumPath: 1, smallPath: 1, vision: 1, year:1, museum: 1};
 var image_fields = { imgPath: 1, mediumPath: 1, smallPath: 1};
@@ -639,7 +639,7 @@ VisionProvider.prototype.updateImagePath = function (visionId, imagePath, callba
 };
 
 /* Handles show or hide requests from gallery admin interface. Sets show_timeline and show_rating to the new value*/
-VisionProvider.prototype.updateTimelineVisibility = function (visionId, visibility, callback) {
+VisionProvider.prototype.updateTimelineVisibility = function (visionId, update, callback) {
     //var id = visionId;
     
     this.getCollection(function (error, vision_collection) {
@@ -650,7 +650,8 @@ VisionProvider.prototype.updateTimelineVisibility = function (visionId, visibili
             vision_collection.update(
                // {_id: vision_collection.db.bson_serializer.ObjectID.createFromHexString(visionId)},
                {_id: id},
-               {"$set": {'show_timeline': visibility}},
+              // {"$set": {'show_timeline': visibility}},
+               {"$set": update},
                function(error, vision){
                 if( error ) callback(error, null);
                // console.log("updated :" + JSON.stringify(vision));

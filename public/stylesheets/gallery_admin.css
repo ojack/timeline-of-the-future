@@ -30,8 +30,15 @@ html{
 
  .header{
  	font-size: 14px;
- 	
  	background-color: #ddd;
+ }
+
+.curator{
+	padding-left: 120px;
+
+}
+ .header-check{
+ 	
  }
 
  .topRow{

@@ -127,10 +127,12 @@ function initVisions(){
   drawingView = new DrawingView(galleryData);
   numVisions = visionData.length;
   container = $('#container');
+  if(visionData.length > 0){
   loadBackground();
   loadVisions();
   setAnimation();
   initIScroll();
+}
 }
 
 function loadBackground(){
@@ -138,11 +140,12 @@ function loadBackground(){
     background_images[i] = new Image(); 
     background_images[i].src = visionData[i].smallPath;
   }
-
+  if(visionData.length > 0){
   for(var i = 0; i < num_hexes; i++){
     var hex_index = Math.floor(Math.random()*visionData.length);
     addNewHex(i,  background_images[hex_index].src);
   }
+}
 }
 /*Load all visions from the server*/
 function loadVisions(){
