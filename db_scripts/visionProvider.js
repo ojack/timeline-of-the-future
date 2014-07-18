@@ -417,12 +417,12 @@ VisionProvider.prototype.addRandom = function(callback){
 }
 
 function findRandom(random, vision_collection, callback){
-     vision_collection.findOne({_id: { $ne: "gallery" },  show_timeline: true, museum :false, rand : { $gte : random }}, 
+     vision_collection.findOne({_id: { $ne: "gallery" },  show_timeline: true, always_visible: true, rand : { $gte : random }}, 
                     function (error, result) {
 
                     if (error) callback(error, null);
                     if(result==null){
-                         vision_collection.findOne({_id: { $ne: "gallery" }, show_timeline: true, museum:false, rand : { $lte : random }}, function (error, result){
+                         vision_collection.findOne({_id: { $ne: "gallery" }, show_timeline: true, always_visible: true, rand : { $lte : random }}, function (error, result){
                             if (error){
                               callback(error, null);
                             } else {

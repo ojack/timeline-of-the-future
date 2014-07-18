@@ -113,12 +113,15 @@ function showResults(params){
       var thisObj = {};
       var thisDate = new Date();
       thisObj[thisDate] = params.vote;
-      var allVotes;
+      var allVotes = new Array;
       if(visionData.vote_results){
+         if(visionData.vote_results.votes){
         allVotes = visionData.vote_results.votes;
-      } else {
-        allVotes = new Array();
+        console.log("all votes is " + JSON.stringify(visionData.vote_results));
       }
+      } /*else {
+        allVotes = new Array();
+      }*/
       allVotes.push(thisObj);
       console.log(JSON.stringify(allVotes));
       var average = 0;
