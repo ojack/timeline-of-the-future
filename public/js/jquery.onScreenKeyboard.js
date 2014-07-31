@@ -112,7 +112,7 @@
 		});
 
 		$keyboard.on('click', 'li', function () {
-			var $key      = $(this),
+		 var $key      = $(this),
 				character = $key.html(),
 				inputValue,
 				indexOfNextInput;
@@ -212,11 +212,16 @@
 				}
 				shift = false;
 			}
-
-			$input.focus().val($input.val() + character);
+			 var caretPos = $input[0].selectionStart;
+			 console.log("caret is at " + caretPos);
+			 var selectPos = caretPos+1;
+			 var textAreaTxt = $input.val();
+			// $input.focus();
+			$input.focus().val(textAreaTxt.substring(0, caretPos) + character + textAreaTxt.substring(caretPos) );
+			$input[0].setSelectionRange(selectPos, selectPos);
 			$input.trigger('keyup');
 
-			console.log("index of input"+ indexOfNextInput);
+			//console.log("index of input"+ indexOfNextInput);
 		});
 		
 		return this;
@@ -285,7 +290,7 @@
 					'<span class="osk-on">)</span>' +
 				'</li>' +
 				'<li class="osk-symbol">' +
-					'<span class="osk-off">-</span>' +
+					'<span class="osk-off">!</span>' +
 					'<span class="osk-on">_</span>' +
 				'</li>' +
 				'<li class="osk-symbol">' +

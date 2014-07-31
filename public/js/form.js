@@ -17,6 +17,7 @@ var checkbox_text = ["Show in gallery", "Curator favorites", "OMCA"];
                input(type='checkbox', id='museum')
                | OMCA*/
  var sampleTags = ['people', 'animals', 'plants', 'land use', 'climate', 'food', 'water', 'energy', 'tech', 'extinction', 'bay area'];
+var commentBools = new Array();
 /*Dropzone.options.dropzone = {
   paramName: "file", // The name that will be used to transfer the file
   init: function() {
@@ -38,33 +39,6 @@ $(document).ready(function(){
       $('#adminCheckboxes').append('<input type="checkbox"  id="'+ admin_checkboxes[i]+'"/> <span class="checkboxtext">' + checkbox_text[i] + '</span> <br />');
     }
           
-  /*myDropzone = new Dropzone("form#bg", { 
-  thumbnailWidth: 800,
-  thumbnailHeight: 600,
-   init: function() {
-
-    this.on("addedfile", function(file) { 
-     var files = this.getQueuedFiles();
-     $('#bg').css('background-image', 'none');
-     if(files.length > 0){
-       console.log("removing file");
-       this.removeFile(files[0]);
-     }
-     console.log(this.getQueuedFiles());
-         
-     //alert("Added file." );
-     });
-  },
-  maxFilesize: 10, // MB
-  uploadMultiple:false,
-  autoProcessQueue: false
-
-});*/
-
-/*myDropzone.on("sending", function(file, xhr, formData) {
-    var paramString = JSON.stringify(params);
-  formData.append("filesize", paramString); // Will send the filesize along with the file as POST data.
-});
 
   /*get socket address based on current url*/
   var str = "" + window.location;
@@ -111,8 +85,16 @@ if(visionParams == 'new' || visionParams== 'null') {
       }
     }
   
-  if(visionData.imgPath!=null) $('#bg').css('background-image', 'url(' + visionData.imgPath + ')');
+      if(visionData.comments){
+      showComments(visionData.comments);
+      console.log("comments are "+JSON.stringify(visionData.comments));
+    }
   
+  if(visionData.imgPath!=null) $('#bg').css('background-image', 'url(' + visionData.imgPath + ')');
+  $(".delete-button").click(function(){
+    alert("clicked delete!" + $(this).data('id'));
+    commentBools[$(this).data('id')] = 0;
+  });
   //alert(visionParams);
 }
 
@@ -149,7 +131,14 @@ socket.on('update', updateHandler);
         //;
      // params[admin_checkboxes[i]] = $( "#"+admin_checkboxes[i]).is(':checked');
     }
-   
+     if(visionData.comments){
+      var comments = new Array();
+      for(var i = 0; i < visionData.comments.length; i++){
+        if(commentBools[i]==1) comments.push(visionData.comments[i]);
+      }
+      params['comments']=comments;
+      //alert(JSON.stringify(comments));
+   }
     if(!isNew)params["_id"] = visionData._id;
     if(!isNew)params["imgPath"] = visionData.imgPath;
     if(isNew){
@@ -280,6 +269,30 @@ function updateHandler(data){
   location.reload();
 }
 
+function showComments(comments){
+  for(var i = comments.length-1; i>=0; i--){
+    addComment(comments[i], i);
+    commentBools[i] = 1;
+  }
+ }
+  function addComment(comment, index){
+    console.log(JSON.stringify(comment));
+     var thisDate =  new Date(comment.date);
+     var row = $('<tr></tr>').addClass('row').data('index', index); /*.click(function(){
+      console.log($(this).data('id'));
+      var str = "" + window.location;
+  var extra = str.lastIndexOf("/");
+  socketLoc = str.substring(0, extra);
+      var url = socketLoc+"/"+ $(this).data('id');
+      window.open(url);
+    });*/
+    var date = $('<div></div>').text(thisDate.toLocaleString()).addClass('date');
+    var name = $('<div></div>').text(comment.name).addClass('name');
+    var comment = $('<div></div>').text(comment.comment).addClass('name');
+     var deleteButton = $('<div></div>').text("X").data("id", index).addClass('delete-button');
+     row.append(date).append(name).append(comment).append(deleteButton);
+     $('#comments').append(row);
+  }
 /*function Output(msg) {
     //var m = $id("messages");
     

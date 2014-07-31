@@ -60,7 +60,7 @@ $('#restart-projection').click(function(){socket.emit("restart projection", "")}
              // console.log(checkbox+ " : " + currData[index].show_timeline + " : " + currData[index].vision);
               if(checkbox2!=currData[index].always_visible) {
                 console.log("CHANGED " + currData[index].vision);
-                var thisUpdate = {"_id": currData[index]._id, "update": {"always_visible": checkbox}};
+                var thisUpdate = {"_id": currData[index]._id, "update": {"always_visible": checkbox2}};
                 updates.push(thisUpdate);
                
               }
@@ -81,7 +81,7 @@ $('#restart-projection').click(function(){socket.emit("restart projection", "")}
 
            if(updates.length > 0){
                   console.log("UPDATING " + JSON.stringify(updates));
-                  socket.emit("update from gallery admin", updates);
+                 socket.emit("update from gallery admin", updates);
                 }
      });
 });

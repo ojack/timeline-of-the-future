@@ -137,6 +137,24 @@ app.get('/projection', function(req, res){
   
 });
 
+app.get('/comments', function(req, res) {
+  if(req.query.id){
+  var dataJson = "new";
+   console.log("ID is : " + req.query.id);
+   visionProvider.getComments(req.query.id, function(error, comments){
+    var commentData = JSON.stringify(comments);
+         console.log("comments are "+ JSON.stringify(comments));
+  res.render('comment.jade', {
+   visionData: commentData
+ });
+   });
+ } else {
+  console.log("no id was added");
+ }
+ // res.render('form_vision.jade', {
+ 
+
+});
 
 app.get('/timeline', function(req, res){
   console.log(req.query.tag);
@@ -868,6 +886,16 @@ socket.on('updateVision', function (data){
  //fileSystem.saveVision(data, null, visionProvider);
  fileSystem.updateVision(data, null, visionProvider);
  io.sockets.in(socket.id).emit('update', '');
+});
+
+socket.on('addComment', function (data){
+ console.log("updated added in socket!!!!!!!!!!HEYYYYY!!!!!  "+JSON.stringify(data));
+ visionProvider.addComment(data.id, data.comment, function(error){
+    if(error) console.log(error);
+ });
+ //fileSystem.saveVision(data, null, visionProvider);
+ //fileSystem.updateVision(data, null, visionProvider);
+ //io.sockets.in(socket.id).emit('update', '');
 });
 
 socket.on('deleteVision', function(data){

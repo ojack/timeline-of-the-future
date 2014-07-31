@@ -16,7 +16,7 @@ var detailed_fields = { imgPath: 1, vision: 1, year:1, smallPath:1, inspiration:
 var thumb_fields = { smallPath: 1, vision:1};
 var gallery_fields = { smallPath: 1, imgPath: 1};
 var gallery_admin_fields = { smallPath: 1, date:1, vision: 1, show_timeline: true, always_visible:1};
-var admin_fields = { imgPath: 1, vision: 1, year:1, inspiration:1, tags: 1, date:1, name: 1, adminTags: 1, children: 1, parent: 1, show_timeline:1, always_visible:1, museum:1};
+var admin_fields = { imgPath: 1, vision: 1, year:1, inspiration:1, tags: 1, date:1, name: 1, adminTags: 1, children: 1, parent: 1, show_timeline:1, always_visible:1, museum:1, comments: 1};
 var timeline_fields = { mediumPath: 1, smallPath: 1, vision: 1, year:1, museum: 1};
 var image_fields = { imgPath: 1, mediumPath: 1, smallPath: 1};
 
@@ -64,6 +64,55 @@ VisionProvider.prototype.findAllGallery = function (callback) {
         });
 };
 
+VisionProvider.prototype.getComments = function (visionId, callback) {
+    var id = visionId;
+   if(id.length != 24) callback(" not valid ID "+ id, null);
+   this.getCollection(function (error, vision_collection) {
+    if (error) callback(error)
+        console.log("ID type is " + typeof id)
+        console.log("id is " + id)
+   /* if(typeof id == 'string') {
+        console.log("getting object");
+        id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
+    }*/
+    id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
+   // id = ObjectId(id.toString());
+   var objectId = new ObjectId(id.toString());
+     console.log("ID type is " + typeof objectId)
+        //else {
+           console.log("looking for " + id);
+           vision_collection.findOne(
+                //{ _id: id }, 
+                {_id: objectId},  {comments: 1},
+                function (error, result) {
+                    if (error) callback(error, null);
+                     
+                        callback(null, result);
+                    });
+        //}
+    });
+};
+
+VisionProvider.prototype.addComment = function (visionId, comment, callback) {
+    var id = visionId;
+   this.getCollection(function (error, vision_collection) {
+    if (error) callback(error);
+    id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
+   var objectId = new ObjectId(id.toString());
+     console.log("ID type is " + typeof objectId)
+        //else {
+           console.log("looking for " + id);
+           vision_collection.update(
+                //{ _id: id }, 
+                {_id: objectId},  { $push: { comments: comment }},
+                function (error, result) {
+                    if (error) callback(error);
+                     
+                        callback(null);
+                    });
+        //}
+    });
+};
 VisionProvider.prototype.findAllGalleryAdmin = function (callback) {
     this.getCollection(function (error, vision_collection) {
         if (error) callback(error)
