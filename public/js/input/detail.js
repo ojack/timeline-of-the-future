@@ -50,7 +50,7 @@ DetailView.prototype =
        this.thumb_images = $('.related');
        this.thumb_text = $('.related_text');
        $('#detail-back').click(function(){hideDetails()});
-       $('.keyboard').onScreenKeyboard();
+       $('.keyboard').onScreenKeyboard({leftPosition: '530px'});
                  $('.keyboard').click(function(){
                     $('#invisibleClick').show();//when on screen keyboard appears, show invisible layer. when layer is clicked, hide keyboard
                   });
@@ -253,6 +253,7 @@ function initThumbs(){
         console.log(" PARNET IS "+ JSON.stringify(child));
         $(thisChild).find('.thumb').css({
           background: 'url('+child.smallPath+')',
+          'background-size': '100% auto'
          // background: "#00f",
           
         });

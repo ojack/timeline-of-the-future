@@ -195,9 +195,23 @@ function resetDrawing(url){
 	//chooseRandomColors();
 	context.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	brush = new marker(context);
+	$('.brush-select').removeClass("selected");
 	$('#spray').addClass("selected");
+	//$('#source-over').addClass("selected");
+	$('.thumb').removeClass("selected");
 	$('#source-over').addClass("selected");
-	var bgVal = 'hsv('+ Math.floor(Math.random()*100)+', 80, 80)';
+	var colorVal = 'hsv('+ Math.floor(Math.random()*100)+', 80 , 20)';
+	 $("#colorpicker").spectrum({
+        color: colorVal,
+        clickoutFiresChange: true,
+        change: function(color) {
+   	setForegroundColor(color.toRgb());
+		}
+    });
+	 var t = $("#colorpicker").spectrum("get");
+	 var rgb = t.toRgb();
+	 setForegroundColor(rgb);
+	var bgVal = 'hsv('+ Math.floor(Math.random()*100)+','+ Math.floor(Math.random()*100)+', 80)';
 	$("#backgroundpicker").spectrum({
         color: bgVal,
         clickoutFiresChange: true,

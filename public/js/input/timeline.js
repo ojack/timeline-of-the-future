@@ -98,7 +98,8 @@ function initFilters(){
        $('#bottom-bar-main').addClass('show');
    });
     newDiv.text(filters[i]).attr("id", filters[i]).appendTo("#bottom-bar-filter");
-    $(newDiv).click(function(){
+    $(newDiv).click(function(event){
+      //alert(JSON.stringify(jQuery(this).id));
       $(".filter-button").removeClass('active');
    $(this).addClass('active'); 
     socket.emit('filterCollection', event.target.id);
@@ -276,11 +277,14 @@ function updatePositions(){
      timeline.splice(index, 0, newObj);
     // console.log("index is "+ index + " new timeline length is "+ timeline.length);
      setPositions();
+
     containerWidth = (timeline.length+1)*ITEM_SPACING*0.87;
      container.css('width', containerWidth+"px");
      setTimeout(function () {
         myScroll.refresh();
-    }, 10);
+        myScroll.scrollToElement(newObj.div, 1000, true, true);
+    }, 20);
+
     
 }
 
