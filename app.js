@@ -780,6 +780,11 @@ socket.on('restart drawing', function(data){
   io.sockets.emit('restart drawing', "");
 });
 
+socket.on('restart rating', function(data){
+  console.log("DRAWING RESTART");
+  io.sockets.emit('restart rating', "");
+});
+
 socket.on('update gallery', function(data){
   console.log(data);
    visionProvider.saveGallery({

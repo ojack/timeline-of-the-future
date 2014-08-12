@@ -4,6 +4,8 @@ var SLIDER_MULTIPLE = 700/SLIDER_WIDTH;
 var vote = ""+2014;
 var visionData = {};
 var like = false;
+var closeInterval = 12; //seconds that results are shown
+var closeTimer;
 
 
 $(function() {
@@ -11,7 +13,7 @@ $(function() {
 	
 	connectToSocket();
 	//var visonData = "hey";
-	console.log(visionData);
+	//console.log(visionData);
 
   $('#like').click(function(e){
     toggleLike();
@@ -22,12 +24,20 @@ $(function() {
     resetSlider();
 	});
 
-  
+  $('#rating-close').click(function(e){
+      closePopup();
+  });
+
+  $('#shade').click(function(e){
+      closePopup();
+  });
 
     $('#submit').click(function(e){
+    var $div = $('#vision').clone().attr('id','clone');   
+    $('#container').append($div);    
       // globalParams = {'_id':id, 'vision': vision, 'year': year, 'tags': tags, 'imgPath':imgPath, 'inspiration': inspiration, 'notes' : notes, 'newVision':isNew};
     var params = {'_id':visionData._id, 'like': like, 'vote':vote};
-      console.log(vote);
+    //  console.log(vote);
      showResults(params);
       socket.emit('newRandom',  {'_id':visionData._id, 'like': like});
      resetSlider();
@@ -41,7 +51,16 @@ $(function() {
        
 });
 
+function reloadPage(){
+  location.reload(true);
+}
 
+function closePopup(){
+  clearTimeout(closeTimer);
+  $( "#clone" ).remove();
+  $('#popup').removeClass('show');
+  $('#shade').removeClass('show');
+}
 
 function resetSlider(){
   vote = ""+2014;
@@ -55,10 +74,10 @@ function createSlider(){
       $("#slider").bind("slider:changed", function (event, data) {
   // The currently selected value of the slider
  
-  console.log(data.value);
+ // console.log(data.value);
   var logYear = logslider(data.value*SLIDER_MULTIPLE);
   var year = new Date().getFullYear();
-  console.log("year is" + year);
+  //console.log("year is" + year);
   var sliderVal = Math.round(logYear);
   if(sliderVal < 10) sliderVal = (sliderVal-5)*2
   vote = sliderVal + year;
@@ -79,10 +98,11 @@ function connectToSocket(){
   socket = io.connect(socketLoc);
   socket.on('newVision', function (data) {
    visionData = jQuery.parseJSON(data);
-   console.log("data is "+ visionData);
+  // console.log("data is "+ visionData);
     showVision(visionData);
     //socket.emit('my other event', { my: 'data' });
   });
+  socket.on('restart rating', reloadPage);
 /*socket.on('showResults', function (data) {
    visionData = jQuery.parseJSON(data);
     showResults(visionData);
@@ -103,7 +123,7 @@ function showVision(data){
 
 /*calculate results based off of new votes and send to server*/
 function showResults(params){
-    console.log(JSON.stringify(params));
+   // console.log(JSON.stringify(params));
     var likes = 0;
     var never_count = 0;
     var total_count = 0;
@@ -117,13 +137,13 @@ function showResults(params){
       if(visionData.vote_results){
          if(visionData.vote_results.votes){
         allVotes = visionData.vote_results.votes;
-        console.log("all votes is " + JSON.stringify(visionData.vote_results));
+   //     console.log("all votes is " + JSON.stringify(visionData.vote_results));
       }
       } /*else {
         allVotes = new Array();
       }*/
       allVotes.push(thisObj);
-      console.log(JSON.stringify(allVotes));
+   //   console.log(JSON.stringify(allVotes));
       var average = 0;
       var count = 0;
       total_count = allVotes.length;
@@ -131,7 +151,7 @@ function showResults(params){
         var key = Object.keys(allVotes[i])[0];
         var vote = allVotes[i][key];
         if(vote !="never" && vote !="NEVER"){
-          console.log("adding "+ vote);
+       //   console.log("adding "+ vote);
           average += parseInt(vote);
           count++;
           }
@@ -165,15 +185,20 @@ function showResults(params){
    params.unlikelihood = unlikelihood;
    params.likes = likes;
    params.votes = allVotes;
-   console.log(JSON.stringify(params));
+ //  console.log(JSON.stringify(params));
   // {'_id':visionData._id, 'like': like, 'vote':vote};
-
+  var never_percent = Math.round((params.never_count/params.total_count)*100);
    // var never_percent = visionData.vote_results
  //  alert("")
  // console.log(JSON.stringify(data));
-
-
-  socket.emit('addVoteResults', params);
+    $('#popup-answer').text(params.vote);
+    $('#popup-average').text(params.year);
+    $('#percent-never').text(never_percent+'%');
+    $('#number-likes').text(likes);
+    $('#shade').addClass('show');
+$('#popup').addClass('show');
+closeTimer = setTimeout(closePopup, closeInterval*1000);
+ socket.emit('addVoteResults', params);
 
 
 }

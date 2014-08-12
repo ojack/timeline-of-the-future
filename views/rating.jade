@@ -16,22 +16,42 @@ html
     
     div#container
       input(type='hidden',id='visionData',value=visionData)
-      div#image
+      div#vision
+        div#image
+        div#text-shade
+        div#text-container
+            h3#vision-text 
       div#skip
-        | SKIP
-      div#text-shade
-      div#text-container
-          h3#vision-text 
       div#question
         | When do you think this will happen?
       div#controls
         div#slider-val
         div#slider-wrapper
           div#slider
-        div#submit VOTE
+        div#submit
       div#like
         div#heart.like.show
         div#heart-down.like
+    div#shade
+    div#popup
+        div#popup-question.popup-text What year will this happen?
+        div.popup-text 
+          span Your answer:   
+          span#popup-answer.bold 2014
+        div.popup-text 
+          span Average:  
+          span#popup-average.bold 2057
+        div#popup-nevers.popup-text
+          span#percent-never.bold 45%
+          |  said
+          span#never-bold.bold  NEVER!
+        div#popup-likes.popup-text
+          div#popup-heart
+          span#number-likes 5 
+          span  likes
+        div#rating-close
+
+
 
 
         

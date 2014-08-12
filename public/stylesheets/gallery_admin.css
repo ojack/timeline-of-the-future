@@ -101,9 +101,14 @@ html{
  }
 
  #restart-drawing{
- 	left: 350px;
+ 	left: 340px;
  }
 
  #restart-projection{
- 	left: 600px;
+ 	left: 520px;
+ }
+
+
+ #restart-rating{
+ 	left: 680px;
  }

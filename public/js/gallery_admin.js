@@ -37,6 +37,7 @@
     });
      $('#restart-drawing').click(function(){socket.emit("restart drawing", "")});
 $('#restart-projection').click(function(){socket.emit("restart projection", "")});
+ $('#restart-rating').click(function(){socket.emit("restart rating", "")});
      $('#submit').click(function(){
         var index = 0;
         var updates = [];
@@ -143,7 +144,7 @@ $('#restart-projection').click(function(){socket.emit("restart projection", "")}
      $('#table').empty();
      currData = data;
     for(var i = 0; i < data.length; i++){
-      addOtherThumb(data[i].smallPath, data[i].date, data[i].vision, data[i]._id, data[i].show_timeline);
+      addOtherThumb(data[i].smallPath, data[i].date, data[i].vision, data[i]._id, data[i].show_timeline, data[i].always_visible);
     }
  }
 

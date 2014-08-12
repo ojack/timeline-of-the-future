@@ -45,6 +45,7 @@ a {
 	padding: 20px;
 	font-size: 14px;
 }
+
 #drawingContainer{
 	width: 420px;
 	height: 420px;
@@ -53,6 +54,13 @@ a {
 	top:28px;
 }
 
+input{
+	color: #fff;
+}
+
+textarea{
+	color: #fff;
+}
 #dropzone{
 	position: absolute;
 	width: 300px;
