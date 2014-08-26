@@ -2,16 +2,21 @@ var comment_fields = ['name', 'comment'];
 
  $(function() {
  	connectToSocket();
-$('.keyboard').onScreenKeyboard();
+$('.keyboard').onScreenKeyboard({leftPosition: '80px', topPosition : '340px'});
    
   	var visionData = jQuery.parseJSON($('#visionData').val());
-  	console.log(" vision data is " + JSON.stringify($('#visionData').val()));
+  	//console.log(" vision data is " + JSON.stringify($('#visionData').val()));
+    if(visionData != null){
    	 if(visionData.comments){ 
       showComments(visionData.comments);
       } else {
          var msg = $('<div></div>').text("No comments yet.").addClass('no-comment');
           $('#comments').append(msg);
       }
+    }else {
+        var msg = $('<div></div>').text("No comments yet.").addClass('no-comment');
+          $('#comments').append(msg);
+    }
      $('#submit').click(function(){
      var params = {};
      for(var i = 0; i < comment_fields.length; i++){
@@ -31,10 +36,10 @@ $('.keyboard').onScreenKeyboard();
 
     }
         socket.emit('addComment', commentObject);
-        location.reload();
+       
        });
                
-
+     socket.on('newComment', function(){ location.reload();});
      
 });
 
@@ -55,10 +60,11 @@ $('.keyboard').onScreenKeyboard();
       window.open(url);
     });*/
     var date = $('<div></div>').text(thisDate.toLocaleString()).addClass('date');
-    var name = $('<div></div>').text(comment.name).addClass('name');
+    var name = $('<div></div>').text(comment.name+", "+thisDate.toLocaleString()).addClass('name');
     
-    var comment = $('<div></div>').text(comment.comment).addClass('name');
-     row.append(date).append(name).append(comment);
+    var comment = $('<div></div>').text(comment.comment).addClass('comment');
+    row.append(comment).append(name);
+     //row.append(date).append(name).append(comment);
      $('#comments').append(row);
   }
 

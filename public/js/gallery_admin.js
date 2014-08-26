@@ -5,6 +5,7 @@
  var numberPerPage = 20;
  var currPage = 0;
  var currData = null;
+ var toDelete = new Array();
 
  $(function() {
  	connectToSocket();
@@ -45,7 +46,11 @@ $('#restart-projection').click(function(){socket.emit("restart projection", "")}
               var checkbox =  $(this).find('td:eq(3)').find('input').prop('checked');
                var checkbox2 =  $(this).find('td:eq(4)').find('input').prop('checked');
                console.log("checking " + index);
-              if(checkbox!=undefined){
+              // alert($(this).data('id'));
+               var thisUpdate = {"_id": $(this).data('id'), "update": {"show_timeline": checkbox, "always_visible": checkbox2}};
+                updates.push(thisUpdate);
+               /*
+             if(checkbox!=undefined){
                  console.log("checkbox " + checkbox);
              // console.log(checkbox+ " : " + currData[index].show_timeline + " : " + currData[index].vision);
               if(checkbox!=currData[index].show_timeline) {
@@ -65,7 +70,7 @@ $('#restart-projection').click(function(){socket.emit("restart projection", "")}
                 updates.push(thisUpdate);
                
               }
-            }
+            }*/
               index++;
             
           });
@@ -84,11 +89,17 @@ $('#restart-projection').click(function(){socket.emit("restart projection", "")}
                   console.log("UPDATING " + JSON.stringify(updates));
                  socket.emit("update from gallery admin", updates);
                 }
+              for(var i = 0; i < toDelete.length; i++){
+     // alert('deleting '+ toDelete[i]);
+      socket.emit('deleteVision', toDelete[i]);
+    }
      });
+ 
 });
 
  
  function addOtherThumbs(data){
+
   var max = (numberPerPage < data.length) ? numberPerPage : data.length;
   for(var i = 0; i < max; i++){
  	//for(var i = 0; i < data.length; i++){
@@ -129,8 +140,13 @@ $('#restart-projection').click(function(){socket.emit("restart projection", "")}
     $('<input />', { type: 'checkbox' }).prop('checked', show_timeline).appendTo(checkbox);
     var checkbox2 = $('<td></td>').addClass('curator');
     $('<input />', { type: 'checkbox' }).prop('checked', always_visible).appendTo(checkbox2);
-    row.append(date).append(thumb).append(vision).append(checkbox).append(checkbox2);
+       var deleteButton = $('<td></td>').data("id", id).addClass('delete-button').click(function(){ 
+          toDelete.push($(this).data('id'));
+          $( this ).parent().remove();
+       });
+    row.append(date).append(thumb).append(vision).append(checkbox).append(checkbox2).append(deleteButton);
     $('#table').append(row);
+
  //	 var li=document.createElement('li');
  /* var li=document.createElement('div');
  	li.setAttribute("id", id);
@@ -143,6 +159,7 @@ $('#restart-projection').click(function(){socket.emit("restart projection", "")}
  function updateTable(data){
      $('#table').empty();
      currData = data;
+   
     for(var i = 0; i < data.length; i++){
       addOtherThumb(data[i].smallPath, data[i].date, data[i].vision, data[i]._id, data[i].show_timeline, data[i].always_visible);
     }

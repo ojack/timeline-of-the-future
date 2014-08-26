@@ -166,8 +166,8 @@ body{
 }*/
 
 .side-text{
- // font-family:'BentonSans-Regular',Sans-Serif;
- font-family:'Oita-Book',Sans-Serif;
+ font-family:'BentonSans-Regular',Sans-Serif;
+// font-family:'Oita-Book',Sans-Serif;
   font-size: 16px;
   padding: 0px;
 
@@ -213,6 +213,7 @@ body{
   position: absolute;
   top: 75px;
   left: 564px;
+  overflow: hidden;
 }
 
 #detail.show{
@@ -256,6 +257,49 @@ body{
   right: 0px;
   background: url('/uploads/0/1/52f2a99b2ea33b9117000001.png');
   background-size: 100% auto;
+}
+
+#comments{
+ /*width: 100%;
+  height: 100%;*/
+   width: 1132px;
+  height: 682px;
+  right: 0px;
+  position: absolute;
+  background: #58595b;
+  opacity: 0;
+  top: 0px;
+  left: -1132px;
+  transition-all: all 400ms linear;
+ // z-index: -200;
+}
+
+#comment-close{
+ transition-all: opacity 1ms linear;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 60px;
+  height: 60px;
+ // z-index: -300;
+    opacity: 0;
+  background-image: url('/images/close-comment-01.png');
+  
+  
+}
+
+#comment-close.show{
+    
+     transition-all: opacity 1000ms linear;
+    opacity: 1;
+
+  // z-index: 200;
+}
+
+#comments.show{
+  opacity: 1;
+   left: 0px;
+ // z-index: 200;
 }
 
 #detail-shade{
@@ -333,21 +377,59 @@ body{
 }
 
 #detail-side-bar{
+ //font-family:'Oita-Bold',Sans-Serif;
+ font-family:'BentonSans-Regular',Sans-Serif;
   position:absolute;
   width: 343px;
   height: 682px;
   left: 223px;
   top: 75px;
-  background-color: #ccc;
+  font-size: 18px;
+  //background-color: #ccc;
+  background-color: #E3E4E5;
+}
+
+#detail-tags{
+  margin-top: 80px;
+}
+
+#detail-comments{
+  position: absolute;
+  bottom: 10px;
+  left: 30px;
+  height: 80px;
+ // width: 260px;
+  background-color: #00f;
+}
+
+#detail-comments-icon{
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 80px;
+  height: 80px;
+  background-image: url('/images/comment-dark-01.png');
+}
+
+#detail-comments-label{
+  position: absolute;
+  bottom: 0px;
+  left: 75px;
+  width: 200px;
+  height: 80px;
+  line-height: 80px;
+  font-size: 21px;
+  font-weight: bold;
 }
 
 #detail-date{
-font-family:'BentonSansCond-Regular', Sans-Serif;
 
+ font-family:'Oita-Bold',Sans-Serif;
   margin-left:32px;
   text-align: left;
   font-size: 90px;
-  color: #909193;
+  //color: #909193;
+   color: #bed62f;
  
 }
 

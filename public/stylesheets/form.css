@@ -164,7 +164,11 @@ textarea{
 	margin-bottom: 5px;
 }
 
-
+td{
+	border-bottom-width: 1px;
+	padding: 5px;
+	padding-bottom: 10px;
+}
 #checkboxes{
 	height: 150px;
 	width: 200px;
@@ -194,6 +198,18 @@ textarea{
 
 .checkboxtext{
 	font-size: 15px;
+}
+.delete-button{
+	width: 20px;
+	height: 20px;
+	background: url("/images/delete-01.png");
+	background-repeat: no-repeat;
+}
+
+#comments{
+	overflow: auto;
+	height: 190px;
+  /*height: 300px;*/
 }
 input[type=checkbox]
 {

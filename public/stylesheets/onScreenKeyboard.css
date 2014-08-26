@@ -96,7 +96,8 @@
 /*-----[Customisable styles]--------------------------------------------------*/
 
 #osk-container {
-	width: 45%;     /* Account for 2% padding and a vertical scroll bar */
+	/*width: 45%;     /* Account for 2% padding and a vertical scroll bar */
+	width: 90%;
 	min-width: 500px;
 	max-width: 900px;
 	background: #fEE;
@@ -125,5 +126,5 @@
 }
 
 .osk-focused {
-	background: #FAFAFA !important;
+	/*background: #FAFAFA !important;*/
 }

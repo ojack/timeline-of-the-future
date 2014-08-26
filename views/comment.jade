@@ -5,24 +5,21 @@ html
     meta(name='viewport', content='width=device-width')
     title Comments
     link(rel='stylesheet', href='/stylesheets/onScreenKeyboard.css', type='text/css')
+    link(rel='stylesheet', href='/stylesheets/comments.css', type='text/css')
     script(src="/socket.io/socket.io.js")
     script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js')
     script(src='js/jquery.onScreenKeyboard.js')
     script(src='js/comment.js')
   body 
     input(type='hidden',id='visionData',value=visionData)
-    fieldset
+    fieldset#form
       .control-group
-          .input-label-large(for='') Name
+          textarea(rows='3', cols='40', id="comment", placeholder="Join the discussion...").keyboard
+      .control-group
+          #name-label.input-label-large.horiz(for='') NAME:
           .controls
-            input#name.keyboard
-      .control-group
-          .input-label-large(for='') Comment
-          textarea(rows='6', cols='40', id="comment").keyboard this is my comment
-      .control-group
-        label.control-label(for='Submit')
-        .controls
-    button.btn.btn-default.form-btn(type="button", id='submit') Submit
+            input#name.keyboard.horiz
+      div#submit.horiz Submit
     div#comments
      
         

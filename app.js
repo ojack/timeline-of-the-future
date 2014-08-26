@@ -894,9 +894,10 @@ socket.on('updateVision', function (data){
 });
 
 socket.on('addComment', function (data){
- console.log("updated added in socket!!!!!!!!!!HEYYYYY!!!!!  "+JSON.stringify(data));
+// console.log("updated added in socket!!!!!!!!!!HEYYYYY!!!!!  "+JSON.stringify(data));
  visionProvider.addComment(data.id, data.comment, function(error){
     if(error) console.log(error);
+     io.sockets.in(socket.id).emit('newComment', '');
  });
  //fileSystem.saveVision(data, null, visionProvider);
  //fileSystem.updateVision(data, null, visionProvider);
@@ -906,6 +907,7 @@ socket.on('addComment', function (data){
 socket.on('deleteVision', function(data){
  console.log(" deleting "+ JSON.stringify(data));
  fileSystem.remove(data, visionProvider);
+ io.sockets.emit('restart drawing', "");
  //if(data.parent && data.parent.length == 24) visionProvider.removeFromParent(data.parent, data._id, data.children);
  //if(data.children && data.children.length == 24) visionProvider.removeParent(data.parent, data._id);
 

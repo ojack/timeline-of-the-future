@@ -92,8 +92,10 @@ if(visionParams == 'new' || visionParams== 'null') {
   
   if(visionData.imgPath!=null) $('#bg').css('background-image', 'url(' + visionData.imgPath + ')');
   $(".delete-button").click(function(){
-    alert("clicked delete!" + $(this).data('id'));
+  //  alert("clicked delete!" + $(this).data('id'));
+   
     commentBools[$(this).data('id')] = 0;
+     $( this ).parent().remove();
   });
   //alert(visionParams);
 }
@@ -286,11 +288,12 @@ function showComments(comments){
       var url = socketLoc+"/"+ $(this).data('id');
       window.open(url);
     });*/
-    var date = $('<div></div>').text(thisDate.toLocaleString()).addClass('date');
-    var name = $('<div></div>').text(comment.name).addClass('name');
-    var comment = $('<div></div>').text(comment.comment).addClass('name');
-     var deleteButton = $('<div></div>').text("X").data("id", index).addClass('delete-button');
-     row.append(date).append(name).append(comment).append(deleteButton);
+    var date = $('<td></td>').text(thisDate.toLocaleString()).addClass('date');
+    var name = $('<td></td>').text(comment.name).addClass('name');
+    var comment = $('<td></td>').text(comment.comment + " -" + comment.name + ", " + thisDate.toLocaleString()).addClass('comment');
+     var deleteButton = $('<td></td>').data("id", index).addClass('delete-button');
+  //   row.append(date).append(name).append(comment).append(deleteButton);
+    row.append(comment).append(deleteButton);
      $('#comments').append(row);
   }
 /*function Output(msg) {

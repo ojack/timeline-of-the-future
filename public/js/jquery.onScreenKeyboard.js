@@ -155,7 +155,16 @@
 			// 'Backspace' key
 			if ($key.hasClass('osk-backspace')) {
 				inputValue = $input.val();
-				$input.val(inputValue.substr(0, inputValue.length - 1));
+				 var caretPos = $input[0].selectionStart;
+			 console.log("caret is at " + caretPos);
+			 var selectPos = caretPos-1;
+			 var textAreaTxt = $input.val();
+
+			// $input.focus();
+			//$input.focus().val(textAreaTxt.substring(0, caretPos) + character + textAreaTxt.substring(caretPos) );
+				$input.val(inputValue.substr(0, caretPos-1)+inputValue.substr(caretPos, inputValue.length));
+				 $input[0].setSelectionRange(selectPos, selectPos);
+				//$input.val(inputValue.substr(0, inputValue.length - 1));
 				$input.trigger('keyup');
 				return false;
 			}

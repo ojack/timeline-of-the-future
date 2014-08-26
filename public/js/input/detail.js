@@ -49,6 +49,14 @@ DetailView.prototype =
        this.thumbs = $('.thumb');
        this.thumb_images = $('.related');
        this.thumb_text = $('.related_text');
+       $('#detail-comments').click(function(){
+          $('#comments').toggleClass('show');
+          $('#comment-close').toggleClass('show');
+       });
+       $('#comment-close').click(function(){
+          $('#comments').removeClass('show');
+          $('#comment-close').removeClass('show');
+       });
        $('#detail-back').click(function(){hideDetails()});
        $('.keyboard').onScreenKeyboard({leftPosition: '530px'});
                  $('.keyboard').click(function(){
@@ -84,10 +92,20 @@ DetailView.prototype =
 		detailView.detailbackdrop.addClass('show');
   // $('#detail-side-bar').addClass('show');
    // $('#drawing-side-bar').removeClass('show');
-  
+  //iframe#comments(src='comments?id=53a0ac793120bed606000002', frameBorder="0")
+
 		visionObj = jQuery.parseJSON(data);
     currID= visionObj._id;
     currURL = visionObj.imgPath;
+   // alert(JSON.stringify(visionObj));
+    var urlString = "comments?id="+currID;
+  document.getElementById('comments').src = urlString;
+  if(visionObj.comments){
+  $('#detail-comments-label').html(visionObj.comments.length + " COMMENTS");
+} else {
+  $('#detail-comments-label').html("0 COMMENTS");
+}
+   // alert(visionObj.comments.length);
 		 resetThumbs();
      $(".label").hide();
                 if(visionObj.parent){
@@ -104,7 +122,7 @@ DetailView.prototype =
 
          
          
-         console.log("received" + data);
+        // console.log("received" + data);
          //
          detailView.detail_image.css('background', 'url('+visionObj.imgPath+')');
          detailView.detail_image.css('background-size', 'auto 100%');
@@ -129,6 +147,18 @@ DetailView.prototype =
         $( "#detail-created-date" ).html("");
       }
         $("#detail-date").html(Math.round(visionObj.year));
+        if(visionObj.tags.length > 1){
+            var tagString = visionObj.tags[0];
+            if(visionObj.tags.length > 1){
+            for(var i = 1; i < visionObj.tags.length; i++){
+              tagString += ", ";
+              tagString += visionObj.tags[i];
+            }
+          }
+         $( "#detail-tags" ).html("Tags:  "+tagString);
+       } else {
+          $( "#detail-tags" ).html("");
+       }
         if((!visionObj.inspiration) || visionObj.inspiration==""){
            $("#detail-details").html("");
         } else {
@@ -262,6 +292,8 @@ function initThumbs(){
       }
 
  function hideDetails(){
+  $('#comments').removeClass('show');
+          $('#comment-close').removeClass('show');
       $('#detail').removeClass('show');
         $("#timeline-date").addClass("show");
          // $('#shade').hide();
