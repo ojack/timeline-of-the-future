@@ -7,15 +7,12 @@
  , routes = require('./routes')
  , http = require('http')
  , path = require('path')
- //, pen = require('./public/js/harmony/brushes/pen')
- //, expose = require('express-expose')
  , io = require('socket.io');
 
 
  var app = express();
  
  var VisionProvider = require('./db_scripts/visionProvider').VisionProvider;
- //var ImageProvider = require('./db_scripts/imageProvider').ImageProvider;
  var FileSystem = require('./db_scripts/fileSystem').FileSystem;
 
 
@@ -29,15 +26,11 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser({uploadDir:'./uploads'}));
 app.use(express.methodOverride());
-//app.use('/TEST_STORAGE',express.directory('../TEST_STORAGE'));
 console.log("basename is "+ path.basename(imageStorage));
 app.use(require('stylus').middleware(__dirname + '/public'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/"+path.basename(imageStorage), express.static(imageStorage));
 app.use(app.router);
-//app.expose()
-//app.exposeRequire();
-//app.exposeModule(__dirname + '/expose', 'utils/color');
 
 // development only
 if ('development' == app.get('env')) {
@@ -46,45 +39,19 @@ if ('development' == app.get('env')) {
 
 
 var visionProvider = new VisionProvider('localhost', 27017);
-//var imageProvider = new ImageProvider('localhost', 27017);
 var fileSystem = new FileSystem(tempStorage, imageStorage);
 
 
-
-//app.get('/', routes.index);
-
 /*Initial submit// add a vision*/
 app.post('/file-upload', function(req, res){
-  //add new root node*/
   console.log("POSTED TO FORM");
   console.log(JSON.stringify(req.files));
   console.log(req.body.filesize);
   var data = JSON.parse(req.body.filesize);
   fileSystem.saveVision(data, req.files.file, visionProvider);
- /* if(JSON.parse(req.body.filesize).newVision == true){
-    
-    fileSystem.addNewVision(data, req.files.file, visionProvider);
-  } else {
-    console.log("UPDATE");
-    fileSystem.updateVision(data, req.files.file, visionProvider);
-  }*/
   });
 
-//* add image to gallery*/
-/*
-app.post('/image-upload', function(req, res){
-  //add new root node*
-  console.log("POSTED TO FORM");
-  console.log(JSON.stringify(req.files));
-  console.log(req.body.filesize);
-   var data = JSON.parse(req.body.filesize);
-   var file = req.files.file;
-  fileSystem.addToGallery(data, file, visionProvider);
-  });
-
-*/
 app.get('/rating', function(req, res){
- //visionProvider.addRandom(function(error){
   visionProvider.getRandom(function(error, result){
     if(error) console.log(error);
     var visionJson = JSON.stringify(result);
@@ -94,27 +61,6 @@ app.get('/rating', function(req, res){
   
 });
 
-/*app.get('/prototype', function(req, res){
-  console.log(req.query.tag);
-  var tag = "";
-  if(req.query.tag) {
-    console.log("finding tag "+req.query.tag);
-     visionProvider.findByTag(req.query.tag, function(error, visions){
-    if(error) {
-      console.log(error);
-    } else {
-      var dataJson = JSON.stringify(visions);
-      res.render('prototype.jade', {
-       visionData: dataJson
-     });
-    }
-  });
-  } else {
-    displayVisions(req, res, visionProvider, 'prototype.jade');
-  }
-  
- 
-});*/
 
 app.get('/projection', function(req, res){
   console.log(req.query.tag);
@@ -151,9 +97,6 @@ app.get('/comments', function(req, res) {
  } else {
   console.log("no id was added");
  }
- // res.render('form_vision.jade', {
- 
-
 });
 
 app.get('/timeline', function(req, res){
@@ -177,106 +120,10 @@ app.get('/timeline', function(req, res){
   
  
 });
-/*
-app.get('/optimize', function(req, res){
-  console.log(req.query.tag);
-  var tag = "";
-  if(req.query.tag) {
-    console.log("finding tag "+req.query.tag);
-     visionProvider.findByTag(req.query.tag, function(error, visions){
-    if(error) {
-      console.log(error);
-    } else {
-      var dataJson = JSON.stringify(visions);
-      res.render('optimize.jade', {
-       visionData: dataJson
-     });
-    }
-  });
-  } else {
-    displayVisions(req, res, visionProvider, 'optimize.jade');
-  }
-  
- 
-});*/
 
-/*
-
-
-/*show drawing app by itself
-app.get('/children', function(req, res){
-  visionProvider.addAllChildren(function(error){
-    if(error)console.log(error);
-  });
-});
-
-*/
-/*
-app.get('/harmony-gallery', function(req, res) {
- imageProvider.findAllThumbs(function(err, result){
-  if(err) throw(err);
-  var visionJson = 'new';
-  var dataJson = JSON.stringify(result);
-  //console.log(" the data from the provider is " +dataJson);
-  visionProvider.getDrawings(function(error, drawings){
-    if(error) {console.log(error)} else {
-      var drawingJson = JSON.stringify(drawings);
-      console.log("drawings are "  + drawingJson);
-  if(req.query.id) {
-    visionProvider.findById(req.query.id, function(error, vision){
-      if(error){
-        console.log("cannot find id") ///NEED better error handling
-      } else {
-        visionJson = JSON.stringify(vision);
-        console.log("found "+ dataJson);
-        res.render('drawing.jade', {
-          visionData: visionJson,
-           imageData: dataJson,
-           drawingData: drawingJson
-         });
-      }
-    });
- } else {
-    console.log("COULDN'T render id");
-    res.render('drawing.jade', {
-      visionData: visionJson,
-      imageData: dataJson,
-      drawingData: drawingJson
-    });
-  }
-}
-});
-});
-});
-*/
-app.get('/honeycomb', function(req, res){
-  console.log(req.query.tag);
-  var tag = "";
-  if(req.query.tag) {
-    console.log("finding tag "+req.query.tag);
-     visionProvider.findByTag(req.query.tag, function(error, visions){
-    if(error) {
-      console.log(error);
-    } else {
-      var dataJson = JSON.stringify(visions);
-      res.render('honeycomb2.jade', {
-       visionData: dataJson
-     });
-    }
-  });
-  } else {
-    displayTimeline(req, res, visionProvider, 'honeycomb2.jade');
-  }
-  
- 
-});
 
 app.get('/gallery', function(req, res) {
- /* imageProvider.findAllThumbs(function(err, result){
-  if(err) throw(err);
-  var visionJson = 'new';
-  var dataJson = JSON.stringify(result);
-  console.log("result is "+ dataJson);*/
+
   visionProvider.findGallery(function(err, result){
         //console.log("result is "+ nodes.length);
         if(err){console.log(err);
@@ -304,27 +151,15 @@ app.get('/gallery', function(req, res) {
 });
 
 app.get('/gallery_admin', function(req, res) {
- /* imageProvider.findAllThumbs(function(err, result){
-  if(err) throw(err);
-  var visionJson = 'new';
-  var dataJson = JSON.stringify(result);
-  console.log("result is "+ dataJson);*/
   visionProvider.findGallery(function(err, result){
-        //console.log("result is "+ nodes.length);
         if(err){console.log(err);
       } else {
         var dataJson = JSON.stringify(result);
-  //console.log(" the data from the provider is " +dataJson);
-  
-        //console.log("found "+ dataJson);
        visionProvider.findAllGalleryAdmin(function(err, visions){
-        //console.log("result is "+ nodes.length);
-       
         var dataJson = JSON.stringify(result);
           if(err){console.log(err);
           } else {
              var visionJson = JSON.stringify(visions);
-            // console.log("all image "+ visionJson);
         res.render('gallery_admin.jade', {
           visionData: visionJson,
           imageData: dataJson,
@@ -336,26 +171,17 @@ app.get('/gallery_admin', function(req, res) {
 });
 
 app.get('/drawing', function(req, res) {
- // imageProvider.findAllThumbs(function(err, result){
-  //if(err) throw(err);
   var visionJson = 'new';
- // var dataJson = JSON.stringify(result);
-  //console.log(" the data from the provider is " +dataJson);
-  /*visionProvider.getDrawings(function(error, drawings){
-    if(error) {console.log(error)} else {
-      var drawingJson = JSON.stringify(drawings);
-      console.log("drawings are "  + drawingJson);*/
+ 
   if(req.query.id) {
     visionProvider.findById(req.query.id, function(error, vision){
       if(error){
-        console.log("cannot find id") ///NEED better error handling
+        console.log("cannot find id") 
       } else {
         visionJson = JSON.stringify(vision);
         console.log("found "+ dataJson);
         res.render('drawing-server.jade', {
           visionData: visionJson,
-          // imageData: dataJson,
-         //  drawingData: drawingJson
          });
       }
     });
@@ -363,76 +189,10 @@ app.get('/drawing', function(req, res) {
     console.log("COULDN'T render id");
     res.render('drawing-server.jade', {
       visionData: visionJson,
-      //imageData: dataJson,
-     // drawingData: drawingJson
     });
   }
-//}
-});
-//});
-//});
-/*
-app.get('/drawing-record', function(req, res) {
- imageProvider.findAllThumbs(function(err, result){
-  if(err) throw(err);
-  var visionJson = 'new';
-  var dataJson = JSON.stringify(result);
-  //console.log(" the data from the provider is " +dataJson);
-  visionProvider.getDrawings(function(error, drawings){
-    if(error) {console.log(error)} else {
-      var drawingJson = JSON.stringify(drawings);
-      console.log("drawings are "  + drawingJson);
-  if(req.query.id) {
-    visionProvider.findById(req.query.id, function(error, vision){
-      if(error){
-        console.log("cannot find id") ///NEED better error handling
-      } else {
-        visionJson = JSON.stringify(vision);
-        console.log("found "+ dataJson);
-        res.render('drawing-record.jade', {
-          visionData: visionJson,
-           imageData: dataJson,
-           drawingData: drawingJson
-         });
-      }
-    });
- } else {
-    console.log("COULDN'T render id");
-    res.render('drawing-record.jade', {
-      visionData: visionJson,
-      imageData: dataJson,
-      drawingData: drawingJson
-    });
-  }
-}
-});
-});
-});
-*/
-/*
-app.get('/visions', function(req, res){
-  console.log(req.query.tag);
-  var tag = "";
-  if(req.query.tag) {
-    console.log("finding tag "+req.query.tag);
-     visionProvider.findByTag(req.query.tag, function(error, visions){
-    if(error) {
-      console.log(error);
-    } else {
-      var dataJson = JSON.stringify(visions);
-      res.render('prototype.jade', {
-       visionData: dataJson
-     });
-    }
-  });
-  } else {
-    displayVisions(req, res, visionProvider, 'prototype.jade');
-  }
-  
- 
-});
 
-*/
+});
 
 app.get('/form', function(req, res) {
   var dataJson = "new";
@@ -443,79 +203,10 @@ app.get('/form', function(req, res) {
 });
 
 
-/*app.get('/image-upload', function(req, res) {
-  res.render('form_image.jade', {
-   visionData: 'new'
- });
-
-});*/
-
-
-
-
-
-app.get('/admin', function(req, res){
-  console.log(req.query.tag);
-  var tag = "";
-  visionProvider.findAllAdmin(function(error, visions){
-     if(error) {
-      console.log(error);
-    } else {
-      var dataJson = JSON.stringify(visions);
-      res.render('visions.jade', {
-       visionData: dataJson
-     });
-    }
-  });
- /* if(req.query.tag) {
-    console.log("finding tag "+req.query.tag);
-     visionProvider.findByTag(req.query.tag, function(error, visions){
-    if(error) {
-      console.log(error);
-    } else {
-      var dataJson = JSON.stringify(visions);
-      res.render('visions.jade', {
-       visionData: dataJson
-     });
-    }
-  });
-  } else {
-    displayVisions(req, res, visionProvider, 'visions.jade');
-  }*/
-  
-});
-/*
-app.get('/dynamic', function(req, res){
-  console.log(req.query.tag);
-  var tag = "";
-  if(req.query.tag) {
-    console.log("finding tag "+req.query.tag);
-     visionProvider.findByTag(req.query.tag, function(error, visions){
-    if(error) {
-      console.log(error);
-    } else {
-      var dataJson = JSON.stringify(visions);
-      res.render('visions-dynamic.jade', {
-       visionData: dataJson
-     });
-    }
-  });
-  } else {
-    displayVisions(req, res, visionProvider, 'visions-dynamic.jade');
-  }
-  
- 
-});*/
- /*
- app.get('/three', function(req, res){
-   displayVisions(req, res, visionProvider, 'three.jade');
- });
-*/
 /*loads into popup indow of iframe*/
 app.get('/:id', function(req, res) {
   if(req.params.id.length == 24){
   visionProvider.findAdmin(req.params.id, function(error, vision){
-   //   console.log("looking for id ");
    if(error){
     console.log("cannot find id")
   } else {
@@ -530,22 +221,12 @@ app.get('/:id', function(req, res) {
 });
 
 function displayTimeline(req, res, visionProvider, jadeTemplate) {
-   // visionProvider.findTimeline(function(err, result){
   visionProvider.findTimelineCollection(100, function(err, result){
-  //visionProvider.findTaggedCollection('*', 100, function(err, result){
-        //console.log("result is "+ nodes.length);
-      /*  for(var i = 0; i < result.length; i++){
-          process.stdout.write(result[i] + " ");
-        }*/
          visionProvider.findGallery(function(err, data){
-        //console.log("result is "+ nodes.length);
         if(err){console.log(err);
       } else {
         var dataJson = JSON.stringify(data);
         var visionJson = JSON.stringify(result);
-
-       // console.log(" the data from the provider is " +dataJson);
-
       res.render(jadeTemplate, {
              visionData: visionJson,
              imageData: dataJson
@@ -555,33 +236,6 @@ function displayTimeline(req, res, visionProvider, jadeTemplate) {
 
     });
 }
-
-/*
-function displayVisions(req, res, visionProvider, jadeTemplate) {
-    visionProvider.findAll(function(err, result){
-        //console.log("result is "+ nodes.length);
-      /*  for(var i = 0; i < result.length; i++){
-          process.stdout.write(result[i] + " ");
-        }
-         visionProvider.findGallery(function(err, data){
-        //console.log("result is "+ nodes.length);
-        if(err){console.log(err);
-      } else {
-        var dataJson = JSON.stringify(data);
-        var visionJson = JSON.stringify(result);
-
-       // console.log(" the data from the provider is " +dataJson);
-
-      res.render(jadeTemplate, {
-             visionData: visionJson,
-             imageData: dataJson
-             });
-    }
-  });
-
-    });
-}
-*/
 
 
 var canvasArray = new Array();
@@ -637,29 +291,14 @@ io.sockets.on('connection', function (socket) {
    
   });
 
+
 /*add a vision with no image*/
-  socket.on('addNewVision', function (data){
+ /* socket.on('addNewVision', function (data){
    console.log("new vision added in socket!!!!!!!!!!HEYYYYY!!!!!  "+JSON.stringify(data));
     fileSystem.saveVision(data, null, visionProvider);
-  /* fileSystem.addNewVision(data, null, visionProvider, function(error, id){
-     if(error)console.log(error);
-     console.log("CALLBACK HOLLLA "+id);
-
-   });*/
   
-});
+});*/
 
- /* socket.on('New Animation Frame', function(data){
-    fileSystem.addFrame(data.frameURL, data.frame, function(error){
-      if(error)console.log(error);
-    });
-    //console.log("new animation frame ! "+ JSON.stringify(data));
-  });
-
-
-  socket.on('Canvas Frame', function(data){
-    console.log(JSON.stringify(data));
-  });*/
 
 /*sends a new random vision to the rating station*/
 socket.on('newRandom', function (data) {
@@ -674,7 +313,6 @@ socket.on('newRandom', function (data) {
     if(error) console.log(error);
     var visionJson = JSON.stringify(result);
   console.log("the result is " + visionJson);
-    //res.render('rating.jade', {visionData: visionJson});
     io.sockets.in(socket.id).emit('newVision', visionJson);
   });
     
@@ -682,9 +320,7 @@ socket.on('newRandom', function (data) {
 
 socket.on('findById', function (data) {
     console.log("received from socket" + socket.id + " data "+ data);
-
     visionProvider.findById(data, function(error, vision){
-   //   console.log("looking for id ");
    if(error){
     console.log("cannot find id")
   } else {
@@ -757,8 +393,7 @@ socket.on('filterShowAll', function(data){
           io.sockets.in(socket.id).emit('newVisionCollection', visionJson);
       }
      });
-        //console.log("result is "+ nodes.length);
-        //
+      
 });
 
 socket.on("get next page", function(data){
@@ -794,64 +429,19 @@ socket.on('update gallery', function(data){
    });
 });
 
-/*socket.on('init drawing', function(data){
-    var identifier = canvasArray.length;
-    console.log("nick name is "+ identifier);
-    socket.set('nickname', identifier);//each time a new drawing is created, the canvas is added to the canvasArray object
-   // var canvas = new Canvas(identifier);
-   // canvasArray.push(canvas);
-});
 
-socket.on('update draw', function(drawData){
-    socket.get('nickname', function(err, nickname) {
-        if(nickname){
-     //   console.log("socket nickname: " + nickname + " socket id: "+ socket.id);
-     //    console.log(JSON.stringify(drawData));
-        // canvasArray[nickname].updateDrawing(drawData);
-       }
-    });
-        
-       
-
- });
-
-socket.on("make video", function(){
-      socket.get('nickname', function(err, nickname) {
-        if(nickname){
-        console.log("socket nickname: " + nickname + " socket id: "+ socket.id);
-         //console.log(JSON.stringify(drawData));
-        // canvasArray[nickname].makeVideo();
-         socket.set('nickname', null);
-       }
-    });
-});
-*/
 
 socket.on('addVoteResults', function (data) {
   visionProvider.addVoteResults(data, function(err){
     if(err){ console.log(err);
     }else {
-    /* if(data.like != null){
-      visionProvider.addLike(data._id, data.like, function(error, likes){
-        if(error) console.log(error);
-        //console.log("NUMBER OF LIKES IS "+ likes);
-      
-      });
-    } */
   }
 });
- /*   visionProvider.getRandom(function(error, vision){
-          if(error) console.log(error);
-         
-          var visionJson = JSON.stringify(vision);
-            io.sockets.in(socket.id).emit('newVision', vision);
-      });*/
 });
 
 socket.on('addVote', function (data) {
   console.log("received from socket" + JSON.stringify(data));
   var results = "";
-    //visionProvider.addVote(function(error){
       if(data.vote != ""){
        if(data.vote != null){
         console.log("updating vote");
@@ -869,11 +459,8 @@ socket.on('addVote', function (data) {
               result["rating"] = results;
               result["likes"] = likes;
               var visionJson = JSON.stringify(vision);
-         // console.log("the result is " + visionJson);
-            //res.render('rating.jade', {visionData: visionJson});
 
             io.sockets.in(socket.id).emit('newVision', vision);
-          //});
           });
           });
          } 
@@ -887,31 +474,22 @@ socket.on('addVote', function (data) {
   });
 
 socket.on('updateVision', function (data){
- console.log("updated added in socket!!!!!!!!!!HEYYYYY!!!!!  "+JSON.stringify(data));
- //fileSystem.saveVision(data, null, visionProvider);
  fileSystem.updateVision(data, null, visionProvider);
  io.sockets.in(socket.id).emit('update', '');
 });
 
 socket.on('addComment', function (data){
-// console.log("updated added in socket!!!!!!!!!!HEYYYYY!!!!!  "+JSON.stringify(data));
  visionProvider.addComment(data.id, data.comment, function(error){
     if(error) console.log(error);
      io.sockets.in(socket.id).emit('newComment', '');
  });
- //fileSystem.saveVision(data, null, visionProvider);
- //fileSystem.updateVision(data, null, visionProvider);
- //io.sockets.in(socket.id).emit('update', '');
 });
 
 socket.on('deleteVision', function(data){
  console.log(" deleting "+ JSON.stringify(data));
  fileSystem.remove(data, visionProvider);
  io.sockets.emit('restart drawing', "");
- //if(data.parent && data.parent.length == 24) visionProvider.removeFromParent(data.parent, data._id, data.children);
- //if(data.children && data.children.length == 24) visionProvider.removeParent(data.parent, data._id);
-
-
+ 
 });
 
 

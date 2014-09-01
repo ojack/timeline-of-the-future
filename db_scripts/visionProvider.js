@@ -752,6 +752,7 @@ VisionProvider.prototype.updateDrawingPath = function (visionId, imagePath, call
     });
 };
 
+/*When a new vision is added based off of an existing idea, the id for that vision is stored in an array witih the parent element*/ 
 VisionProvider.prototype.addChild = function(parentId, childId, callback){
   this.getCollection(function(error, vision_collection){
       if(error) callback(error);
@@ -807,6 +808,7 @@ VisionProvider.prototype.save = function (visions, callback) {
         });
 };
 
+/*Adds new vision into database*/
 VisionProvider.prototype.saveVision = function (visions, callback) {
     //console.log(JSON.stringify(visions));
     this.getCollection(function (error, vision_collection) {
@@ -898,91 +900,6 @@ VisionProvider.prototype.removeVision = function (id, callback) {
     }
   });
 };
-/*    
 
-VisionProvider.prototype.removeVision = function (id) {
-    console.log("removing id" + id);
-    this.getCollection(function (error, vision_collection) {
-        if (error) callback(error);
-        else {
-            id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
-        //  var objectId = new ObjectId(id.toString());
-           vision_collection.findOne(
-                //{ _id: id }, 
-                {_id: id},  detailed_fields,
-                function (error, result) {
-                    if (error) {
-                      console.log("error on delete: "+error);
-                    } else {
-                        if(result.parent && result.parent.length == 24) {
-                          console.log("removing from parent");
-                          removeFromParent(result.parent, id, result.children, vision_collection);
-                        } else if(result.children.length >= 0){
-                           console.log("removing from children");
-                          removeFromChildren(objectId, vision_collection);
-                        } else {
-                          console.log("straight remove");
-                           vision_collection.remove(
-                                 {_id: id}
-                                 );
-       
-                        }
-                        
-                    }
-          });
-         }
-        //}
-    });
-           
-};
-
-function removeFromParent(parent, id, children, vision_collection){
-      var parent_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(parent.toString());
-      //var this_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
-      var this_id = vision_collection.db.bson_serializer.ObjectID.createFromHexString(id.toString());
-      var query = {children: this_id};
-      var update = {$pull: { children: this_id }};
-      console.log("children is "+ JSON.stringify(children));
-      if(children.length > 0){
-          console.log("pusing children");
-        update = { $push: { children: children}, $pull: { children: this_id }};
-      }
-                   
-      vision_collection.update(query, update, function(err){
-        if(err) {
-          console.log("error removing from parent "+ err);
-        } else {
-         /* vision_collection.remove(
-                                 {_id: this_id}
-                                 );
-        }
-    });
- var id = parent.toString();
-     var child_query = {parent: id};
-      var child_update = { $set: {parent: parent.toString()}};
-      vision_collection.update(child_query, child_update, function(err){
-        if(err) {
-          console.log("error updating children "+ err);
-        } else {
-          /*vision_collection.remove(
-                                 {_id: this_id}
-                                 );
-        }
-    });
-       
-};
-
-function removeFromChildren(objectId, vision_collection){
-  var id = objectId.toString();
-     var child_query = {parent: id};
-      var child_update = { $set: {parent: null}};//TO DO check how parent is stored
-      vision_collection.update(child_query, child_update, function(err){
-        if(err) {
-          console.log("error updating children "+ err);
-        } else {
-        }
-    });
-
-}*/
 
 exports.VisionProvider = VisionProvider;

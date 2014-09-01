@@ -4,22 +4,9 @@
 //var Canvas = require('./canvas').Canvas;
 var fs = require('fs'),
   path = require('path');
-//var tmpStorage = "./uploads"; // file path to location where http POST requests are received
-//var permStorage = "./public/uploads"; 
-//var permStorage = "../TEST_STORAGE" //file path to where uploaded images are stored. If no folder exists, creates folder
+
 var THUMB_WIDTHS = [{name: 'medium', size: 461}, {name: 'small', size: 230}];
-/*
-'date'] = new Date();
-      params['newVision']= "true";
-       params['imgPath'] = iFrameCanvas.toDataURL('image/png');
-       params['drawingPath'] = iFrameDrawing.toDataURL('image/png');
-    params["show_rating"] = true;
-    params["show_timeline"] = true;
-    params["show_projection"] = true;
-    params["parent"]= this.parent_id;
-    params["museum"] = false;
-    params["eventArray"
-*/
+
 var drawing_fields =  ['vision', 'inspiration', 'date', 'name', 'tags', 'year', 'parent', 'show_timeline', 'always_visible', 'museum'];//fields to save to database from new drawing submission
 
 var im = require('imagemagick');
@@ -79,22 +66,11 @@ FileSystem.prototype.remove = function(id, visionProvider){
  
     });
       }
-     /* for(var i = 0; i < )
-      fs.unlink(path, function (err) {
-              if (err) callback(err);
- 
-    });*/
     }
   });
   
 };
 
-FileSystem.prototype.addFrame = function(data, frameNo, callback){
-    console.log("adding + "+ frameNo);
-    addFrame("testframe", data, frameNo, this.permStorage, function(err){
-      callback(err);
-    });
-};
 
 /*Receives data of newly created vision, adds to server*/
 
@@ -120,35 +96,11 @@ FileSystem.prototype.addNewDrawing = function(data, visionProvider, callback){
    visionProvider.saveVision(newVision, function (error, visions) {
   var _id = visions._id;
   
-      console.log("error is "+ error + "visions are "+ JSON.stringify(visions));
-  
- 
- /*   var voteDate = {};
-    voteDate[new Date()]=data.year;
-    var voteResults = {'year_count': 1, 'total_count': 1, 'never_count':0, 'votes':[voteDate], 'year_sum':data.year};
-    visionProvider.save({
-   imgPath: "hellloooooooooooooooooooooo",
-   vision: data.vision,
-   inspiration: data.inspiration,
-   year: data.year,
-   rand: Math.random(),
-   parent: data.parent,
-   adminTags: adminArray,
-  // vote_results: voteResults,
-   tags: tagArray,
-   date: new Date(),
-   name: data.name,
-   notes: data.notes,
-   weight: 0
- }, function (error, visions) {
-  var _id = visions[0]._id;*/
-  //console.log(data.drawingPath);
+    //  console.log("error is "+ error + "visions are "+ JSON.stringify(visions));
      addPNG(_id, img, visionProvider, permStorage, function(err, path){
 
     if(err) callback(err, null);
-   /* addPNG(_id, drawing, visionProvider, "-draw", permStorage, function(err, path){
-   if(err) callback(err, null);*/
-    console.log("PARENT IS " + data.parent + " this element "+ _id);
+   // console.log("PARENT IS " + data.parent + " this element "+ _id);
 
    if(data.parent && data.parent.length == 24){
       console.log("PARENT IS " + data.parent + " this element "+ _id);
@@ -164,8 +116,6 @@ FileSystem.prototype.addNewDrawing = function(data, visionProvider, callback){
     }
   });
   });
-    //}  
-  //});
 };
 
 FileSystem.prototype.addToGallery = function(data, file,  imageProvider){
@@ -185,62 +135,7 @@ FileSystem.prototype.addToGallery = function(data, file,  imageProvider){
 });
 
 };
-/*
 
-FileSystem.prototype.addNewVision = function (data, file, visionProvider){
-  var tagArray = data.tags.split(',');
-  //var fileType = req.files.type;
-  var permStorage = this.permStorage;
-  visionProvider.save({
-   imgPath: "hellloooooooooooooooooooooo",
-   vision: data.vision,
-   inspiration: data.inspiration,
-   year: data.year,
-   tags: tagArray,
-    date: new Date(),
-   notes: data.notes,
-   weight: 0
- }, function (error, visions) {
-    if(file){
-  var _id = visions[0]._id;
- 
-  console.log("added vision" + file.type);
-  console.log("added vision" + file.type.indexOf("image"));
-  if (file.type.indexOf("image") > -1) {
-   uploadImage(_id, file.type, file.path, visionProvider, permStorage, function(err, path){
-    if(err) console.log(err);
-  });
- } else {
-   console.log("NOT AN IMAGE")
- }
-}
-});
-
-};*/
-/*
-FileSystem.prototype.addNewImage = function(req, visionProvider){
-  var name = req.files.file.name;
-  var data = JSON.parse(req.body.filesize);
-  var tagArray = data.tags.split(',');
-  var fileType = req.files.type;
-  visionProvider.save({
-   imgPath: "hellloooooooooooooooooooooo",
-   tags: tagArray,
-   gallery: true,
-   weight: 0
- }, function (error, visions) {
-  var _id = visions[0]._id;
-  if (req.files.file.type.indexOf("image") > -1) {
-   fileSystem.uploadGalleryImage(_id, req.files.file.type, req.files.file.path, name, visionProvider, function(err, path){
-    if(err) console.log(err);
-  });
-
- } else {
-   console.log("NOT AN IMAGE")
- }
-});
-
-};*/
 
 /*Function to save a new vision in the database*/
 
@@ -313,11 +208,7 @@ function uploadImage(id, type, tmpPath, visionProvider, permStorage, callback){
             console.log("file uploaded to "+ newPath);
             var publicPath = "./"+ newPath;
              addThumbs(id, newPath, filepath, fileExt, visionProvider, callback);
-            //var publicPath = newPath.replace("./public", "");
-            /* visionProvider.updateImagePath(id, publicPath, function(err, vision){
-                    if(err) callback(err, null);
-                    callback(null, publicPath);
-                });*/
+          
             
         });
     });
@@ -342,26 +233,9 @@ function uploadToGallery(id, type, tmpPath, name, visionProvider, permStorage, c
             var publicPath = "./"+ newPath;
             var thumbPath = filepath + "-small" + fileExt;
             console.log(" thumb path is " + thumbPath + " new path is " + newPath);
-            /*im.resize({
-                srcPath: newPath,
-                dstPath: thumbPath,
-                width:   THUMB_WIDTH
-            }, function(err, stdout, stderr){
-             if (err){
-              callback(err, null);
-           } else {
-            console.log('resized kittens.jpg to fit within 256x256px' + stdout);
-            //var publicThumb = thumbPath.replace("./public", "");*/
+          
       addThumbs(id, newPath, filepath, fileExt, visionProvider, callback);
-           /*  var publicPath = "./"+ publicPath;
-             var publicThumb = "placeholder";
-            visionProvider.updateImagePath(id, publicPath, function(err, vision){
-                    if(err) callback(err, null);
-                    callback(null, publicPath);
-                });
-           //}
-        });
-        //});*/
+        
     });
   });
 
@@ -449,10 +323,6 @@ function addThumbs(id, newPath, filepath, extension, visionProvider, callback){
 }
 
 function addPNG(id, imgData, visionProvider, permStorage, callback) {
-   /* this.db.collection('nodes', { safe: true }, function (error, node_collection) {
-        if (error) callback(error);
-        else callback(null, node_collection);
-    });*/
      var base64Data  =   imgData.replace(/^data:image\/png;base64,/, "");
     base64Data  +=  base64Data.replace('+', ' ');
     var binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
@@ -467,55 +337,12 @@ function addPNG(id, imgData, visionProvider, permStorage, callback) {
             } else {
               var extension = ".png";
               addThumbs(id, newPath, filepath, extension, visionProvider, callback);
-                //console.log("The file was saved!" + newPath);
-               // var publicPath = newPath.replace("./public", "");
-             
-                  //var publicThumb = thumbPath.replace("./public", "");*/
-/*if(id){
-                  console.log("ID IS "+ id);
-                if(suffix=="-draw"){
-                    nodeProvider.updateDrawingPath(id, publicPath, function(err, vision){
-                    if(err) callback(err, null);
-                    callback(null, publicPath);
-                });
-                } else {
-              
-                nodeProvider.updateImagePath(id, publicPath, function(err, vision){
-                    if(err) callback(err, null);
-                    callback(null, publicPath);
-                });
-            }
-            }
-            }*/
+          
           }
 
         });
     });
 }
 
-function addFrame(id, imgData, frameNo, permStorage, callback) {
-   /* this.db.collection('nodes', { safe: true }, function (error, node_collection) {
-        if (error) callback(error);
-        else callback(null, node_collection);
-    });*/
-     var base64Data  =   imgData.replace(/^data:image\/png;base64,/, "");
-    base64Data  +=  base64Data.replace('+', ' ');
-    var binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
-
-    createFolders("", id, permStorage, function(err, filepath){
-       // console.log("filepath:"+ filepath);
-       if(err) console.log("error creating folders" + err);
-        var newPath = filepath+"-"+frameNo+".png";
-        fs.writeFile(newPath, binaryData, "binary", function(err) {
-            if(err) {
-                callback(err);
-            } else {
-                //console.log("The file was saved!" + newPath);
-                callback(null);
-            }
- 
-        });
-    });
-}
 
 

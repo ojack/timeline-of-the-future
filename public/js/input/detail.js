@@ -69,12 +69,6 @@ DetailView.prototype =
 	addClickHandlers: function(){
     var _id = this.id;
 		$('#build-button').click(function(e) {//TODO: move this funtion out of here/ stop adding extra event listeners
-           //$('#detail-backdrop').removeClass('show');
-            //goToDraw();
-            console.log("clicked drawing");
-           // $('#detail').removeClass('show');
-        
-           
             drawingView.showDrawing(currURL,currID);
             showDrawingThumb(visionObj, 0);
       });
@@ -137,7 +131,7 @@ DetailView.prototype =
           detailView.detail_created_by.html("by anonymous");
         }
         if(visionObj.date){
-        console.log("date is : "+ visionObj.date);
+       // console.log("date is : "+ visionObj.date);
         var date = new Date(visionObj.date);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -242,7 +236,7 @@ function initThumbs(){
           _id = $(this).data('id');
                 currId =  "?id="+ _id;
                socket.emit('findById', _id);
-               console.log(" data of clicked " + JSON.stringify($(this).data('id')));
+              // console.log(" data of clicked " + JSON.stringify($(this).data('id')));
           }
       });
     }

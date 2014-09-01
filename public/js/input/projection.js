@@ -462,15 +462,6 @@ function shuffle(array) {
 
 function toggleImage(index){
   $(timeline[index].textDiv).toggleClass('show');
-  //$(timeline[i].itemAlternate).toggleClass('hide');
-	 // var thisItem = container.children().get(index);
-   /* visionArray[index].find( ".item-text").toggleClass('show');
-    visionArray[index].find( ".item-image").toggleClass('show');*/
-
-    //backgroundArray[index].toggleClass('show');
-	 // $(thisItem).find( ".item-text").toggleClass('show');
-	 // $(thisItem).find( ".item-image").toggleClass('show');
-   //scroll timeline[i].find
 
 }
 
