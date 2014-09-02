@@ -134,16 +134,18 @@ function showResults(params){
       var thisDate = new Date();
       thisObj[thisDate] = params.vote;
       var allVotes = new Array;
-      if(visionData.vote_results){
-         if(visionData.vote_results.votes){
-        allVotes = visionData.vote_results.votes;
+    //  if(visionData.vote_results){
+        if(visionData.votes){
+       //  if(visionData.vote_results.votes){
+       //   alert(JSON.stringify("hey" + visionData));
+        allVotes = visionData.votes;
    //     console.log("all votes is " + JSON.stringify(visionData.vote_results));
-      }
+     // }
       } /*else {
         allVotes = new Array();
       }*/
       allVotes.push(thisObj);
-   //   console.log(JSON.stringify(allVotes));
+   //  alert(JSON.stringify(visionData));
       var average = 0;
       var count = 0;
       total_count = allVotes.length;
